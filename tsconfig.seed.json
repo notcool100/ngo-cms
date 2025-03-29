@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+      "module": "CommonJS",
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "target": "ES2020",
+      "moduleResolution": "node",
+      "strict": true,
+      "noEmit": true
+    },
+    "ts-node": {
+      "transpileOnly": true,
+      "files": true
+    }
+  }
