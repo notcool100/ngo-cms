@@ -37,6 +37,8 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { PermissionGate } from "@/components/auth/permission-gate";
+import { usePermissions } from "@/hooks/use-permissions";
 
 interface User {
 	id: string;
@@ -59,6 +61,7 @@ export default function UserManagementPage() {
 		password: "",
 		role: "USER",
 	});
+	const permissions = usePermissions();
 
 	useEffect(() => {
 		fetchUsers();
@@ -201,22 +204,27 @@ export default function UserManagementPage() {
 			title: "Actions",
 			render: (user: User) => (
 				<div className="flex gap-2">
-					<Button variant="outline" size="icon">
-						<Edit className="h-4 w-4" />
-						<span className="sr-only">Edit</span>
-					</Button>
-					<Button
-						variant="outline"
-						size="icon"
-						onClick={() => {
-							setUserToDelete(user.id);
-							setDeleteDialogOpen(true);
-						}}
-						disabled={user.role === "ADMIN"} // Prevent deleting admin users
-					>
-						<Trash className="h-4 w-4" />
-						<span className="sr-only">Delete</span>
-					</Button>
+					<PermissionGate permission="manage:users">
+						<Button variant="outline" size="icon">
+							<Edit className="h-4 w-4" />
+							<span className="sr-only">Edit</span>
+						</Button>
+					</PermissionGate>
+
+					<PermissionGate permission="manage:users">
+						<Button
+							variant="outline"
+							size="icon"
+							onClick={() => {
+								setUserToDelete(user.id);
+								setDeleteDialogOpen(true);
+							}}
+							disabled={user.role === "ADMIN" || user.id === permissions.role} // Prevent deleting admin users or self
+						>
+							<Trash className="h-4 w-4" />
+							<span className="sr-only">Delete</span>
+						</Button>
+					</PermissionGate>
 				</div>
 			),
 		},
@@ -230,10 +238,13 @@ export default function UserManagementPage() {
 		<div className="space-y-6">
 			<div className="flex items-center justify-between">
 				<h1 className="text-3xl font-bold tracking-tight">User Management</h1>
-				<Button onClick={() => setNewUserDialogOpen(true)}>
-					<UserPlus className="mr-2 h-4 w-4" />
-					New User
-				</Button>
+
+				<PermissionGate permission="manage:users">
+					<Button onClick={() => setNewUserDialogOpen(true)}>
+						<UserPlus className="mr-2 h-4 w-4" />
+						New User
+					</Button>
+				</PermissionGate>
 			</div>
 
 			<DataTable data={users} columns={columns} />

@@ -19,6 +19,7 @@ import {
 	Settings,
 	Users,
 } from "lucide-react";
+import { usePermissions } from "@/hooks/use-permissions";
 
 export default function AdminLayout({
 	children,
@@ -27,6 +28,7 @@ export default function AdminLayout({
 	const router = useRouter();
 	const pathname = usePathname();
 	const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+	const permissions = usePermissions();
 
 	useEffect(() => {
 		// Redirect if not authenticated
@@ -111,83 +113,111 @@ export default function AdminLayout({
 							<Home className="h-5 w-5" />
 							Dashboard
 						</Link>
-						<Link
-							href="/admin/content"
-							className={`flex items-center gap-2 rounded-lg px-3 py-2 ${
-								pathname === "/admin/content"
-									? "bg-primary text-primary-foreground"
-									: "text-muted-foreground hover:bg-muted hover:text-foreground"
-							}`}
-						>
-							<FileText className="h-5 w-5" />
-							Content Management
-						</Link>
-						<Link
-							href="/admin/users"
-							className={`flex items-center gap-2 rounded-lg px-3 py-2 ${
-								pathname === "/admin/users"
-									? "bg-primary text-primary-foreground"
-									: "text-muted-foreground hover:bg-muted hover:text-foreground"
-							}`}
-						>
-							<Users className="h-5 w-5" />
-							User Management
-						</Link>
-						<Link
-							href="/admin/donations"
-							className={`flex items-center gap-2 rounded-lg px-3 py-2 ${
-								pathname === "/admin/donations"
-									? "bg-primary text-primary-foreground"
-									: "text-muted-foreground hover:bg-muted hover:text-foreground"
-							}`}
-						>
-							<DollarSign className="h-5 w-5" />
-							Donations
-						</Link>
-						<Link
-							href="/admin/events"
-							className={`flex items-center gap-2 rounded-lg px-3 py-2 ${
-								pathname === "/admin/events"
-									? "bg-primary text-primary-foreground"
-									: "text-muted-foreground hover:bg-muted hover:text-foreground"
-							}`}
-						>
-							<Calendar className="h-5 w-5" />
-							Events
-						</Link>
-						<Link
-							href="/admin/messages"
-							className={`flex items-center gap-2 rounded-lg px-3 py-2 ${
-								pathname === "/admin/messages"
-									? "bg-primary text-primary-foreground"
-									: "text-muted-foreground hover:bg-muted hover:text-foreground"
-							}`}
-						>
-							<MessageSquare className="h-5 w-5" />
-							Messages
-						</Link>
-						<Link
-							href="/admin/reports"
-							className={`flex items-center gap-2 rounded-lg px-3 py-2 ${
-								pathname === "/admin/reports"
-									? "bg-primary text-primary-foreground"
-									: "text-muted-foreground hover:bg-muted hover:text-foreground"
-							}`}
-						>
-							<BarChart className="h-5 w-5" />
-							Reports
-						</Link>
-						<Link
-							href="/admin/settings"
-							className={`flex items-center gap-2 rounded-lg px-3 py-2 ${
-								pathname === "/admin/settings"
-									? "bg-primary text-primary-foreground"
-									: "text-muted-foreground hover:bg-muted hover:text-foreground"
-							}`}
-						>
-							<Settings className="h-5 w-5" />
-							Settings
-						</Link>
+
+						{permissions.canManageContent() && (
+							<Link
+								href="/admin/content"
+								className={`flex items-center gap-2 rounded-lg px-3 py-2 ${
+									pathname === "/admin/content" ||
+									pathname.startsWith("/admin/content/")
+										? "bg-primary text-primary-foreground"
+										: "text-muted-foreground hover:bg-muted hover:text-foreground"
+								}`}
+							>
+								<FileText className="h-5 w-5" />
+								Content Management
+							</Link>
+						)}
+
+						{permissions.canManageUsers() && (
+							<Link
+								href="/admin/users"
+								className={`flex items-center gap-2 rounded-lg px-3 py-2 ${
+									pathname === "/admin/users" ||
+									pathname.startsWith("/admin/users/")
+										? "bg-primary text-primary-foreground"
+										: "text-muted-foreground hover:bg-muted hover:text-foreground"
+								}`}
+							>
+								<Users className="h-5 w-5" />
+								User Management
+							</Link>
+						)}
+
+						{permissions.hasPermission("manage:donations") && (
+							<Link
+								href="/admin/donations"
+								className={`flex items-center gap-2 rounded-lg px-3 py-2 ${
+									pathname === "/admin/donations" ||
+									pathname.startsWith("/admin/donations/")
+										? "bg-primary text-primary-foreground"
+										: "text-muted-foreground hover:bg-muted hover:text-foreground"
+								}`}
+							>
+								<DollarSign className="h-5 w-5" />
+								Donations
+							</Link>
+						)}
+
+						{permissions.hasPermission("manage:events") && (
+							<Link
+								href="/admin/events"
+								className={`flex items-center gap-2 rounded-lg px-3 py-2 ${
+									pathname === "/admin/events" ||
+									pathname.startsWith("/admin/events/")
+										? "bg-primary text-primary-foreground"
+										: "text-muted-foreground hover:bg-muted hover:text-foreground"
+								}`}
+							>
+								<Calendar className="h-5 w-5" />
+								Events
+							</Link>
+						)}
+
+						{permissions.hasPermission("manage:messages") && (
+							<Link
+								href="/admin/messages"
+								className={`flex items-center gap-2 rounded-lg px-3 py-2 ${
+									pathname === "/admin/messages" ||
+									pathname.startsWith("/admin/messages/")
+										? "bg-primary text-primary-foreground"
+										: "text-muted-foreground hover:bg-muted hover:text-foreground"
+								}`}
+							>
+								<MessageSquare className="h-5 w-5" />
+								Messages
+							</Link>
+						)}
+
+						{permissions.hasPermission("view:reports") && (
+							<Link
+								href="/admin/reports"
+								className={`flex items-center gap-2 rounded-lg px-3 py-2 ${
+									pathname === "/admin/reports" ||
+									pathname.startsWith("/admin/reports/")
+										? "bg-primary text-primary-foreground"
+										: "text-muted-foreground hover:bg-muted hover:text-foreground"
+								}`}
+							>
+								<BarChart className="h-5 w-5" />
+								Reports
+							</Link>
+						)}
+
+						{permissions.hasPermission("manage:settings") && (
+							<Link
+								href="/admin/settings"
+								className={`flex items-center gap-2 rounded-lg px-3 py-2 ${
+									pathname === "/admin/settings" ||
+									pathname.startsWith("/admin/settings/")
+										? "bg-primary text-primary-foreground"
+										: "text-muted-foreground hover:bg-muted hover:text-foreground"
+								}`}
+							>
+								<Settings className="h-5 w-5" />
+								Settings
+							</Link>
+						)}
 					</nav>
 				</aside>
 				<main className="flex-1 p-6">{children}</main>
