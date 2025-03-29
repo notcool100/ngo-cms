@@ -55,7 +55,7 @@ export default function Home() {
 			.then((res) => res.json())
 			.then((data) => {
 				console.log(data, "this is feature data");
-				setFeaturedPrograms(data.programs);
+				setFeaturedPrograms(data);
 			})
 			.catch((err) => {
 				console.error("Error fetching featured programs:", err);

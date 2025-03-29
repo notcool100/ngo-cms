@@ -40,7 +40,7 @@ export async function GET(request: Request) {
 		}
 
 		if (featured !== null) {
-			where.featured = featured;
+			where.featured = featured === "true";
 		}
 
 		if (search) {
