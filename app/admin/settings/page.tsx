@@ -1,217 +1,249 @@
 "use client";
 
+import type React from "react";
+
 import { useState } from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
 	CardContent,
 	CardDescription,
+	CardFooter,
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
-import {
-	Download,
-	BarChart,
-	PieChart,
-	LineChart,
-	Calendar,
-} from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { toast } from "@/components/ui/use-toast";
+import { PermissionGate } from "@/components/auth/permission-gate";
+import { Shield, Globe, Bell, Database } from "lucide-react";
 
-export default function ReportsPage() {
-	const [timeRange, setTimeRange] = useState("month");
+export default function SettingsPage() {
+	const [isLoading, setIsLoading] = useState(false);
+
+	const handleSaveSettings = (e: React.FormEvent) => {
+		e.preventDefault();
+		setIsLoading(true);
+
+		// Simulate API call
+		setTimeout(() => {
+			setIsLoading(false);
+			toast({
+				title: "Settings saved",
+				description: "Your settings have been saved successfully.",
+			});
+		}, 1000);
+	};
 
 	return (
 		<div className="space-y-6">
 			<div className="flex items-center justify-between">
-				<h1 className="text-3xl font-bold tracking-tight">Reports</h1>
-				<div className="flex items-center gap-4">
-					<Select value={timeRange} onValueChange={setTimeRange}>
-						<SelectTrigger className="w-[180px]">
-							<SelectValue placeholder="Select time range" />
-						</SelectTrigger>
-						<SelectContent>
-							<SelectItem value="week">Last 7 days</SelectItem>
-							<SelectItem value="month">Last 30 days</SelectItem>
-							<SelectItem value="quarter">Last 3 months</SelectItem>
-							<SelectItem value="year">Last 12 months</SelectItem>
-							<SelectItem value="all">All time</SelectItem>
-						</SelectContent>
-					</Select>
-					<Button variant="outline">
-						<Download className="mr-2 h-4 w-4" />
-						Export Reports
-					</Button>
-				</div>
+				<h1 className="text-3xl font-bold tracking-tight">Settings</h1>
 			</div>
 
-			<Tabs defaultValue="donations">
-				<TabsList className="grid w-full grid-cols-4">
-					<TabsTrigger value="donations">Donations</TabsTrigger>
-					<TabsTrigger value="programs">Programs</TabsTrigger>
-					<TabsTrigger value="events">Events</TabsTrigger>
-					<TabsTrigger value="volunteers">Volunteers</TabsTrigger>
+			<Tabs defaultValue="general">
+				<TabsList>
+					<TabsTrigger value="general">General</TabsTrigger>
+					<TabsTrigger value="notifications">Notifications</TabsTrigger>
+					<PermissionGate permission="manage:settings">
+						<TabsTrigger value="advanced">Advanced</TabsTrigger>
+					</PermissionGate>
 				</TabsList>
+				<TabsContent value="general" className="space-y-4">
+					<Card>
+						<CardHeader>
+							<CardTitle>General Settings</CardTitle>
+							<CardDescription>
+								Manage your website's general settings
+							</CardDescription>
+						</CardHeader>
+						<CardContent className="space-y-4">
+							<form onSubmit={handleSaveSettings}>
+								<div className="grid gap-4">
+									<div className="grid gap-2">
+										<Label htmlFor="siteName">Site Name</Label>
+										<Input id="siteName" defaultValue="Empower Together" />
+									</div>
+									<div className="grid gap-2">
+										<Label htmlFor="siteDescription">Site Description</Label>
+										<Input
+											id="siteDescription"
+											defaultValue="Empowering women through education and support"
+										/>
+									</div>
+									<div className="grid gap-2">
+										<Label htmlFor="contactEmail">Contact Email</Label>
+										<Input
+											id="contactEmail"
+											type="email"
+											defaultValue="contact@empowertogether.org"
+										/>
+									</div>
+									<div className="flex items-center gap-2">
+										<Switch id="maintenanceMode" />
+										<Label htmlFor="maintenanceMode">Maintenance Mode</Label>
+									</div>
+									<Button type="submit" disabled={isLoading}>
+										{isLoading ? "Saving..." : "Save Changes"}
+									</Button>
+								</div>
+							</form>
+						</CardContent>
+					</Card>
 
-				<TabsContent value="donations" className="space-y-6">
-					<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+					<PermissionGate permission="manage:settings">
 						<Card>
-							<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-								<CardTitle className="text-sm font-medium">
-									Total Donations
-								</CardTitle>
+							<CardHeader className="flex flex-row items-center gap-4">
+								<Shield className="h-6 w-6 text-primary" />
+								<div>
+									<CardTitle>Role Management</CardTitle>
+									<CardDescription>
+										View and manage user roles and permissions
+									</CardDescription>
+								</div>
 							</CardHeader>
 							<CardContent>
-								<div className="text-2xl font-bold">$45,231.89</div>
-								<p className="text-xs text-muted-foreground">
-									+20.1% from previous period
+								<p className="text-sm text-muted-foreground mb-4">
+									Configure access control and permissions for different user
+									roles in the system.
 								</p>
 							</CardContent>
+							<CardFooter>
+								<Button variant="outline" asChild>
+									<Link href="/admin/settings/roles">Manage Roles</Link>
+								</Button>
+							</CardFooter>
 						</Card>
-						<Card>
-							<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-								<CardTitle className="text-sm font-medium">
-									Average Donation
-								</CardTitle>
-							</CardHeader>
-							<CardContent>
-								<div className="text-2xl font-bold">$78.45</div>
-								<p className="text-xs text-muted-foreground">
-									+5.2% from previous period
-								</p>
-							</CardContent>
-						</Card>
-						<Card>
-							<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-								<CardTitle className="text-sm font-medium">
-									Number of Donors
-								</CardTitle>
-							</CardHeader>
-							<CardContent>
-								<div className="text-2xl font-bold">576</div>
-								<p className="text-xs text-muted-foreground">
-									+12.3% from previous period
-								</p>
-							</CardContent>
-						</Card>
-						<Card>
-							<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-								<CardTitle className="text-sm font-medium">
-									Recurring Donations
-								</CardTitle>
-							</CardHeader>
-							<CardContent>
-								<div className="text-2xl font-bold">$3,450.00</div>
-								<p className="text-xs text-muted-foreground">
-									Monthly recurring revenue
-								</p>
-							</CardContent>
-						</Card>
-					</div>
+					</PermissionGate>
 
-					<div className="grid gap-4 md:grid-cols-2">
-						<Card>
-							<CardHeader>
-								<CardTitle>Donation Trends</CardTitle>
+					<Card>
+						<CardHeader className="flex flex-row items-center gap-4">
+							<Globe className="h-6 w-6 text-primary" />
+							<div>
+								<CardTitle>Site Configuration</CardTitle>
 								<CardDescription>
-									Monthly donation amounts over time
+									Configure website appearance and behavior
 								</CardDescription>
-							</CardHeader>
-							<CardContent className="h-[300px] flex items-center justify-center">
-								<div className="flex flex-col items-center gap-2 text-center">
-									<LineChart className="h-16 w-16 text-muted-foreground" />
+							</div>
+						</CardHeader>
+						<CardContent>
+							<p className="text-sm text-muted-foreground mb-4">
+								Manage your website's appearance, SEO settings, and social media
+								integration.
+							</p>
+						</CardContent>
+						<CardFooter>
+							<Button variant="outline">Configure Site</Button>
+						</CardFooter>
+					</Card>
+				</TabsContent>
+				<TabsContent value="notifications" className="space-y-4">
+					<Card>
+						<CardHeader className="flex flex-row items-center gap-4">
+							<Bell className="h-6 w-6 text-primary" />
+							<div>
+								<CardTitle>Notification Settings</CardTitle>
+								<CardDescription>
+									Configure email and system notifications
+								</CardDescription>
+							</div>
+						</CardHeader>
+						<CardContent className="space-y-4">
+							<div className="flex items-center justify-between">
+								<div>
+									<p className="font-medium">Email Notifications</p>
 									<p className="text-sm text-muted-foreground">
-										Line chart placeholder - In a real implementation, this
-										would be an interactive chart
+										Receive email notifications for important events
 									</p>
 								</div>
-							</CardContent>
-						</Card>
-						<Card>
-							<CardHeader>
-								<CardTitle>Donation Sources</CardTitle>
-								<CardDescription>
-									Breakdown by program and campaign
-								</CardDescription>
-							</CardHeader>
-							<CardContent className="h-[300px] flex items-center justify-center">
-								<div className="flex flex-col items-center gap-2 text-center">
-									<PieChart className="h-16 w-16 text-muted-foreground" />
+								<Switch defaultChecked />
+							</div>
+							<div className="flex items-center justify-between">
+								<div>
+									<p className="font-medium">New Donation Alerts</p>
 									<p className="text-sm text-muted-foreground">
-										Pie chart placeholder - In a real implementation, this would
-										be an interactive chart
+										Get notified when a new donation is received
 									</p>
 								</div>
+								<Switch defaultChecked />
+							</div>
+							<div className="flex items-center justify-between">
+								<div>
+									<p className="font-medium">New Volunteer Applications</p>
+									<p className="text-sm text-muted-foreground">
+										Get notified when someone applies to volunteer
+									</p>
+								</div>
+								<Switch defaultChecked />
+							</div>
+							<div className="flex items-center justify-between">
+								<div>
+									<p className="font-medium">Contact Form Submissions</p>
+									<p className="text-sm text-muted-foreground">
+										Get notified when someone submits the contact form
+									</p>
+								</div>
+								<Switch defaultChecked />
+							</div>
+						</CardContent>
+						<CardFooter>
+							<Button>Save Notification Settings</Button>
+						</CardFooter>
+					</Card>
+				</TabsContent>
+				<TabsContent value="advanced" className="space-y-4">
+					<PermissionGate permission="manage:settings">
+						<Card>
+							<CardHeader className="flex flex-row items-center gap-4">
+								<Database className="h-6 w-6 text-primary" />
+								<div>
+									<CardTitle>Database Settings</CardTitle>
+									<CardDescription>
+										Advanced database configuration options
+									</CardDescription>
+								</div>
+							</CardHeader>
+							<CardContent>
+								<p className="text-sm text-muted-foreground mb-4">
+									These settings are for advanced users only. Incorrect
+									configuration may cause system issues.
+								</p>
+								<div className="grid gap-4">
+									<div className="grid gap-2">
+										<Label htmlFor="backupFrequency">Backup Frequency</Label>
+										<select
+											id="backupFrequency"
+											className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+										>
+											<option value="daily">Daily</option>
+											<option value="weekly">Weekly</option>
+											<option value="monthly">Monthly</option>
+										</select>
+									</div>
+									<div className="grid gap-2">
+										<Label htmlFor="cacheLifetime">
+											Cache Lifetime (seconds)
+										</Label>
+										<Input
+											id="cacheLifetime"
+											type="number"
+											defaultValue="3600"
+										/>
+									</div>
+									<div className="flex items-center gap-2">
+										<Switch id="debugMode" />
+										<Label htmlFor="debugMode">Debug Mode</Label>
+									</div>
+								</div>
 							</CardContent>
+							<CardFooter>
+								<Button>Save Advanced Settings</Button>
+							</CardFooter>
 						</Card>
-					</div>
-				</TabsContent>
-
-				<TabsContent value="programs" className="space-y-6">
-					<Card>
-						<CardHeader>
-							<CardTitle>Program Performance</CardTitle>
-							<CardDescription>
-								Engagement and impact metrics by program
-							</CardDescription>
-						</CardHeader>
-						<CardContent className="h-[400px] flex items-center justify-center">
-							<div className="flex flex-col items-center gap-2 text-center">
-								<BarChart className="h-16 w-16 text-muted-foreground" />
-								<p className="text-sm text-muted-foreground">
-									Bar chart placeholder - In a real implementation, this would
-									be an interactive chart showing program metrics
-								</p>
-							</div>
-						</CardContent>
-					</Card>
-				</TabsContent>
-
-				<TabsContent value="events" className="space-y-6">
-					<Card>
-						<CardHeader>
-							<CardTitle>Event Attendance</CardTitle>
-							<CardDescription>
-								Attendance and engagement metrics by event
-							</CardDescription>
-						</CardHeader>
-						<CardContent className="h-[400px] flex items-center justify-center">
-							<div className="flex flex-col items-center gap-2 text-center">
-								<Calendar className="h-16 w-16 text-muted-foreground" />
-								<p className="text-sm text-muted-foreground">
-									Calendar chart placeholder - In a real implementation, this
-									would be an interactive chart showing event metrics
-								</p>
-							</div>
-						</CardContent>
-					</Card>
-				</TabsContent>
-
-				<TabsContent value="volunteers" className="space-y-6">
-					<Card>
-						<CardHeader>
-							<CardTitle>Volunteer Engagement</CardTitle>
-							<CardDescription>
-								Volunteer hours and participation metrics
-							</CardDescription>
-						</CardHeader>
-						<CardContent className="h-[400px] flex items-center justify-center">
-							<div className="flex flex-col items-center gap-2 text-center">
-								<BarChart className="h-16 w-16 text-muted-foreground" />
-								<p className="text-sm text-muted-foreground">
-									Bar chart placeholder - In a real implementation, this would
-									be an interactive chart showing volunteer metrics
-								</p>
-							</div>
-						</CardContent>
-					</Card>
+					</PermissionGate>
 				</TabsContent>
 			</Tabs>
 		</div>

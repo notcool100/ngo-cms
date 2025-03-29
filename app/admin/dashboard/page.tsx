@@ -21,6 +21,8 @@ import {
 } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 import { AdminLoading } from "@/components/admin/loading";
+import { RoleBadge } from "@/components/admin/role-badge";
+import { PermissionGate } from "@/components/auth/permission-gate";
 
 interface DashboardStats {
 	totalDonations: number;
@@ -38,7 +40,7 @@ interface DashboardStats {
 }
 
 export default function AdminDashboard() {
-	const { status } = useSession();
+	const { data: session, status } = useSession();
 	const [isLoading, setIsLoading] = useState(true);
 	const [stats, setStats] = useState<DashboardStats>({
 		totalDonations: 0,
@@ -86,22 +88,36 @@ export default function AdminDashboard() {
 	return (
 		<div className="space-y-6">
 			<div className="flex items-center justify-between">
-				<h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+				<div>
+					<h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+					<div className="mt-1 flex items-center gap-2">
+						<p className="text-sm text-muted-foreground">
+							Welcome, {session?.user.name}
+						</p>
+						{session?.user.role && (
+							<RoleBadge role={session.user.role as any} />
+						)}
+					</div>
+				</div>
 				<div className="flex items-center gap-2">
 					<Button variant="outline" size="sm" onClick={fetchDashboardData}>
 						Refresh Data
 					</Button>
-					<Button variant="outline" size="sm">
-						<Download className="mr-2 h-4 w-4" />
-						Download Reports
-					</Button>
+					<PermissionGate permission="export:data">
+						<Button variant="outline" size="sm">
+							<Download className="mr-2 h-4 w-4" />
+							Download Reports
+						</Button>
+					</PermissionGate>
 				</div>
 			</div>
 			<Tabs defaultValue="overview">
 				<TabsList>
 					<TabsTrigger value="overview">Overview</TabsTrigger>
 					<TabsTrigger value="analytics">Analytics</TabsTrigger>
-					<TabsTrigger value="reports">Reports</TabsTrigger>
+					<PermissionGate permission="view:reports">
+						<TabsTrigger value="reports">Reports</TabsTrigger>
+					</PermissionGate>
 					<TabsTrigger value="notifications">Notifications</TabsTrigger>
 				</TabsList>
 				<TabsContent value="overview" className="space-y-4">
