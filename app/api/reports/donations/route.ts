@@ -9,13 +9,15 @@ import { checkPermission } from "@/lib/api-permissions";
 export async function GET(req: Request) {
 	try {
 		const session = await getServerSession(authOptions);
-
+		if (!session) {
+			console.log("No session found, user is not authenticated."); // Debugging log
+			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+		}
 		// Check if user has permission to download reports
-		const permissionCheck = await checkPermission(session, "download:reports");
-		if (!permissionCheck.success) {
+		const permissionCheck = await checkPermission("download:reports");
+		if (!permissionCheck.hasPermission) {
 			return permissionCheck.response;
 		}
-
 		// Parse query parameters
 		const url = new URL(req.url);
 		const format = url.searchParams.get("format") || "json";

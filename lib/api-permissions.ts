@@ -23,6 +23,7 @@ export async function checkPermission(permission: Permission) {
 	}
 
 	return {
+		success: true,
 		hasPermission: true,
 		session,
 		user: session.user,
