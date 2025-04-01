@@ -1,136 +1,104 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
+import { stringify } from "csv-stringify/sync";
 
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
+import { checkPermission } from "@/lib/api-permissions";
 
 export async function GET(req: Request) {
 	try {
 		const session = await getServerSession(authOptions);
 
-		if (!session || session.user.role !== "ADMIN") {
-			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+		// Check if user has permission to download reports
+		const permissionCheck = await checkPermission(session, "download:reports");
+		if (!permissionCheck.success) {
+			return permissionCheck.response;
 		}
 
-		const { searchParams } = new URL(req.url);
-		const period = searchParams.get("period") || "month"; // week, month, quarter, year, all
+		// Parse query parameters
+		const url = new URL(req.url);
+		const format = url.searchParams.get("format") || "json";
+		const startDate = url.searchParams.get("startDate")
+			? new Date(url.searchParams.get("startDate") as string)
+			: new Date(new Date().getFullYear(), 0, 1); // Default to start of year
+		const endDate = url.searchParams.get("endDate")
+			? new Date(url.searchParams.get("endDate") as string)
+			: new Date(); // Default to today
 
-		// Calculate date range based on period
-		const now = new Date();
-		let startDate = new Date(now);
-
-		switch (period) {
-			case "week":
-				startDate.setDate(now.getDate() - 7);
-				break;
-			case "month":
-				startDate.setMonth(now.getMonth() - 1);
-				break;
-			case "quarter":
-				startDate.setMonth(now.getMonth() - 3);
-				break;
-			case "year":
-				startDate.setFullYear(now.getFullYear() - 1);
-				break;
-			case "all":
-				startDate = new Date(0); // Beginning of time
-				break;
-		}
-
-		// Get total donations by status
-		const donationsByStatus = await prisma.donation.groupBy({
-			by: ["status"],
-			_sum: {
-				amount: true,
-			},
-			_count: true,
+		// Query donations
+		const donations = await prisma.donation.findMany({
 			where: {
 				createdAt: {
 					gte: startDate,
+					lte: endDate,
+				},
+			},
+			orderBy: {
+				createdAt: "desc",
+			},
+			select: {
+				id: true,
+				name: true,
+				email: true,
+				amount: true,
+				currency: true,
+				status: true,
+				createdAt: true,
+				message: true,
+				program: {
+					select: {
+						title: true,
+					},
 				},
 			},
 		});
 
-		// Get total donations by type
-		const donationsByType = await prisma.donation.groupBy({
-			by: ["type"],
-			_sum: {
-				amount: true,
-			},
-			_count: true,
-			where: {
-				createdAt: {
-					gte: startDate,
-				},
-			},
-		});
-
-		// Get monthly donations for the period
-		const monthlyDonations = await prisma.$queryRaw`
-      SELECT 
-        DATE_TRUNC('month', "createdAt") as month,
-        SUM(amount) as total,
-        COUNT(*) as count
-      FROM "Donation"
-      WHERE "createdAt" >= ${startDate}
-      GROUP BY DATE_TRUNC('month', "createdAt")
-      ORDER BY month ASC
-    `;
-
-		// Get donations by program
-		const donationsByProgram = await prisma.donation.groupBy({
-			by: ["programId"],
-			_sum: {
-				amount: true,
-			},
-			_count: true,
-			where: {
-				createdAt: {
-					gte: startDate,
-				},
-				programId: {
-					not: null,
-				},
-			},
-		});
-
-		// Get program names for the donations by program
-		const programIds = donationsByProgram
-			.map((d) => d.programId)
-			.filter(Boolean) as string[];
-		const programs =
-			programIds.length > 0
-				? await prisma.program.findMany({
-						where: {
-							id: {
-								in: programIds,
-							},
-						},
-						select: {
-							id: true,
-							title: true,
-						},
-					})
-				: [];
-
-		// Map program names to donations by program
-		const donationsByProgramWithNames = donationsByProgram.map((d) => ({
-			...d,
-			programName:
-				programs.find((p) => p.id === d.programId)?.title || "Unknown Program",
+		// Format data for export
+		const formattedDonations = donations.map((donation) => ({
+			id: donation.id,
+			name: donation.name,
+			email: donation.email,
+			amount: donation.amount,
+			currency: donation.currency,
+			status: donation.status,
+			date: donation.createdAt.toISOString().split("T")[0],
+			time: donation.createdAt.toISOString().split("T")[1].split(".")[0],
+			message: donation.message || "",
+			program: donation.program?.title || "General Donation",
 		}));
 
-		return NextResponse.json({
-			donationsByStatus,
-			donationsByType,
-			monthlyDonations,
-			donationsByProgram: donationsByProgramWithNames,
-			period,
-		});
+		// Return data in requested format
+		if (format === "csv") {
+			const csv = stringify(formattedDonations, {
+				header: true,
+				columns: [
+					"id",
+					"name",
+					"email",
+					"amount",
+					"currency",
+					"status",
+					"date",
+					"time",
+					"message",
+					"program",
+				],
+			});
+
+			return new NextResponse(csv, {
+				headers: {
+					"Content-Type": "text/csv",
+					"Content-Disposition": `attachment; filename="donations-report-${new Date().toISOString().split("T")[0]}.csv"`,
+				},
+			});
+		}
+
+		return NextResponse.json(formattedDonations);
 	} catch (error) {
 		console.error("Error generating donations report:", error);
 		return NextResponse.json(
-			{ error: "Failed to generate donations report" },
+			{ error: "Failed to generate report" },
 			{ status: 500 },
 		);
 	}

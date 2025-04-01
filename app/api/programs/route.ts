@@ -31,7 +31,7 @@ export async function GET(request: Request) {
 
 		const where: any = {};
 
-		if (active !== null) {
+		if (searchParams.has("active")) {
 			where.active = active;
 		}
 

@@ -1,8 +1,8 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { usePermissions } from "@/hooks/use-permissions";
-import type { Permission } from "@/lib/permissions";
+import { usePermissions } from "hooks/use-permissions";
+import type { Permission } from "lib/permissions";
 
 interface PermissionGateProps {
 	permission: Permission;

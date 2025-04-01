@@ -47,7 +47,8 @@ export default function ContentManagementPage() {
 			}
 
 			const data = await response.json();
-			setPrograms(data.programs || []);
+			console.log(data, " this is data");
+			setPrograms(data || []);
 			setTotalPages(data.totalPages || 1);
 		} catch (error) {
 			console.error("Error fetching programs:", error);

@@ -1,55 +1,50 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
+import { stringify } from "csv-stringify/sync";
 
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
+import { checkPermission } from "@/lib/api-permissions";
 
 export async function GET(req: Request) {
 	try {
 		const session = await getServerSession(authOptions);
 
-		if (!session || session.user.role !== "ADMIN") {
-			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+		// Check if user has permission to download reports
+		const permissionCheck = await checkPermission(session, "download:reports");
+		if (!permissionCheck.success) {
+			return permissionCheck.response;
 		}
 
-		const { searchParams } = new URL(req.url);
-		const period = searchParams.get("period") || "month"; // week, month, quarter, year, all
+		// Parse query parameters
+		const url = new URL(req.url);
+		const format = url.searchParams.get("format") || "json";
+		const startDate = url.searchParams.get("startDate")
+			? new Date(url.searchParams.get("startDate") as string)
+			: new Date(new Date().getFullYear(), 0, 1); // Default to start of year
+		const endDate = url.searchParams.get("endDate")
+			? new Date(url.searchParams.get("endDate") as string)
+			: new Date(new Date().getFullYear(), 11, 31); // Default to end of year
 
-		// Calculate date range based on period
-		const now = new Date();
-		let startDate = new Date(now);
-
-		switch (period) {
-			case "week":
-				startDate.setDate(now.getDate() - 7);
-				break;
-			case "month":
-				startDate.setMonth(now.getMonth() - 1);
-				break;
-			case "quarter":
-				startDate.setMonth(now.getMonth() - 3);
-				break;
-			case "year":
-				startDate.setFullYear(now.getFullYear() - 1);
-				break;
-			case "all":
-				startDate = new Date(0); // Beginning of time
-				break;
-		}
-
-		// Get upcoming events
-		const upcomingEvents = await prisma.event.findMany({
+		// Query events
+		const events = await prisma.event.findMany({
 			where: {
 				startDate: {
-					gte: now,
+					gte: startDate,
+					lte: endDate,
 				},
-				published: true,
 			},
 			orderBy: {
 				startDate: "asc",
 			},
-			take: 5,
-			include: {
+			select: {
+				id: true,
+				title: true,
+				description: true,
+				startDate: true,
+				endDate: true,
+				location: true,
+				published: true,
 				_count: {
 					select: {
 						attendees: true,
@@ -58,61 +53,51 @@ export async function GET(req: Request) {
 			},
 		});
 
-		// Get past events
-		const pastEvents = await prisma.event.findMany({
-			where: {
-				startDate: {
-					lt: now,
-					gte: startDate,
-				},
-			},
-			orderBy: {
-				startDate: "desc",
-			},
-			include: {
-				_count: {
-					select: {
-						attendees: true,
-					},
-				},
-			},
-		});
+		// Format data for export
+		const formattedEvents = events.map((event) => ({
+			id: event.id,
+			title: event.title,
+			description: event.description || "",
+			startDate: event.startDate.toISOString().split("T")[0],
+			startTime: event.startDate.toISOString().split("T")[1].split(".")[0],
+			endDate: event.endDate?.toISOString().split("T")[0] || "",
+			endTime: event.endDate?.toISOString().split("T")[1].split(".")[0] || "",
+			location: event.location || "",
+			published: event.published ? "Yes" : "No",
+			attendees: event._count.attendees,
+		}));
 
-		// Get attendee statistics
-		const attendeeStats = await prisma.attendee.groupBy({
-			by: ["status"],
-			_count: true,
-			where: {
-				event: {
-					startDate: {
-						gte: startDate,
-					},
+		// Return data in requested format
+		if (format === "csv") {
+			const csv = stringify(formattedEvents, {
+				header: true,
+				columns: [
+					"id",
+					"title",
+					"description",
+					"startDate",
+					"startTime",
+					"endDate",
+					"endTime",
+					"location",
+					"published",
+					"attendees",
+				],
+			});
+
+			return new NextResponse(csv, {
+				headers: {
+					"Content-Type": "text/csv",
+					"Content-Disposition": `attachment; filename="events-report-${new Date().toISOString().split("T")[0]}.csv"`,
 				},
-			},
-		});
+			});
+		}
 
-		// Get monthly event counts
-		const monthlyEvents = await prisma.$queryRaw`
-      SELECT 
-        DATE_TRUNC('month', "startDate") as month,
-        COUNT(*) as count
-      FROM "Event"
-      WHERE "startDate" >= ${startDate}
-      GROUP BY DATE_TRUNC('month', "startDate")
-      ORDER BY month ASC
-    `;
-
-		return NextResponse.json({
-			upcomingEvents,
-			pastEvents,
-			attendeeStats,
-			monthlyEvents,
-			period,
-		});
+		return NextResponse.json(formattedEvents);
 	} catch (error) {
 		console.error("Error generating events report:", error);
 		return NextResponse.json(
-			{ error: "Failed to generate events report" },
+			{ error: "Failed to generate report" },
 			{ status: 500 },
 		);
 	}

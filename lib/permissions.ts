@@ -1,89 +1,102 @@
-// Define permission types
-export type Permission =
-	| "manage:users"
-	| "manage:content"
-	| "manage:donations"
-	| "manage:events"
-	| "manage:messages"
-	| "view:reports"
-	| "manage:settings"
-	| "edit:content"
-	| "view:admin"
-	| "approve:content"
-	| "delete:content"
-	| "export:data";
+export const PERMISSIONS = {
+	"view:dashboard": ["ADMIN", "EDITOR"],
+	"download:reports": ["ADMIN"],
+	"manage:users": ["ADMIN"],
+	"manage:content": ["ADMIN", "EDITOR"],
+	"edit:content": ["ADMIN", "EDITOR"],
+	"delete:content": ["ADMIN"],
+	"approve:content": ["ADMIN"],
+	"manage:settings": ["ADMIN"],
+	"manage:donations": ["ADMIN"],
+	"manage:events": ["ADMIN"],
+	"manage:messages": ["ADMIN"],
+	"view:volunteers": ["ADMIN"],
+	"manage:volunteers": ["ADMIN"],
+};
 
-// Define role types from the schema
-export type Role = "USER" | "EDITOR" | "ADMIN";
-
-// Map roles to permissions
-const rolePermissions: Record<Role, Permission[]> = {
-	USER: [],
-	EDITOR: ["view:admin", "edit:content", "manage:content", "view:reports"],
+export const ROLE_PERMISSIONS = {
 	ADMIN: [
-		"view:admin",
+		"view:dashboard",
+		"download:reports",
 		"manage:users",
 		"manage:content",
+		"edit:content",
+		"delete:content",
+		"approve:content",
+		"manage:settings",
 		"manage:donations",
 		"manage:events",
 		"manage:messages",
-		"view:reports",
-		"manage:settings",
-		"edit:content",
-		"approve:content",
-		"delete:content",
-		"export:data",
+		"view:volunteers",
+		"manage:volunteers",
 	],
+	EDITOR: [
+		"view:dashboard",
+		"manage:content",
+		"edit:content",
+		"view:volunteers",
+		"view:donations",
+		"view:messages",
+	],
+	USER: [],
 };
 
-// Check if a role has a specific permission
+export type Role = "ADMIN" | "EDITOR" | "USER";
+
+export type Permission =
+	| "view:dashboard"
+	| "download:reports"
+	| "manage:users"
+	| "manage:content"
+	| "edit:content"
+	| "delete:content"
+	| "approve:content"
+	| "manage:settings"
+	| "manage:donations"
+	| "manage:events"
+	| "manage:messages"
+	| "view:volunteers"
+	| "manage:volunteers";
+
 export function hasPermission(
-	role: Role | undefined | null,
-	permission: Permission,
+	role: string | undefined,
+	permission: string,
 ): boolean {
 	if (!role) return false;
-	return rolePermissions[role]?.includes(permission) || false;
+
+	const rolePermissions =
+		ROLE_PERMISSIONS[role as keyof typeof ROLE_PERMISSIONS] || [];
+	return rolePermissions.includes(permission);
 }
 
-// Get all permissions for a role
-export function getPermissionsForRole(
-	role: Role | undefined | null,
-): Permission[] {
-	if (!role) return [];
-	return rolePermissions[role] || [];
+export function canAccessAdmin(role: string | undefined): boolean {
+	return role === "ADMIN" || role === "EDITOR";
 }
 
-// Check if user can access admin area
-export function canAccessAdmin(role: Role | undefined | null): boolean {
-	return hasPermission(role, "view:admin");
+export function canManageUsers(role: string | undefined): boolean {
+	return role === "ADMIN";
 }
 
-// Check if user can manage users
-export function canManageUsers(role: Role | undefined | null): boolean {
-	return hasPermission(role, "manage:users");
+export function canManageContent(role: string | undefined): boolean {
+	return role === "ADMIN" || role === "EDITOR";
 }
 
-// Check if user can manage content
-export function canManageContent(role: Role | undefined | null): boolean {
-	return hasPermission(role, "manage:content");
+export function canEditContent(role: string | undefined): boolean {
+	return role === "ADMIN" || role === "EDITOR";
 }
 
-// Check if user can edit content
-export function canEditContent(role: Role | undefined | null): boolean {
-	return hasPermission(role, "edit:content");
+export function canDeleteContent(role: string | undefined): boolean {
+	return role === "ADMIN";
 }
 
-// Check if user can delete content
-export function canDeleteContent(role: Role | undefined | null): boolean {
-	return hasPermission(role, "delete:content");
+export function canApproveContent(role: string | undefined): boolean {
+	return role === "ADMIN";
 }
 
-// Check if user can approve content
-export function canApproveContent(role: Role | undefined | null): boolean {
-	return hasPermission(role, "approve:content");
+export function canExportData(role: string | undefined): boolean {
+	return role === "ADMIN";
 }
 
-// Check if user can export data
-export function canExportData(role: Role | undefined | null): boolean {
-	return hasPermission(role, "export:data");
+export function getPermissionsForRole(role: string): string[] {
+	return ROLE_PERMISSIONS[role as keyof typeof ROLE_PERMISSIONS] || [];
 }
