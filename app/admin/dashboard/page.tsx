@@ -32,11 +32,11 @@ import {
 	Calendar,
 	FileText,
 } from "lucide-react";
-import { usePermissions } from "hooks/use-permissions";
-import { PermissionGate } from "components/auth/permission-gate";
-import { FadeIn } from "components/animations/fade-in";
-import { StaggerChildren } from "components/animations/stagger-children";
-import { StaggerItem } from "components/animations/stagger-item";
+import { usePermissions } from "@/hooks/use-permissions";
+import { PermissionGate } from "@/components/auth/permission-gate";
+import { FadeIn } from "@/components/animations/fade-in";
+import { StaggerChildren } from "@/components/animations/stagger-children";
+import { StaggerItem } from "@/components/animations/stagger-item";
 
 // Dashboard types
 interface DashboardStats {

@@ -12,7 +12,7 @@ import {
 	canExportData,
 	type Permission,
 	type Role,
-} from "lib/permissions";
+} from "@/lib/permissions";
 
 export function usePermissions() {
 	const { data: session } = useSession();

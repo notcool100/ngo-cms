@@ -1,15 +1,20 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 
-import { authOptions } from "lib/auth";
-import prisma from "lib/prisma";
-import { checkPermission } from "lib/api-permissions";
+import { authOptions } from "@/lib/auth";
+import prisma from "@/lib/prisma";
+import { checkPermission } from "@/lib/api-permissions";
 
 export async function GET(req: Request) {
 	try {
 		console.log("GET request received"); // Debugging log
 		const session = await getServerSession(authOptions);
 		console.log("Session:", session); // Debugging: Log the session
+
+		if (!session) {
+			console.log("No session found, user is not authenticated."); // Debugging log
+			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+		}
 
 		// Check if user has permission to view dashboard
 		const permissionCheck = await checkPermission("view:dashboard");
