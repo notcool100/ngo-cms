@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prisma:seed": "ts-node --project tsconfig.seed.json ./lib/db-seed.ts"
+    "prisma:seed": "ts-node --project tsconfig.seed.json ./lib/aboutus-seed.ts"
   },
   "dependencies": {
     "@auth/core": "0.34.2",

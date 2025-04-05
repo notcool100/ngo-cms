@@ -129,6 +129,43 @@ model ProgramCategory {
   updatedAt   DateTime  @updatedAt
   programs    Program[]
 }
+model AboutUs {
+  id        Int     @id @default(autoincrement())
+  mission   String
+  vision    String
+  history   String
+  values    Json
+  team      Json
+  impact    Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AboutSection {
+  id        Int     @id @default(autoincrement())
+  title     String
+  subtitle  String?
+  content   String
+  image     String?
+  order     Int
+  type      String  // mission, vision, history, team, etc.
+  active    Boolean @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model TeamMember {
+  id          Int     @id @default(autoincrement())
+  name        String
+  position    String
+  bio         String
+  image       String?
+  socialLinks Json?
+  order       Int
+  active      Boolean @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
 
 model Donation {
   id            String         @id @default(cuid())

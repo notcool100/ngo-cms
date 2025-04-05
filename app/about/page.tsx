@@ -1,375 +1,562 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Image from "next/image";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Link from "next/link";
 import { motion } from "framer-motion";
-import { FadeIn } from "@/components/animations/fade-in";
-import { ScaleIn } from "@/components/animations/scale-in";
-import { StaggerChildren } from "@/components/animations/stagger-children";
-import { StaggerItem } from "@/components/animations/stagger-item";
-import { AnimatedText } from "@/components/animations/animated-text";
-import { HoverCard } from "@/components/animations/hover-card";
-import { ParallaxScroll } from "@/components/animations/parallax-scroll";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+// Types for the about page data
+interface TeamMember {
+	id: number;
+	name: string;
+	position: string;
+	bio: string;
+	image: string;
+	socialLinks?: {
+		twitter?: string;
+		linkedin?: string;
+		instagram?: string;
+	};
+	order: number;
+	active: boolean;
+}
+
+interface AboutSection {
+	id: number;
+	title: string;
+	subtitle?: string;
+	content: string;
+	image?: string;
+	order: number;
+	type: string;
+	active: boolean;
+}
+
+interface AboutPageData {
+	sections: AboutSection[];
+	team: TeamMember[];
+}
 
 export default function AboutPage() {
+	const [aboutData, setAboutData] = useState<AboutPageData | null>(null);
+	const [isLoading, setIsLoading] = useState(true);
+
+	useEffect(() => {
+		const fetchAboutData = async () => {
+			try {
+				const response = await fetch("/api/about");
+				if (!response.ok) {
+					throw new Error("Failed to fetch about data");
+				}
+				const data = await response.json();
+				setAboutData(data);
+			} catch (error) {
+				console.error("Error fetching about data:", error);
+			} finally {
+				setIsLoading(false);
+			}
+		};
+
+		fetchAboutData();
+	}, []);
+
+	// Helper function to get sections by type
+	const getSectionsByType = (type: string) => {
+		if (!aboutData?.sections) return [];
+		return aboutData.sections.filter((section) => section.type === type);
+	};
+
+	// Get specific sections
+	const missionSections = getSectionsByType("mission");
+	const visionSections = getSectionsByType("vision");
+	const historySections = getSectionsByType("history");
+	const valuesSections = getSectionsByType("values");
+	const impactSections = getSectionsByType("impact");
+
+	const renderSkeleton = () => (
+		<div className="animate-pulse">
+			<div className="h-8 bg-gray-200 rounded w-1/3 mb-6"></div>
+			<div className="h-4 bg-gray-200 rounded mb-2 w-full"></div>
+			<div className="h-4 bg-gray-200 rounded mb-2 w-full"></div>
+			<div className="h-4 bg-gray-200 rounded mb-2 w-5/6"></div>
+			<div className="h-4 bg-gray-200 rounded w-4/6"></div>
+		</div>
+	);
+
 	return (
 		<div className="flex flex-col">
 			{/* Hero Section */}
 			<section className="relative">
-				<div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-primary/70 z-10" />
-				<ParallaxScroll speed={0.3} className="relative h-[40vh] w-full">
-					<Image
-						src="/placeholder.svg?height=600&width=1600"
-						alt="About Empower Together"
-						fill
-						className="object-cover"
-						priority
-					/>
-				</ParallaxScroll>
-				<div className="absolute inset-0 z-20 flex items-center justify-center">
-					<div className="container text-center text-white">
-						<AnimatedText
-							text="About Us"
-							className="text-4xl font-bold tracking-tighter sm:text-5xl"
+				<div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-primary/70 mix-blend-multiply" />
+				<div className="relative py-24 flex items-center">
+					<div className="absolute inset-0 z-0">
+						<Image
+							src="/placeholder.svg?height=400&width=1920"
+							alt="About Us"
+							fill
+							className="object-cover"
+							priority
 						/>
-						<FadeIn
-							direction="up"
-							delay={0.3}
-							className="mx-auto mt-4 max-w-[700px] text-lg text-white/90"
-						>
-							<p>
-								Learn about our mission, vision, and the team behind Empower
-								Together.
-							</p>
-						</FadeIn>
+					</div>
+					<div className="container relative z-10">
+						<div className="max-w-2xl text-white">
+							<motion.h1
+								initial={{ opacity: 0, y: 20 }}
+								animate={{ opacity: 1, y: 0 }}
+								transition={{ duration: 0.5 }}
+								className="text-4xl md:text-5xl font-bold mb-4"
+							>
+								About Us
+							</motion.h1>
+							<motion.p
+								initial={{ opacity: 0, y: 20 }}
+								animate={{ opacity: 1, y: 0 }}
+								transition={{ duration: 0.5, delay: 0.2 }}
+								className="text-lg md:text-xl"
+							>
+								Learn about our mission, vision, and the team behind our work.
+							</motion.p>
+						</div>
 					</div>
 				</div>
 			</section>
 
-			{/* Our Story */}
-			<section className="py-16 md:py-24">
+			{/* Mission & Vision Section */}
+			<section className="py-16 bg-white">
 				<div className="container">
-					<div className="grid gap-12 md:grid-cols-2 items-center">
-						<FadeIn direction="right">
-							<div>
-								<Badge className="mb-4">Our Story</Badge>
-								<h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">
-									How We Started
-								</h2>
-								<div className="mt-4 space-y-4 text-muted-foreground">
-									<p>
-										Empower Together was founded in 2010 by a group of
-										passionate advocates for women's rights who recognized the
-										need for a comprehensive approach to women's empowerment.
-									</p>
-									<p>
-										What began as a small grassroots initiative has grown into a
-										global organization with programs in over 20 countries,
-										impacting the lives of thousands of women and girls.
-									</p>
-									<p>
-										Our journey has been guided by the belief that when women
-										are empowered, entire communities thrive. Through education,
-										economic opportunities, and leadership development, we've
-										been working to create a world where every woman can reach
-										her full potential.
+					<Tabs defaultValue="mission" className="w-full">
+						<TabsList className="grid w-full grid-cols-2 mb-8">
+							<TabsTrigger value="mission">Our Mission</TabsTrigger>
+							<TabsTrigger value="vision">Our Vision</TabsTrigger>
+						</TabsList>
+						<TabsContent value="mission">
+							{isLoading ? (
+								renderSkeleton()
+							) : missionSections.length > 0 ? (
+								<div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+									<div>
+										<h2 className="text-3xl font-bold mb-6">
+											{missionSections[0].title}
+										</h2>
+										<div
+											className="prose max-w-none"
+											dangerouslySetInnerHTML={{
+												__html: missionSections[0].content,
+											}}
+										/>
+									</div>
+									<div className="relative h-[400px] rounded-lg overflow-hidden">
+										<Image
+											src={
+												missionSections[0].image ||
+												"/placeholder.svg?height=400&width=600"
+											}
+											alt="Our mission"
+											fill
+											className="object-cover"
+										/>
+									</div>
+								</div>
+							) : (
+								<div className="text-center py-12">
+									<p className="text-gray-500">
+										Mission information not available.
 									</p>
 								</div>
-							</div>
-						</FadeIn>
-						<FadeIn direction="left">
-							<div className="relative h-[400px] rounded-lg overflow-hidden">
-								<motion.div
-									whileHover={{ scale: 1.05 }}
-									transition={{ duration: 0.5 }}
-									className="h-full w-full"
-								>
-									<Image
-										src="/placeholder.svg?height=800&width=600"
-										alt="Our story"
-										fill
-										className="object-cover"
-									/>
-								</motion.div>
-							</div>
-						</FadeIn>
-					</div>
-				</div>
-			</section>
-
-			{/* Mission & Vision */}
-			<section className="bg-muted/40 py-16 md:py-24">
-				<div className="container">
-					<Tabs defaultValue="mission" className="mx-auto max-w-[800px]">
-						<FadeIn className="mb-8 text-center">
-							<TabsList className="grid w-full max-w-md mx-auto grid-cols-2">
-								<TabsTrigger value="mission">Our Mission</TabsTrigger>
-								<TabsTrigger value="vision">Our Vision</TabsTrigger>
-							</TabsList>
-						</FadeIn>
-						<TabsContent value="mission" className="text-center space-y-4">
-							<ScaleIn>
-								<h3 className="text-2xl font-bold">Our Mission</h3>
-								<p className="text-muted-foreground">
-									Empower Together is dedicated to advancing women's rights,
-									promoting gender equality, and creating opportunities for
-									women to achieve their full potential through education,
-									economic empowerment, and leadership development.
-								</p>
-							</ScaleIn>
+							)}
 						</TabsContent>
-						<TabsContent value="vision" className="text-center space-y-4">
-							<ScaleIn>
-								<h3 className="text-2xl font-bold">Our Vision</h3>
-								<p className="text-muted-foreground">
-									We envision a world where all women and girls have equal
-									access to resources and opportunities, are free from
-									discrimination and violence, and are able to fully participate
-									in all aspects of social, economic, and political life.
-								</p>
-							</ScaleIn>
+						<TabsContent value="vision">
+							{isLoading ? (
+								renderSkeleton()
+							) : visionSections.length > 0 ? (
+								<div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+									<div className="relative h-[400px] rounded-lg overflow-hidden md:order-first">
+										<Image
+											src={
+												visionSections[0].image ||
+												"/placeholder.svg?height=400&width=600"
+											}
+											alt="Our vision"
+											fill
+											className="object-cover"
+										/>
+									</div>
+									<div>
+										<h2 className="text-3xl font-bold mb-6">
+											{visionSections[0].title}
+										</h2>
+										<div
+											className="prose max-w-none"
+											dangerouslySetInnerHTML={{
+												__html: visionSections[0].content,
+											}}
+										/>
+									</div>
+								</div>
+							) : (
+								<div className="text-center py-12">
+									<p className="text-gray-500">
+										Vision information not available.
+									</p>
+								</div>
+							)}
 						</TabsContent>
 					</Tabs>
 				</div>
 			</section>
 
-			{/* Our Values */}
-			<section className="py-16 md:py-24">
+			{/* History Section */}
+			<section className="py-16 bg-gray-50">
 				<div className="container">
-					<div className="mb-12 text-center">
-						<FadeIn>
-							<Badge className="mb-4">Our Values</Badge>
-						</FadeIn>
-						<FadeIn direction="up" delay={0.2}>
-							<h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">
-								What We Stand For
-							</h2>
-						</FadeIn>
-						<FadeIn
-							direction="up"
-							delay={0.4}
-							className="mx-auto mt-4 max-w-[700px] text-muted-foreground"
-						>
-							<p>
-								Our core values guide everything we do and shape our approach to
-								women's empowerment.
-							</p>
-						</FadeIn>
+					<div className="text-center mb-12">
+						<h2 className="text-3xl font-bold mb-4">Our History</h2>
+						<p className="text-gray-600 max-w-2xl mx-auto">
+							The journey that brought us to where we are today.
+						</p>
 					</div>
-					<StaggerChildren
-						className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
-						staggerDelay={0.1}
-					>
-						<StaggerItem>
-							<HoverCard>
-								<Card>
-									<CardContent className="pt-6">
-										<h3 className="text-xl font-bold">Equality</h3>
-										<p className="mt-2 text-sm text-muted-foreground">
-											We believe in the inherent equality of all people and work
-											to eliminate disparities based on gender, race, class, or
-											any other factor.
-										</p>
-									</CardContent>
-								</Card>
-							</HoverCard>
-						</StaggerItem>
-						<StaggerItem>
-							<HoverCard>
-								<Card>
-									<CardContent className="pt-6">
-										<h3 className="text-xl font-bold">Empowerment</h3>
-										<p className="mt-2 text-sm text-muted-foreground">
-											We are committed to helping women develop the confidence,
-											skills, and resources they need to take control of their
-											lives and make their own decisions.
-										</p>
-									</CardContent>
-								</Card>
-							</HoverCard>
-						</StaggerItem>
-						<StaggerItem>
-							<HoverCard>
-								<Card>
-									<CardContent className="pt-6">
-										<h3 className="text-xl font-bold">Inclusivity</h3>
-										<p className="mt-2 text-sm text-muted-foreground">
-											We embrace diversity and ensure that our programs are
-											accessible and responsive to the needs of women from all
-											backgrounds and communities.
-										</p>
-									</CardContent>
-								</Card>
-							</HoverCard>
-						</StaggerItem>
-						<StaggerItem>
-							<HoverCard>
-								<Card>
-									<CardContent className="pt-6">
-										<h3 className="text-xl font-bold">Integrity</h3>
-										<p className="mt-2 text-sm text-muted-foreground">
-											We operate with transparency, accountability, and the
-											highest ethical standards in all our work.
-										</p>
-									</CardContent>
-								</Card>
-							</HoverCard>
-						</StaggerItem>
-						<StaggerItem>
-							<HoverCard>
-								<Card>
-									<CardContent className="pt-6">
-										<h3 className="text-xl font-bold">Collaboration</h3>
-										<p className="mt-2 text-sm text-muted-foreground">
-											We believe in the power of partnership and work closely
-											with communities, organizations, and governments to
-											achieve our goals.
-										</p>
-									</CardContent>
-								</Card>
-							</HoverCard>
-						</StaggerItem>
-					</StaggerChildren>
+
+					{isLoading ? (
+						<div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+							{[1, 2, 3].map((i) => (
+								<div key={i} className="animate-pulse">
+									<div className="h-6 bg-gray-200 rounded mb-4 w-1/2"></div>
+									<div className="h-4 bg-gray-200 rounded mb-2 w-full"></div>
+									<div className="h-4 bg-gray-200 rounded mb-2 w-full"></div>
+									<div className="h-4 bg-gray-200 rounded w-3/4"></div>
+								</div>
+							))}
+						</div>
+					) : historySections.length > 0 ? (
+						<div className="space-y-12">
+							{historySections.map((section, index) => (
+								<motion.div
+									key={section.id}
+									initial={{ opacity: 0, y: 20 }}
+									whileInView={{ opacity: 1, y: 0 }}
+									transition={{ duration: 0.5, delay: index * 0.1 }}
+									viewport={{ once: true }}
+									className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center"
+								>
+									<div className={index % 2 === 0 ? "" : "md:order-last"}>
+										<h3 className="text-2xl font-bold mb-4">{section.title}</h3>
+										{section.subtitle && (
+											<p className="text-primary font-medium mb-4">
+												{section.subtitle}
+											</p>
+										)}
+										<div
+											className="prose max-w-none"
+											dangerouslySetInnerHTML={{ __html: section.content }}
+										/>
+									</div>
+									<div className="relative h-[300px] rounded-lg overflow-hidden">
+										<Image
+											src={
+												section.image ||
+												`/placeholder.svg?height=300&width=500&text=History+${index + 1}`
+											}
+											alt={section.title}
+											fill
+											className="object-cover"
+										/>
+									</div>
+								</motion.div>
+							))}
+						</div>
+					) : (
+						<div className="text-center py-12">
+							<p className="text-gray-500">
+								History information not available.
+							</p>
+						</div>
+					)}
 				</div>
 			</section>
 
-			{/* Our Team */}
-			<section className="bg-muted/40 py-16 md:py-24">
+			{/* Values Section */}
+			<section className="py-16 bg-white">
 				<div className="container">
-					<div className="mb-12 text-center">
-						<FadeIn>
-							<Badge className="mb-4">Our Team</Badge>
-						</FadeIn>
-						<FadeIn direction="up" delay={0.2}>
-							<h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">
-								Meet Our Leadership
-							</h2>
-						</FadeIn>
-						<FadeIn
-							direction="up"
-							delay={0.4}
-							className="mx-auto mt-4 max-w-[700px] text-muted-foreground"
-						>
-							<p>
-								Our dedicated team brings diverse expertise and a shared
-								commitment to advancing women's empowerment.
-							</p>
-						</FadeIn>
+					<div className="text-center mb-12">
+						<h2 className="text-3xl font-bold mb-4">Our Values</h2>
+						<p className="text-gray-600 max-w-2xl mx-auto">
+							The principles that guide our work and decision-making.
+						</p>
 					</div>
-					<StaggerChildren
-						className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4"
-						staggerDelay={0.15}
-					>
-						{[
-							{
-								name: "Sarah Johnson",
-								role: "Executive Director",
-								bio: "With over 15 years of experience in nonprofit leadership, Sarah brings vision and strategic direction to Empower Together.",
-								image: "/placeholder.svg?height=400&width=400",
-							},
-							{
-								name: "Maria Rodriguez",
-								role: "Programs Director",
-								bio: "Maria oversees the development and implementation of our programs, ensuring they effectively address the needs of the women we serve.",
-								image: "/placeholder.svg?height=400&width=400",
-							},
-							{
-								name: "David Chen",
-								role: "Finance Director",
-								bio: "David manages our financial operations, ensuring transparency and accountability in all our financial activities.",
-								image: "/placeholder.svg?height=400&width=400",
-							},
-							{
-								name: "Aisha Patel",
-								role: "Partnerships Director",
-								bio: "Aisha builds and maintains relationships with our partners, donors, and other stakeholders to support our mission.",
-								image: "/placeholder.svg?height=400&width=400",
-							},
-						].map((member, index) => (
-							<StaggerItem key={index}>
-								<div className="flex flex-col items-center text-center">
-									<motion.div
-										className="relative h-40 w-40 overflow-hidden rounded-full"
-										whileHover={{ scale: 1.05 }}
-										transition={{ duration: 0.3 }}
-									>
+
+					{isLoading ? (
+						<div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+							{[1, 2, 3].map((i) => (
+								<div key={i} className="animate-pulse">
+									<div className="h-16 w-16 bg-gray-200 rounded-full mb-4 mx-auto"></div>
+									<div className="h-6 bg-gray-200 rounded mb-4 w-1/2 mx-auto"></div>
+									<div className="h-4 bg-gray-200 rounded mb-2 w-full"></div>
+									<div className="h-4 bg-gray-200 rounded w-3/4 mx-auto"></div>
+								</div>
+							))}
+						</div>
+					) : valuesSections.length > 0 ? (
+						<div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+							{valuesSections.map((value, index) => (
+								<motion.div
+									key={value.id}
+									initial={{ opacity: 0, y: 20 }}
+									whileInView={{ opacity: 1, y: 0 }}
+									transition={{ duration: 0.5, delay: index * 0.1 }}
+									viewport={{ once: true }}
+									className="text-center"
+								>
+									<div className="bg-primary/10 text-primary h-16 w-16 rounded-full flex items-center justify-center mx-auto mb-4">
+										<span className="text-2xl font-bold">{index + 1}</span>
+									</div>
+									<h3 className="text-xl font-bold mb-4">{value.title}</h3>
+									<div
+										className="prose max-w-none"
+										dangerouslySetInnerHTML={{ __html: value.content }}
+									/>
+								</motion.div>
+							))}
+						</div>
+					) : (
+						<div className="text-center py-12">
+							<p className="text-gray-500">Values information not available.</p>
+						</div>
+					)}
+				</div>
+			</section>
+
+			{/* Team Section */}
+			<section className="py-16 bg-gray-50">
+				<div className="container">
+					<div className="text-center mb-12">
+						<h2 className="text-3xl font-bold mb-4">Our Team</h2>
+						<p className="text-gray-600 max-w-2xl mx-auto">
+							Meet the dedicated individuals working to fulfill our mission.
+						</p>
+					</div>
+
+					{isLoading ? (
+						<div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
+							{[1, 2, 3, 4].map((i) => (
+								<div key={i} className="animate-pulse">
+									<div className="h-64 bg-gray-200 rounded-lg mb-4"></div>
+									<div className="h-6 bg-gray-200 rounded mb-2 w-3/4"></div>
+									<div className="h-4 bg-gray-200 rounded w-1/2"></div>
+								</div>
+							))}
+						</div>
+					) : aboutData?.team && aboutData.team.length > 0 ? (
+						<div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
+							{aboutData.team.map((member, index) => (
+								<motion.div
+									key={member.id}
+									initial={{ opacity: 0, y: 20 }}
+									whileInView={{ opacity: 1, y: 0 }}
+									transition={{ duration: 0.5, delay: index * 0.1 }}
+									viewport={{ once: true }}
+									whileHover={{ y: -10 }}
+									className="bg-white rounded-lg overflow-hidden shadow-sm"
+								>
+									<div className="relative h-64">
 										<Image
-											src={member.image || "/placeholder.svg"}
+											src={
+												member.image ||
+												`/placeholder.svg?height=300&width=300&text=${member.name}`
+											}
 											alt={member.name}
 											fill
 											className="object-cover"
 										/>
-									</motion.div>
-									<h3 className="mt-4 text-xl font-bold">{member.name}</h3>
-									<p className="text-sm font-medium text-primary">
-										{member.role}
-									</p>
-									<p className="mt-2 text-sm text-muted-foreground">
-										{member.bio}
-									</p>
-								</div>
-							</StaggerItem>
-						))}
-					</StaggerChildren>
+									</div>
+									<div className="p-6">
+										<h3 className="text-xl font-bold mb-1">{member.name}</h3>
+										<p className="text-primary mb-4">{member.position}</p>
+										<p className="text-gray-600 line-clamp-3">{member.bio}</p>
+
+										{member.socialLinks && (
+											<div className="flex mt-4 space-x-3">
+												{member.socialLinks.twitter && (
+													<a
+														href={member.socialLinks.twitter}
+														target="_blank"
+														rel="noopener noreferrer"
+														className="text-gray-500 hover:text-primary"
+													>
+														<svg
+															xmlns="http://www.w3.org/2000/svg"
+															width="20"
+															height="20"
+															viewBox="0 0 24 24"
+															fill="none"
+															stroke="currentColor"
+															strokeWidth="2"
+															strokeLinecap="round"
+															strokeLinejoin="round"
+														>
+															<path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>
+														</svg>
+													</a>
+												)}
+												{member.socialLinks.linkedin && (
+													<a
+														href={member.socialLinks.linkedin}
+														target="_blank"
+														rel="noopener noreferrer"
+														className="text-gray-500 hover:text-primary"
+													>
+														<svg
+															xmlns="http://www.w3.org/2000/svg"
+															width="20"
+															height="20"
+															viewBox="0 0 24 24"
+															fill="none"
+															stroke="currentColor"
+															strokeWidth="2"
+															strokeLinecap="round"
+															strokeLinejoin="round"
+														>
+															<path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+															<rect x="2" y="9" width="4" height="12"></rect>
+															<circle cx="4" cy="4" r="2"></circle>
+														</svg>
+													</a>
+												)}
+												{member.socialLinks.instagram && (
+													<a
+														href={member.socialLinks.instagram}
+														target="_blank"
+														rel="noopener noreferrer"
+														className="text-gray-500 hover:text-primary"
+													>
+														<svg
+															xmlns="http://www.w3.org/2000/svg"
+															width="20"
+															height="20"
+															viewBox="0 0 24 24"
+															fill="none"
+															stroke="currentColor"
+															strokeWidth="2"
+															strokeLinecap="round"
+															strokeLinejoin="round"
+														>
+															<rect
+																x="2"
+																y="2"
+																width="20"
+																height="20"
+																rx="5"
+																ry="5"
+															></rect>
+															<path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+															<line
+																x1="17.5"
+																y1="6.5"
+																x2="17.51"
+																y2="6.5"
+															></line>
+														</svg>
+													</a>
+												)}
+											</div>
+										)}
+									</div>
+								</motion.div>
+							))}
+						</div>
+					) : (
+						<div className="text-center py-12">
+							<p className="text-gray-500">Team information not available.</p>
+						</div>
+					)}
 				</div>
 			</section>
 
-			{/* Annual Reports */}
-			<section className="py-16 md:py-24">
+			{/* Impact Section */}
+			<section className="py-16 bg-primary text-white">
 				<div className="container">
-					<div className="mb-12 text-center">
-						<FadeIn>
-							<Badge className="mb-4">Transparency</Badge>
-						</FadeIn>
-						<FadeIn direction="up" delay={0.2}>
-							<h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">
-								Annual Reports
-							</h2>
-						</FadeIn>
-						<FadeIn
-							direction="up"
-							delay={0.4}
-							className="mx-auto mt-4 max-w-[700px] text-muted-foreground"
-						>
-							<p>
-								We are committed to transparency and accountability. View our
-								annual reports to learn about our impact and financial
-								stewardship.
-							</p>
-						</FadeIn>
+					<div className="text-center mb-12">
+						<h2 className="text-3xl font-bold mb-4">Our Impact</h2>
+						<p className="max-w-2xl mx-auto">
+							The difference we've made in the lives of women and communities.
+						</p>
 					</div>
-					<StaggerChildren
-						className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
-						staggerDelay={0.1}
-					>
-						{[2023, 2022, 2021].map((year) => (
-							<StaggerItem key={year}>
-								<HoverCard>
-									<Card>
-										<CardContent className="pt-6">
-											<h3 className="text-xl font-bold">
-												{year} Annual Report
-											</h3>
-											<p className="mt-2 text-sm text-muted-foreground">
-												Learn about our activities, impact, and financial
-												performance for the year {year}.
-											</p>
-											<motion.a
-												href={`/reports/${year}`}
-												className="mt-4 inline-block text-sm font-medium text-primary hover:underline"
-												whileHover={{ x: 5 }}
-												transition={{ duration: 0.2 }}
-											>
-												Download PDF
-											</motion.a>
-										</CardContent>
-									</Card>
-								</HoverCard>
-							</StaggerItem>
-						))}
-					</StaggerChildren>
+
+					{isLoading ? (
+						<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+							{[1, 2, 3, 4].map((i) => (
+								<div key={i} className="animate-pulse">
+									<div className="h-16 bg-white/20 rounded mb-4"></div>
+									<div className="h-4 bg-white/20 rounded w-1/2 mx-auto"></div>
+								</div>
+							))}
+						</div>
+					) : impactSections.length > 0 ? (
+						<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+							{impactSections.map((impact, index) => (
+								<motion.div
+									key={impact.id}
+									initial={{ opacity: 0, y: 20 }}
+									whileInView={{ opacity: 1, y: 0 }}
+									transition={{ duration: 0.5, delay: index * 0.1 }}
+									viewport={{ once: true }}
+									className="text-center"
+								>
+									<p className="text-4xl font-bold mb-2">{impact.title}</p>
+									<p>{impact.subtitle}</p>
+								</motion.div>
+							))}
+						</div>
+					) : (
+						<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+							<div className="text-center">
+								<p className="text-4xl font-bold mb-2">5,000+</p>
+								<p>Women Empowered</p>
+							</div>
+							<div className="text-center">
+								<p className="text-4xl font-bold mb-2">120+</p>
+								<p>Communities Served</p>
+							</div>
+							<div className="text-center">
+								<p className="text-4xl font-bold mb-2">50+</p>
+								<p>Active Programs</p>
+							</div>
+							<div className="text-center">
+								<p className="text-4xl font-bold mb-2">15+</p>
+								<p>Years of Impact</p>
+							</div>
+						</div>
+					)}
+				</div>
+			</section>
+
+			{/* Call to Action Section */}
+			<section className="py-16 bg-white">
+				<div className="container">
+					<div className="max-w-3xl mx-auto text-center">
+						<h2 className="text-3xl font-bold mb-6">Join Us in Our Mission</h2>
+						<p className="text-gray-600 text-lg mb-8">
+							There are many ways to get involved and support our work to
+							empower women and transform communities.
+						</p>
+						<div className="flex flex-wrap justify-center gap-4">
+							<Link href="/donate">
+								<Button size="lg" className="bg-primary hover:bg-primary/90">
+									Donate Now
+								</Button>
+							</Link>
+							<Link href="/volunteer">
+								<Button size="lg" variant="outline">
+									Volunteer With Us
+								</Button>
+							</Link>
+							<Link href="/contact">
+								<Button size="lg" variant="outline">
+									Contact Us
+								</Button>
+							</Link>
+						</div>
+					</div>
 				</div>
 			</section>
 		</div>
