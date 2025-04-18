@@ -108,6 +108,7 @@ export async function POST(req: Request) {
 
 		const body = await req.json();
 		const validatedData = eventSchema.parse(body);
+        console.log(validatedData," this is valid data");
 
 		// Check if slug already exists
 		const existingEvent = await prisma.event.findUnique({

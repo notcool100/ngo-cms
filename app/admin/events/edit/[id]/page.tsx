@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -62,7 +62,8 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-export default function EditEventPage({ params }: { params: { id: string } }) {
+export default function EditEventPage({ params }: { params:Promise< { id: string } >}) {
+const {id} = use(params);
 	const router = useRouter();
 	const [event, setEvent] = useState<any>(null);
 	const [isLoading, setIsLoading] = useState(false);
@@ -86,7 +87,7 @@ export default function EditEventPage({ params }: { params: { id: string } }) {
 	useEffect(() => {
 		const fetchEvent = async () => {
 			try {
-				const response = await fetch(`/api/events/${params.id}`);
+				const response = await fetch(`/api/events/${id}`);
 				if (!response.ok) {
 					throw new Error("Failed to fetch event");
 				}
@@ -123,7 +124,7 @@ export default function EditEventPage({ params }: { params: { id: string } }) {
 		};
 
 		fetchEvent();
-	}, [params.id, form]);
+	}, [id, form]);
 
 	const onSubmit = async (data: FormValues) => {
 		try {
