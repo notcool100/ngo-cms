@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect,use } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -61,7 +61,8 @@ type FormValues = z.infer<typeof formSchema>;
 
 export default function EditProgramPage({
 	params,
-}: { params: { id: string } }) {
+}: { params: Promise<{ id: string }> }) {
+	const { id } = use(params);
 	const router = useRouter();
 	const [program, setProgram] = useState<any>(null);
 	const [categories, setCategories] = useState<{ id: string; name: string }[]>(
@@ -89,7 +90,7 @@ export default function EditProgramPage({
 	useEffect(() => {
 		const fetchProgram = async () => {
 			try {
-				const response = await fetch(`/api/programs/${params.id}`);
+				const response = await fetch(`/api/programs/${id}`);
 				if (!response.ok) {
 					throw new Error("Failed to fetch program");
 				}
@@ -124,7 +125,7 @@ export default function EditProgramPage({
 		};
 
 		fetchProgram();
-	}, [params.id, form]);
+	}, [id, form]);
 
 	// Fetch categories
 	useEffect(() => {
@@ -160,7 +161,7 @@ export default function EditProgramPage({
 				data.image = imageUrl;
 			}
 
-			const response = await fetch(`/api/programs/${params.id}`, {
+			const response = await fetch(`/api/programs/${id}`, {
 				method: "PATCH",
 				headers: {
 					"Content-Type": "application/json",
@@ -245,33 +246,37 @@ export default function EditProgramPage({
 						</div>
 
 						<FormField
-							control={form.control}
-							name="categoryId"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Category</FormLabel>
-									<Select
-										onValueChange={field.onChange}
-										defaultValue={field.value}
-										disabled={isLoadingCategories}
-									>
-										<FormControl>
-											<SelectTrigger>
-												<SelectValue placeholder="Select a category" />
-											</SelectTrigger>
-										</FormControl>
-										<SelectContent>
-											{categories.map((category) => (
-												<SelectItem key={category.id} value={category.id}>
-													{category.name}
-												</SelectItem>
-											))}
-										</SelectContent>
-									</Select>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
+    control={form.control}
+    name="categoryId"
+    render={({ field }) => (
+        <FormItem>
+            <FormLabel>Category</FormLabel>
+            {isLoadingCategories ? (
+                <div className="text-sm text-muted-foreground">Loading categories...</div>
+            ) : (
+                <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    disabled={isLoadingCategories || (categories?.length || 0) === 0}
+                >
+                    <FormControl>
+                        <SelectTrigger>
+                            <SelectValue placeholder="Select a category" />
+                        </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                        {categories?.map((category) => (
+                            <SelectItem key={category.id} value={category.id}>
+                                {category.name}
+                            </SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
+            )}
+            <FormMessage />
+        </FormItem>
+    )}
+/>
 
 						<FormField
 							control={form.control}

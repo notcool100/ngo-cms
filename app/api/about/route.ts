@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { db } from "@/lib/db";
+import { prisma as db } from "@/lib/prisma";
 import { aboutSections, teamMembers } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 
@@ -12,26 +12,37 @@ export async function GET(request: Request) {
 		// Fetch about sections
 		let sections = [];
 		if (type) {
-			sections = await db
-				.select()
-				.from(aboutSections)
-				.where(eq(aboutSections.type, type))
-				.where(eq(aboutSections.active, true))
-				.orderBy(aboutSections.order);
+			sections = await db.aboutSection.findMany({
+
+				where: {
+                    type: type,
+                    active: true,
+                },
+                orderBy: {
+                    order: "asc",
+                },
+            });
+			
 		} else {
-			sections = await db
-				.select()
-				.from(aboutSections)
-				.where(eq(aboutSections.active, true))
-				.orderBy(aboutSections.order);
+			sections = await db.aboutSection.findMany({
+                where: {
+                    active: true,
+                },
+                orderBy: {
+                    order: "asc",
+                },
+            });
 		}
 
 		// Fetch team members
-		const team = await db
-			.select()
-			.from(teamMembers)
-			.where(eq(teamMembers.active, true))
-			.orderBy(teamMembers.order);
+		const team = await db.teamMember.findMany({
+            where: {
+				active: true,
+            },
+            orderBy: {
+                order: "asc",
+            },
+        });
 
 		return NextResponse.json({
 			sections,
