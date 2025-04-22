@@ -12,6 +12,10 @@ export const PERMISSIONS = {
 	"manage:messages": ["ADMIN"],
 	"view:volunteers": ["ADMIN"],
 	"manage:volunteers": ["ADMIN"],
+	"about:read": ["ADMIN", "EDITOR", "USER"],
+	"about:create": ["ADMIN", "EDITOR"],
+	"about:update": ["ADMIN", "EDITOR"],
+	"about:delete": ["ADMIN"],
 };
 
 export const ROLE_PERMISSIONS = {
@@ -29,6 +33,10 @@ export const ROLE_PERMISSIONS = {
 		"manage:messages",
 		"view:volunteers",
 		"manage:volunteers",
+		"about:read",
+		"about:create",
+		"about:update",
+		"about:delete",
 	],
 	EDITOR: [
 		"view:dashboard",
@@ -37,8 +45,13 @@ export const ROLE_PERMISSIONS = {
 		"view:volunteers",
 		"view:donations",
 		"view:messages",
+		"about:read",
+		"about:create",
+		"about:update",
 	],
-	USER: [],
+	USER: [
+		"about:read",
+	],
 };
 
 export type Role = "ADMIN" | "EDITOR" | "USER";
@@ -56,7 +69,11 @@ export type Permission =
 	| "manage:events"
 	| "manage:messages"
 	| "view:volunteers"
-	| "manage:volunteers";
+	| "manage:volunteers"
+	| "about:read"
+	| "about:create"
+	| "about:update"
+	| "about:delete";
 
 export function hasPermission(
 	role: string | undefined,

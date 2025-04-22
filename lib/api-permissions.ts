@@ -3,12 +3,14 @@ import { NextResponse } from "next/server";
 import { authOptions } from "@/lib/auth";
 import { hasPermission, type Permission, type Role } from "@/lib/permissions";
 
-export async function checkPermission(permission: Permission) {
+export async function checkPermission(request: Request, permission: Permission) {
 	const session = await getServerSession(authOptions);
 
 	if (!session) {
 		return {
+			success: false,
 			hasPermission: false,
+			error: "Unauthorized",
 			response: NextResponse.json({ error: "Unauthorized" }, { status: 401 }),
 		};
 	}
@@ -17,7 +19,9 @@ export async function checkPermission(permission: Permission) {
 
 	if (!hasPermission(userRole, permission)) {
 		return {
+			success: false,
 			hasPermission: false,
+			error: "Forbidden",
 			response: NextResponse.json({ error: "Forbidden" }, { status: 403 }),
 		};
 	}
