@@ -28,6 +28,7 @@ export async function GET(req: Request) {
 		const featured = searchParams.get("featured") === "true";
 		const published = searchParams.get("published") === "true";
 		const upcoming = searchParams.get("upcoming") === "true";
+		const past = searchParams.get("past") === "true";
 		const search = searchParams.get("search") || "";
 		const page = Number(searchParams.get("page") || "1");
 		const limit = Number(searchParams.get("limit") || "10");
@@ -45,6 +46,14 @@ export async function GET(req: Request) {
 				{ endDate: null }, // If no end date is specified, consider it as ongoing
 				{ endDate: { gt: new Date() } }, // Ensure end date is in the future
 			];
+		}
+		
+		// Handle past events
+		if (past) {
+			where.startDate = {
+				lt: new Date(),
+			};
+			// For past events, we don't need to check the end date
 		}
 		if (search) {
 			where.OR = [
@@ -74,7 +83,7 @@ export async function GET(req: Request) {
 					},
 				},
 				orderBy: {
-					startDate: "asc",
+					startDate: past ? "desc" : "asc", // For past events, show most recent first
 				},
 			}),
 			prisma.event.count({ where }),
