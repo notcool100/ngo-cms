@@ -579,7 +579,7 @@ export default function Home() {
             </FadeIn>
           </div>
 
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-3 text-black">  
             {[
               {
                 icon: <Heart className="h-10 w-10" />,

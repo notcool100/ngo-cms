@@ -54,7 +54,7 @@ export function EventCard({
           </p>
         </div>
 
-        <h3 className="text-xl font-bold mb-2">{title}</h3>
+        <h3 className="text-xl font-bold mb-2 text-black">{title}</h3>
 
         {location && (
           <div className="flex items-center gap-2 mb-4 text-muted-foreground">

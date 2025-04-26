@@ -77,7 +77,7 @@ export default function Footer() {
 						<div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
 							<div>
 								<motion.h3 
-									className="text-2xl md:text-3xl font-bold mb-4 text-gradient"
+									className="text-2xl md:text-3xl font-bold mb-4 text-black"
 									initial={{ opacity: 0, y: 20 }}
 									whileInView={{ opacity: 1, y: 0 }}
 									viewport={{ once: true }}
@@ -119,7 +119,7 @@ export default function Footer() {
 							>
 								<form className="space-y-4" onSubmit={handleSubscribe}>
 									<div className="space-y-2">
-										<label htmlFor="email" className="text-sm font-medium">
+										<label htmlFor="email" className="text-sm font-medium text-black">
 											Email Address
 										</label>
 										<Input
@@ -266,14 +266,14 @@ export default function Footer() {
 							<li className="flex items-start gap-3">
 								<MapPin className="h-5 w-5 text-primary mt-0.5" />
 								<span className="text-muted-foreground">
-									123 Empowerment Street<br />
-									New York, NY 10001
+									Kapan<br />
+									kathmandu, Nepal
 								</span>
 							</li>
 							<li className="flex items-center gap-3">
 								<Phone className="h-5 w-5 text-primary" />
 								<a href="tel:+1234567890" className="text-muted-foreground hover:text-primary transition-colors">
-									(123) 456-7890
+									(977) 9800000000
 								</a>
 							</li>
 							<li className="flex items-center gap-3">

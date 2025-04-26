@@ -62,7 +62,7 @@ export function ProgramCard({
       </div>
 
       <div className="p-6 flex-grow flex flex-col">
-        <h3 className="text-xl font-bold mb-2">{title}</h3>
+        <h3 className="text-xl font-bold mb-2 text-black">{title}</h3>
         <p className="text-muted-foreground mb-4">{description}</p>
         
         {content && (
