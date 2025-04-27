@@ -1,5 +1,6 @@
 import { DonationType, PaymentStatus, PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import { seedAboutData } from "../prisma/seed-about";
 
 const prisma = new PrismaClient();
 
@@ -248,6 +249,9 @@ async function main() {
 		});
 	}
 	console.log(`Created ${donations.length} donations`);
+
+	// Seed about page data
+	await seedAboutData();
 
 	console.log("Database seed completed successfully");
 }

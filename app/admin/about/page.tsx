@@ -21,10 +21,11 @@ import {
 	Dialog,
 	DialogContent,
 	DialogHeader,
-	DialogTitle,
+	DialogTitle,																																																																																																																																																					
 } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
 import dynamic from "next/dynamic";
+import { ImageUpload } from "@/components/admin/image-upload";
 
 // Dynamically import the rich text editor to avoid SSR issues
 const RichTextEditor = dynamic(() => import("@/components/rich-text-editor"), {
@@ -32,7 +33,7 @@ const RichTextEditor = dynamic(() => import("@/components/rich-text-editor"), {
 	loading: () => (
 		<div className="h-64 bg-gray-100 animate-pulse rounded-md"></div>
 	),
-});
+});																																																																													
 
 // Types for the about page data
 interface TeamMember {

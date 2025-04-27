@@ -105,7 +105,7 @@ export default function Header() {
         </nav>
         
         <div className="hidden md:flex items-center gap-4">
-          <Link href="/donate">
+          {/* <Link href="/donate">
             <motion.div
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -119,7 +119,7 @@ export default function Header() {
                 Donate Now
               </Button>
             </motion.div>
-          </Link>
+          </Link> */}
           <Link href="/admin" className="text-sm text-gray-700 hover:text-primary transition-colors font-medium">
             Admin
           </Link>
