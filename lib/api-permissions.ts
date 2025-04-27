@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { authOptions } from "@/lib/auth";
 import { hasPermission, type Permission, type Role } from "@/lib/permissions";
 
-export async function checkPermission(request: Request, permission: Permission) {
+export async function checkPermission(permission: Permission, request?: Request) {
 	const session = await getServerSession(authOptions);
 
 	if (!session) {

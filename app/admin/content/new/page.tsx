@@ -2,7 +2,7 @@
 
 import type React from "react";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -71,15 +71,15 @@ export default function NewProgramPage() {
 	const [imageUrl, setImageUrl] = useState<string | null>(null);
 
 	// Fetch categories on component mount
-	useState(() => {
+	useEffect(() => {
 		const fetchCategories = async () => {
 			try {
 				const response = await fetch("/api/program-categories");
 				if (!response.ok) {
 					throw new Error("Failed to fetch categories");
 				}
-				const data = await response.json();
-				setCategories(data.categories);
+				const categories = await response.json();
+				setCategories(categories);
 			} catch (error) {
 				console.error("Error fetching categories:", error);
 				toast({
@@ -93,7 +93,7 @@ export default function NewProgramPage() {
 		};
 
 		fetchCategories();
-	});
+	}, []);
 
 	const form = useForm<FormValues>({
 		resolver: zodResolver(formSchema),
@@ -104,6 +104,7 @@ export default function NewProgramPage() {
 			content: "",
 			featured: false,
 			active: true,
+			categoryId: "",
 		},
 	});
 
