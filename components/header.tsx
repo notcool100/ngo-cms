@@ -9,6 +9,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Menu, Heart, X } from "lucide-react"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
+import { useSiteSettings } from "@/lib/contexts/site-settings-context"
 
 const navigation = [
   { name: "Home", href: "/" },
@@ -23,6 +24,7 @@ export default function Header() {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const pathname = usePathname()
+  const { settings } = useSiteSettings()
 
   // Handle scroll effect for header
   useEffect(() => {
@@ -68,7 +70,7 @@ export default function Header() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2 }}
             >
-              Empower Together
+              {settings?.siteName || "Empower Together"}
             </motion.span>
           </Link>
         </div>
@@ -144,7 +146,7 @@ export default function Header() {
                     ET
                   </div>
                 </div>
-                <span className="text-lg font-bold text-gray-800">Empower Together</span>
+                <span className="text-lg font-bold text-gray-800">{settings?.siteName || "Empower Together"}</span>
               </div>
               <Button 
                 variant="ghost" 

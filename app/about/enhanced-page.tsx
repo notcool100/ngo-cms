@@ -20,8 +20,7 @@ import {
   ChevronDown,
   Sparkles,
   Lightbulb,
-  Handshake,
-  Award
+  Handshake
 } from "lucide-react";
 
 // Import our custom components

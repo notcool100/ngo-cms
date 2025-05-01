@@ -10,10 +10,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Facebook, Instagram, Twitter, Youtube, Heart, Mail, MapPin, Phone, ArrowRight } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
+import { useSiteSettings } from "@/lib/contexts/site-settings-context";
 
 export default function Footer() {
 	const [email, setEmail] = useState("");
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const { settings } = useSiteSettings();
 
 	const handleSubscribe = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -166,11 +168,10 @@ export default function Footer() {
 									ET
 								</div>
 							</div>
-							<h3 className="text-xl font-bold text-gradient">Empower Together</h3>
+							<h3 className="text-xl font-bold text-gradient">{settings?.siteName || "Empower Together"}</h3>
 						</div>
 						<p className="text-muted-foreground">
-							Empowering women through education, support, and community
-							initiatives since 2010.
+							{settings?.siteDescription || "Empowering women through education, support, and community initiatives since 2010."}
 						</p>
 						<div className="flex space-x-4">
 							<motion.a
@@ -278,8 +279,8 @@ export default function Footer() {
 							</li>
 							<li className="flex items-center gap-3">
 								<Mail className="h-5 w-5 text-primary" />
-								<a href="mailto:info@empowertogether.org" className="text-muted-foreground hover:text-primary transition-colors">
-									info@empowertogether.org
+								<a href={`mailto:${settings?.contactEmail || "info@empowertogether.org"}`} className="text-muted-foreground hover:text-primary transition-colors">
+									{settings?.contactEmail || "info@empowertogether.org"}
 								</a>
 							</li>
 						</ul>
@@ -288,7 +289,7 @@ export default function Footer() {
 				
 				<div className="mt-16 pt-8 border-t border-muted/30 flex flex-col md:flex-row justify-between items-center gap-4">
 					<p className="text-sm text-muted-foreground text-center md:text-left">
-						&copy; {new Date().getFullYear()} Empower Together. All rights reserved.
+						&copy; {new Date().getFullYear()} {settings?.siteName || "Empower Together"}. All rights reserved.
 					</p>
 					<div className="flex items-center gap-2">
 						<Heart className="h-4 w-4 text-primary" />

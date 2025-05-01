@@ -23,9 +23,13 @@ export function ProgramCard({
   slug,
   description,
   content = "",
-  image = "/placeholder.svg?height=400&width=600",
+  image,
   isFeatured = false,
 }: ProgramCardProps) {
+  // Set default image or handle empty string
+  const imageUrl = image && image.trim() !== "" 
+    ? image 
+    : "/placeholder.svg?height=400&width=600";
   return (
     <motion.div
       className="bg-white rounded-xl overflow-hidden shadow-sm border border-muted/20 h-full flex flex-col"
@@ -44,7 +48,7 @@ export function ProgramCard({
           transition={{ duration: 0.4 }}
         >
           <Image
-            src={image}
+            src={imageUrl}
             alt={title}
             fill
             className="object-cover"

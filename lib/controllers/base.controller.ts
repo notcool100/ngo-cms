@@ -21,7 +21,7 @@ export abstract class BaseController {
     response?: NextResponse;
   }> {
     const permission = this.permissions[permissionType];
-    const permissionCheck = await checkPermission(request, permission);
+    const permissionCheck = await checkPermission(permission, request);
     
     if (!permissionCheck.success) {
       return {

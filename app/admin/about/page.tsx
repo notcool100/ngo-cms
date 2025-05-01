@@ -89,8 +89,19 @@ export default function AdminAboutPage() {
 				if (!response.ok) {
 					throw new Error("Failed to fetch about data");
 				}
-				const data = await response.json();
-				setAboutData(data);
+				const responseData = await response.json();
+				
+				// Check if the data is in the expected format
+				if (responseData.data) {
+					setAboutData(responseData.data);
+				} else {
+					console.error("Unexpected data format:", responseData);
+					toast({
+						title: "Error",
+						description: "Received unexpected data format from server",
+						variant: "destructive",
+					});
+				}
 			} catch (error) {
 				console.error("Error fetching about data:", error);
 				toast({
@@ -972,16 +983,16 @@ export default function AdminAboutPage() {
 							<Label htmlFor="member-bio" className="text-right pt-2">
 								Bio
 							</Label>
-							<Textarea
-								id="member-bio"
-								value={editingTeamMember?.bio || ""}
-								onChange={(e) =>
-									setEditingTeamMember((prev) =>
-										prev ? { ...prev, bio: e.target.value } : null,
-									)
-								}
-								className="col-span-3 min-h-[150px]"
-							/>
+							<div className="col-span-3">
+								<RichTextEditor
+									value={editingTeamMember?.bio || ""}
+									onChange={(value) =>
+										setEditingTeamMember((prev) =>
+											prev ? { ...prev, bio: value } : null,
+										)
+									}
+								/>
+							</div>
 						</div>
 					</div>
 					<div className="flex justify-end gap-2">

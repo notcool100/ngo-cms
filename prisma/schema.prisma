@@ -259,6 +259,23 @@ model Newsletter {
   updatedAt DateTime @updatedAt
 }
 
+model SiteSettings {
+  id                String   @id @default(cuid())
+  siteName          String   @default("Empower Together")
+  siteDescription   String   @default("Empowering women through education and support")
+  contactEmail      String   @default("contact@empowertogether.org")
+  maintenanceMode   Boolean  @default(false)
+  backupFrequency   String   @default("weekly")
+  cacheLifetime     Int      @default(3600)
+  debugMode         Boolean  @default(false)
+  emailNotifications Boolean  @default(true)
+  donationAlerts    Boolean  @default(true)
+  volunteerAlerts   Boolean  @default(true)
+  contactFormAlerts Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
 enum Role {
   USER
   ADMIN

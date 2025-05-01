@@ -2,7 +2,7 @@
 
 import type React from "react";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,24 +19,115 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "@/components/ui/use-toast";
 import { PermissionGate } from "@/components/auth/permission-gate";
-import { Shield, Globe, Bell, Database } from "lucide-react";
+import { Shield, Globe, Bell, Database, Loader2 } from "lucide-react";
+import { useSettings } from "@/hooks/use-settings";
+import { useSiteSettings } from "@/lib/contexts/site-settings-context";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function SettingsPage() {
-	const [isLoading, setIsLoading] = useState(false);
+	const {
+		settings,
+		isLoading,
+		error,
+		updateGeneralSettings,
+		updateNotificationSettings,
+		updateAdvancedSettings,
+	} = useSettings();
+	
+	const { refreshSettings: refreshGlobalSettings } = useSiteSettings();
 
-	const handleSaveSettings = (e: React.FormEvent) => {
-		e.preventDefault();
-		setIsLoading(true);
+	// Form states
+	const [generalForm, setGeneralForm] = useState({
+		siteName: "",
+		siteDescription: "",
+		contactEmail: "",
+		maintenanceMode: false,
+	});
 
-		// Simulate API call
-		setTimeout(() => {
-			setIsLoading(false);
-			toast({
-				title: "Settings saved",
-				description: "Your settings have been saved successfully.",
+	const [notificationForm, setNotificationForm] = useState({
+		emailNotifications: true,
+		donationAlerts: true,
+		volunteerAlerts: true,
+		contactFormAlerts: true,
+	});
+
+	const [advancedForm, setAdvancedForm] = useState({
+		backupFrequency: "weekly",
+		cacheLifetime: 3600,
+		debugMode: false,
+	});
+
+	const [isSaving, setIsSaving] = useState(false);
+
+	// Update form states when settings are loaded
+	useEffect(() => {
+		if (settings) {
+			setGeneralForm({
+				siteName: settings.siteName,
+				siteDescription: settings.siteDescription,
+				contactEmail: settings.contactEmail,
+				maintenanceMode: settings.maintenanceMode,
 			});
-		}, 1000);
+
+			setNotificationForm({
+				emailNotifications: settings.emailNotifications,
+				donationAlerts: settings.donationAlerts,
+				volunteerAlerts: settings.volunteerAlerts,
+				contactFormAlerts: settings.contactFormAlerts,
+			});
+
+			setAdvancedForm({
+				backupFrequency: settings.backupFrequency,
+				cacheLifetime: settings.cacheLifetime,
+				debugMode: settings.debugMode,
+			});
+		}
+	}, [settings]);
+
+	const handleSaveGeneralSettings = async (e: React.FormEvent) => {
+		e.preventDefault();
+		setIsSaving(true);
+		await updateGeneralSettings(generalForm);
+		// Refresh global settings to update the UI
+		await refreshGlobalSettings();
+		setIsSaving(false);
 	};
+
+	const handleSaveNotificationSettings = async () => {
+		setIsSaving(true);
+		await updateNotificationSettings(notificationForm);
+		setIsSaving(false);
+	};
+
+	const handleSaveAdvancedSettings = async (e: React.FormEvent) => {
+		e.preventDefault();
+		setIsSaving(true);
+		await updateAdvancedSettings(advancedForm);
+		setIsSaving(false);
+	};
+
+	if (isLoading && !settings) {
+		return (
+			<div className="flex items-center justify-center h-[50vh]">
+				<Loader2 className="h-8 w-8 animate-spin text-primary" />
+				<span className="ml-2">Loading settings...</span>
+			</div>
+		);
+	}
+
+	if (error) {
+		return (
+			<div className="flex items-center justify-center h-[50vh]">
+				<div className="text-center">
+					<h2 className="text-xl font-semibold text-destructive">Error Loading Settings</h2>
+					<p className="text-muted-foreground mt-2">{error}</p>
+					<Button className="mt-4" onClick={() => window.location.reload()}>
+						Try Again
+					</Button>
+				</div>
+			</div>
+		);
+	}
 
 	return (
 		<div className="space-y-6">
@@ -61,17 +152,22 @@ export default function SettingsPage() {
 							</CardDescription>
 						</CardHeader>
 						<CardContent className="space-y-4">
-							<form onSubmit={handleSaveSettings}>
+							<form onSubmit={handleSaveGeneralSettings}>
 								<div className="grid gap-4">
 									<div className="grid gap-2">
 										<Label htmlFor="siteName">Site Name</Label>
-										<Input id="siteName" defaultValue="Empower Together" />
+										<Input 
+											id="siteName" 
+											value={generalForm.siteName} 
+											onChange={(e) => setGeneralForm({...generalForm, siteName: e.target.value})}
+										/>
 									</div>
 									<div className="grid gap-2">
 										<Label htmlFor="siteDescription">Site Description</Label>
 										<Input
 											id="siteDescription"
-											defaultValue="Empowering women through education and support"
+											value={generalForm.siteDescription}
+											onChange={(e) => setGeneralForm({...generalForm, siteDescription: e.target.value})}
 										/>
 									</div>
 									<div className="grid gap-2">
@@ -79,15 +175,20 @@ export default function SettingsPage() {
 										<Input
 											id="contactEmail"
 											type="email"
-											defaultValue="contact@empowertogether.org"
+											value={generalForm.contactEmail}
+											onChange={(e) => setGeneralForm({...generalForm, contactEmail: e.target.value})}
 										/>
 									</div>
 									<div className="flex items-center gap-2">
-										<Switch id="maintenanceMode" />
+										<Switch 
+											id="maintenanceMode" 
+											checked={generalForm.maintenanceMode}
+											onCheckedChange={(checked) => setGeneralForm({...generalForm, maintenanceMode: checked})}
+										/>
 										<Label htmlFor="maintenanceMode">Maintenance Mode</Label>
 									</div>
-									<Button type="submit" disabled={isLoading}>
-										{isLoading ? "Saving..." : "Save Changes"}
+									<Button type="submit" disabled={isSaving || isLoading}>
+										{isSaving ? "Saving..." : "Save Changes"}
 									</Button>
 								</div>
 							</form>
@@ -159,7 +260,10 @@ export default function SettingsPage() {
 										Receive email notifications for important events
 									</p>
 								</div>
-								<Switch defaultChecked />
+								<Switch 
+									checked={notificationForm.emailNotifications}
+									onCheckedChange={(checked) => setNotificationForm({...notificationForm, emailNotifications: checked})}
+								/>
 							</div>
 							<div className="flex items-center justify-between">
 								<div>
@@ -168,7 +272,10 @@ export default function SettingsPage() {
 										Get notified when a new donation is received
 									</p>
 								</div>
-								<Switch defaultChecked />
+								<Switch 
+									checked={notificationForm.donationAlerts}
+									onCheckedChange={(checked) => setNotificationForm({...notificationForm, donationAlerts: checked})}
+								/>
 							</div>
 							<div className="flex items-center justify-between">
 								<div>
@@ -177,7 +284,10 @@ export default function SettingsPage() {
 										Get notified when someone applies to volunteer
 									</p>
 								</div>
-								<Switch defaultChecked />
+								<Switch 
+									checked={notificationForm.volunteerAlerts}
+									onCheckedChange={(checked) => setNotificationForm({...notificationForm, volunteerAlerts: checked})}
+								/>
 							</div>
 							<div className="flex items-center justify-between">
 								<div>
@@ -186,11 +296,19 @@ export default function SettingsPage() {
 										Get notified when someone submits the contact form
 									</p>
 								</div>
-								<Switch defaultChecked />
+								<Switch 
+									checked={notificationForm.contactFormAlerts}
+									onCheckedChange={(checked) => setNotificationForm({...notificationForm, contactFormAlerts: checked})}
+								/>
 							</div>
 						</CardContent>
 						<CardFooter>
-							<Button>Save Notification Settings</Button>
+							<Button 
+								onClick={handleSaveNotificationSettings}
+								disabled={isSaving || isLoading}
+							>
+								{isSaving ? "Saving..." : "Save Notification Settings"}
+							</Button>
 						</CardFooter>
 					</Card>
 				</TabsContent>
@@ -211,37 +329,49 @@ export default function SettingsPage() {
 									These settings are for advanced users only. Incorrect
 									configuration may cause system issues.
 								</p>
-								<div className="grid gap-4">
-									<div className="grid gap-2">
-										<Label htmlFor="backupFrequency">Backup Frequency</Label>
-										<select
-											id="backupFrequency"
-											className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-										>
-											<option value="daily">Daily</option>
-											<option value="weekly">Weekly</option>
-											<option value="monthly">Monthly</option>
-										</select>
+								<form onSubmit={handleSaveAdvancedSettings}>
+									<div className="grid gap-4">
+										<div className="grid gap-2">
+											<Label htmlFor="backupFrequency">Backup Frequency</Label>
+											<Select 
+												value={advancedForm.backupFrequency}
+												onValueChange={(value) => setAdvancedForm({...advancedForm, backupFrequency: value})}
+											>
+												<SelectTrigger>
+													<SelectValue placeholder="Select backup frequency" />
+												</SelectTrigger>
+												<SelectContent>
+													<SelectItem value="daily">Daily</SelectItem>
+													<SelectItem value="weekly">Weekly</SelectItem>
+													<SelectItem value="monthly">Monthly</SelectItem>
+												</SelectContent>
+											</Select>
+										</div>
+										<div className="grid gap-2">
+											<Label htmlFor="cacheLifetime">
+												Cache Lifetime (seconds)
+											</Label>
+											<Input
+												id="cacheLifetime"
+												type="number"
+												value={advancedForm.cacheLifetime}
+												onChange={(e) => setAdvancedForm({...advancedForm, cacheLifetime: parseInt(e.target.value, 10)})}
+											/>
+										</div>
+										<div className="flex items-center gap-2">
+											<Switch 
+												id="debugMode" 
+												checked={advancedForm.debugMode}
+												onCheckedChange={(checked) => setAdvancedForm({...advancedForm, debugMode: checked})}
+											/>
+											<Label htmlFor="debugMode">Debug Mode</Label>
+										</div>
+										<Button type="submit" disabled={isSaving || isLoading}>
+											{isSaving ? "Saving..." : "Save Advanced Settings"}
+										</Button>
 									</div>
-									<div className="grid gap-2">
-										<Label htmlFor="cacheLifetime">
-											Cache Lifetime (seconds)
-										</Label>
-										<Input
-											id="cacheLifetime"
-											type="number"
-											defaultValue="3600"
-										/>
-									</div>
-									<div className="flex items-center gap-2">
-										<Switch id="debugMode" />
-										<Label htmlFor="debugMode">Debug Mode</Label>
-									</div>
-								</div>
+								</form>
 							</CardContent>
-							<CardFooter>
-								<Button>Save Advanced Settings</Button>
-							</CardFooter>
 						</Card>
 					</PermissionGate>
 				</TabsContent>
