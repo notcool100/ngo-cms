@@ -8,7 +8,7 @@ A modern, responsive CMS website for a women's empowerment NGO built with Next.j
 
 IWLAG is a full-featured website for a women's empowerment NGO that includes both public-facing pages and an administrative backend. The platform enables the organization to manage content, events, donations, volunteers, and communications through an intuitive interface.
 
-## Features
+## Features test
 
 ### Public-Facing Website
 - **Home Page**: Dynamic hero section, mission statement, impact statistics, featured programs, and upcoming events
