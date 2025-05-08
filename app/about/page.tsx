@@ -310,7 +310,7 @@ export default function AboutPage() {
             <div className="text-center mb-16">
               <FadeIn>
                 <Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20 py-1.5 px-4">Our Purpose</Badge>
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-gradient mb-6">
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-black mb-6">
                   Mission & Vision
                 </h2>
                 <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
@@ -324,7 +324,7 @@ export default function AboutPage() {
                 value="mission" 
                 className="data-[state=active]:bg-primary data-[state=active]:text-white rounded-full py-3 transition-all duration-300"
               >
-                <Target className="mr-2 h-4 w-4" />
+                <Target className="mr-2 h-4 w-4 " />
                 Our Mission
               </TabsTrigger>
               <TabsTrigger 
@@ -343,7 +343,7 @@ export default function AboutPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
                   <FadeIn direction="right">
                     <div>
-                      <h2 className="text-3xl font-bold mb-6 text-gradient">
+                      <h2 className="text-3xl font-bold mb-6 text-black">
                         {missionSections[0].title}
                       </h2>
                       <div
