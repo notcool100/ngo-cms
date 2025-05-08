@@ -71,7 +71,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
 						href="/admin/dashboard"
 						className="flex items-center gap-2 font-semibold"
 					>
-						<span className="text-primary">Empower Together</span>
+						<span className="text-primary">IWLAG</span>
 						<span className="text-muted-foreground">Admin</span>
 					</Link>
 				</div>
@@ -128,7 +128,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
 							<Users className="h-5 w-5" />
 							User Management
 						</Link>
-						<Link
+						{/* <Link
 							href="/admin/donations"
 							className={`flex items-center gap-2 rounded-lg px-3 py-2 ${
 								pathname === "/admin/donations" ||
@@ -139,7 +139,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
 						>
 							<DollarSign className="h-5 w-5" />
 							Donations
-						</Link>
+						</Link> */}
 						<Link
 							href="/admin/events"
 							className={`flex items-center gap-2 rounded-lg px-3 py-2 ${

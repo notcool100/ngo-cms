@@ -17,7 +17,7 @@ async function seedAboutData() {
       data: {
         title: 'Our Mission',
         subtitle: 'Empowering women through education and opportunity',
-        content: '<p>At Empower Together, our mission is to create a world where every woman has access to education, resources, and opportunities needed to thrive. We work tirelessly to break down barriers that prevent women from reaching their full potential.</p><p>Through our programs and initiatives, we aim to:</p><ul><li>Provide educational opportunities for women and girls</li><li>Support economic empowerment through skills training</li><li>Advocate for gender equality and women\'s rights</li><li>Create safe spaces for women to connect and grow</li></ul>',
+        content: '<p>At IWLAG, our mission is to create a world where every woman has access to education, resources, and opportunities needed to thrive. We work tirelessly to break down barriers that prevent women from reaching their full potential.</p><p>Through our programs and initiatives, we aim to:</p><ul><li>Provide educational opportunities for women and girls</li><li>Support economic empowerment through skills training</li><li>Advocate for gender equality and women\'s rights</li><li>Create safe spaces for women to connect and grow</li></ul>',
         image: '/placeholder.svg?height=400&width=600',
         order: 1,
         type: 'mission',
@@ -43,7 +43,7 @@ async function seedAboutData() {
       data: {
         title: 'Our History',
         subtitle: 'A decade of making a difference',
-        content: '<p>Empower Together was founded in 2013 by a group of passionate advocates for women\'s rights. What began as a small local initiative has grown into an international organization with programs in 25 countries.</p><p>Key milestones in our journey:</p><ul><li><strong>2013:</strong> Founded with our first educational program in Kenya</li><li><strong>2015:</strong> Expanded to 5 countries with the launch of our economic empowerment initiative</li><li><strong>2018:</strong> Reached 5,000 women through our programs</li><li><strong>2020:</strong> Launched our digital education platform to reach women in remote areas</li><li><strong>2023:</strong> Celebrated 10 years with programs in 25 countries and over 15,000 women empowered</li></ul>',
+        content: '<p>IWLAG was founded in 2013 by a group of passionate advocates for women\'s rights. What began as a small local initiative has grown into an international organization with programs in 25 countries.</p><p>Key milestones in our journey:</p><ul><li><strong>2013:</strong> Founded with our first educational program in Kenya</li><li><strong>2015:</strong> Expanded to 5 countries with the launch of our economic empowerment initiative</li><li><strong>2018:</strong> Reached 5,000 women through our programs</li><li><strong>2020:</strong> Launched our digital education platform to reach women in remote areas</li><li><strong>2023:</strong> Celebrated 10 years with programs in 25 countries and over 15,000 women empowered</li></ul>',
         image: '/placeholder.svg?height=400&width=600',
         order: 1,
         type: 'history',

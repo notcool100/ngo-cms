@@ -232,7 +232,7 @@ export default function Home() {
                 className="text-lg text-muted-foreground"
               >
                 <p className="leading-relaxed mb-6">
-                  Empower Together is dedicated to advancing women's rights,
+                IWLAG is dedicated to advancing women's rights,
                   promoting gender equality, and creating opportunities for women
                   to achieve their full potential through education, economic
                   empowerment, and leadership development.

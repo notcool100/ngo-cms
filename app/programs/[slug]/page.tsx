@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: ProgramPageProps) {
 	}
 
 	return {
-		title: `${program.title} | Empower Together`,
+		title: `${program.title} | IWLAG`,
 		description: program.description,
 	};
 }
@@ -128,9 +128,9 @@ export default async function ProgramPage({ params }: ProgramPageProps) {
 							<div className="bg-muted/40 rounded-lg p-6 sticky top-24">
 								<h3 className="text-xl font-bold mb-4">Get Involved</h3>
 								<div className="space-y-4">
-									<Link href="/donate" className="w-full">
+									{/* <Link href="/donate" className="w-full">
 										<Button className="w-full">Support This Program</Button>
-									</Link>
+									</Link> */}
 									<Link href="/volunteer" className="w-full">
 										<Button variant="outline" className="w-full">
 											Volunteer

@@ -261,7 +261,7 @@ model Newsletter {
 
 model SiteSettings {
   id                String   @id @default(cuid())
-  siteName          String   @default("Empower Together")
+  siteName          String   @default("IWLAG")
   siteDescription   String   @default("Empowering women through education and support")
   contactEmail      String   @default("contact@empowertogether.org")
   maintenanceMode   Boolean  @default(false)

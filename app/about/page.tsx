@@ -147,7 +147,7 @@ export default function AboutPage() {
         >
           <HeroParallax
             imageUrl="/placeholder.svg?height=1200&width=1920"
-            alt="About Empower Together"
+            alt="About IWLAG"
             overlayColor="from-primary/80 to-primary/60"
           >
             <div className="text-center text-white max-w-5xl mx-auto px-4">

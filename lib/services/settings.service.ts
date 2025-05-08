@@ -23,7 +23,7 @@ export class SettingsService {
   async createDefaultSettings(): Promise<SiteSettings> {
     return prisma.siteSettings.create({
       data: {
-        siteName: "Empower Together",
+        siteName: "IWLAG",
         siteDescription: "Empowering women through education and support",
         contactEmail: "contact@empowertogether.org",
         maintenanceMode: false,

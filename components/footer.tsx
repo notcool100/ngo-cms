@@ -163,12 +163,16 @@ export default function Footer() {
 				<div className="grid grid-cols-1 gap-12 md:grid-cols-4">
 					<div className="space-y-6">
 						<div className="flex items-center gap-3">
-							<div className="relative h-10 w-10 overflow-hidden rounded-full bg-primary/10">
-								<div className="absolute inset-0 flex items-center justify-center text-primary font-bold text-lg">
-									ET
-								</div>
+							<div className="relative h-10 w-10 overflow-hidden rounded-full">
+								<Image 
+									src="/uploads/logo.jpg" 
+									alt={settings?.siteName || "IWLAG Logo"} 
+									fill
+									className="object-cover"
+									sizes="40px"
+								/>
 							</div>
-							<h3 className="text-xl font-bold text-gradient">{settings?.siteName || "Empower Together"}</h3>
+							<h3 className="text-xl font-bold text-gradient">{settings?.siteName || "IWLAG"}</h3>
 						</div>
 						<p className="text-muted-foreground">
 							{settings?.siteDescription || "Empowering women through education, support, and community initiatives since 2010."}
@@ -289,7 +293,7 @@ export default function Footer() {
 				
 				<div className="mt-16 pt-8 border-t border-muted/30 flex flex-col md:flex-row justify-between items-center gap-4">
 					<p className="text-sm text-muted-foreground text-center md:text-left">
-						&copy; {new Date().getFullYear()} {settings?.siteName || "Empower Together"}. All rights reserved.
+						&copy; {new Date().getFullYear()} {settings?.siteName || "IWLAG"}. All rights reserved.
 					</p>
 					<div className="flex items-center gap-2">
 						<Heart className="h-4 w-4 text-primary" />

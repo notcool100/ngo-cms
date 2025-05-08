@@ -1,7 +1,7 @@
 -- CreateTable
 CREATE TABLE "SiteSettings" (
     "id" TEXT NOT NULL,
-    "siteName" TEXT NOT NULL DEFAULT 'Empower Together',
+    "siteName" TEXT NOT NULL DEFAULT 'IWLAG',
     "siteDescription" TEXT NOT NULL DEFAULT 'Empowering women through education and support',
     "contactEmail" TEXT NOT NULL DEFAULT 'contact@empowertogether.org',
     "maintenanceMode" BOOLEAN NOT NULL DEFAULT false,

@@ -1,12 +1,12 @@
-# Empower Together - Women's Empowerment NGO Website
+# IWLAG - Women's Empowerment NGO Website
 
 A modern, responsive CMS website for a women's empowerment NGO built with Next.js, React, and Prisma.
 
-![Empower Together](https://placeholder.svg?height=400&width=800&text=Empower+Together)
+![IWLAG](https://placeholder.svg?height=400&width=800&text=Empower+Together)
 
 ## Overview
 
-Empower Together is a full-featured website for a women's empowerment NGO that includes both public-facing pages and an administrative backend. The platform enables the organization to manage content, events, donations, volunteers, and communications through an intuitive interface.
+IWLAG is a full-featured website for a women's empowerment NGO that includes both public-facing pages and an administrative backend. The platform enables the organization to manage content, events, donations, volunteers, and communications through an intuitive interface.
 
 ## Features
 

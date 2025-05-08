@@ -10,7 +10,7 @@ async function main() {
     // Create default settings
     await prisma.siteSettings.create({
       data: {
-        siteName: "Empower Together",
+        siteName: "IWLAG",
         siteDescription: "Empowering women through education and support",
         contactEmail: "contact@empowertogether.org",
         maintenanceMode: false,

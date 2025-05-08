@@ -58,11 +58,15 @@ export default function Header() {
       <div className="container flex h-20 items-center justify-between">
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center space-x-3">
-            <div className="relative h-10 w-10 overflow-hidden rounded-full bg-primary/10">
-              {/* Replace with your actual logo */}
-              <div className="absolute inset-0 flex items-center justify-center text-primary font-bold text-lg">
-                ET
-              </div>
+            <div className="relative h-10 w-10 overflow-hidden rounded-full">
+              <Image 
+                src="/uploads/logo.jpg" 
+                alt={settings?.siteName || "IWLAG Logo"} 
+                fill
+                className="object-cover"
+                sizes="40px"
+                priority
+              />
             </div>
             <motion.span 
               className="text-xl font-bold text-gray-800"
@@ -70,7 +74,7 @@ export default function Header() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2 }}
             >
-              {settings?.siteName || "Empower Together"}
+              {settings?.siteName || "IWLAG"}
             </motion.span>
           </Link>
         </div>
@@ -141,12 +145,16 @@ export default function Header() {
           <SheetContent side="right" className="w-full max-w-xs sm:max-w-sm border-l">
             <div className="flex justify-between items-center mb-8 mt-2">
               <div className="flex items-center gap-2">
-                <div className="relative h-8 w-8 overflow-hidden rounded-full bg-primary/10">
-                  <div className="absolute inset-0 flex items-center justify-center text-primary font-bold text-sm">
-                    ET
-                  </div>
+                <div className="relative h-8 w-8 overflow-hidden rounded-full">
+                  <Image 
+                    src="/uploads/logo.jpg" 
+                    alt={settings?.siteName || "IWLAG Logo"} 
+                    fill
+                    className="object-cover"
+                    sizes="32px"
+                  />
                 </div>
-                <span className="text-lg font-bold text-gray-800">{settings?.siteName || "Empower Together"}</span>
+                <span className="text-lg font-bold text-gray-800">{settings?.siteName || "IWLAG"}</span>
               </div>
               <Button 
                 variant="ghost" 

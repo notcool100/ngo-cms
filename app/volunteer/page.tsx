@@ -85,7 +85,7 @@ export default function VolunteerPage() {
         <ParallaxScroll speed={0.3} className="relative h-[50vh] md:h-[60vh] w-full">
           <Image
             src="/placeholder.svg?height=600&width=1600"
-            alt="Volunteer with Empower Together"
+            alt="Volunteer with IWLAG"
             fill
             className="object-cover"
             priority
@@ -301,7 +301,7 @@ export default function VolunteerPage() {
                 Why Volunteer With Us
               </h2>
               <p className="text-muted-foreground max-w-2xl mx-auto">
-                Volunteering with Empower Together offers numerous benefits and opportunities for personal and professional growth.
+                Volunteering with IWLAG offers numerous benefits and opportunities for personal and professional growth.
               </p>
             </FadeIn>
           </div>
@@ -502,7 +502,7 @@ export default function VolunteerPage() {
                     <Textarea 
                       id="motivation" 
                       name="motivation" 
-                      placeholder="Share your motivation for volunteering with Empower Together"
+                      placeholder="Share your motivation for volunteering with IWLAG"
                       className="min-h-[120px]"
                     />
                   </div>
@@ -516,7 +516,7 @@ export default function VolunteerPage() {
                       required
                     />
                     <Label htmlFor="consent" className="text-sm text-muted-foreground">
-                      I consent to Empower Together storing and processing my personal information for volunteer recruitment purposes. I understand that I can withdraw my consent at any time.
+                      I consent to IWLAG storing and processing my personal information for volunteer recruitment purposes. I understand that I can withdraw my consent at any time.
                     </Label>
                   </div>
                   
@@ -636,7 +636,7 @@ export default function VolunteerPage() {
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
             {[
               {
-                quote: "Volunteering with Empower Together has been one of the most rewarding experiences of my life. I've developed new skills, made lasting friendships, and seen firsthand the impact of our work.",
+                quote: "Volunteering with IWLAG has been one of the most rewarding experiences of my life. I've developed new skills, made lasting friendships, and seen firsthand the impact of our work.",
                 name: "Sarah Johnson",
                 role: "Education Program Volunteer",
                 image: "/placeholder.svg?height=100&width=100"

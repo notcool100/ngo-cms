@@ -53,7 +53,7 @@ export default function DonatePage() {
         <ParallaxScroll speed={0.3} className="relative h-[50vh] md:h-[60vh] w-full">
           <Image
             src="/placeholder.svg?height=600&width=1600"
-            alt="Donate to Empower Together"
+            alt="Donate to IWLAG"
             fill
             className="object-cover"
             priority

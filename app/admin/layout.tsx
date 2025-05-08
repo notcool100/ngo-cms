@@ -80,7 +80,7 @@ export default function AdminLayout({
 						href="/admin/dashboard"
 						className="flex items-center gap-2 font-semibold"
 					>
-						<span className="text-primary">Empower Together</span>
+						<span className="text-primary">IWLAG</span>
 						<span className="text-muted-foreground">Admin</span>
 					</Link>
 				</div>
