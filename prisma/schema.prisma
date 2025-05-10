@@ -78,6 +78,7 @@ model Post {
   category    Category? @relation(fields: [categoryId], references: [id])
   tags        Tag[]
   image       String?
+  comments    Comment[]
 
   @@index([authorId])
   @@index([categoryId])
@@ -276,6 +277,40 @@ model SiteSettings {
   updatedAt         DateTime @updatedAt
 }
 
+model BlogSettings {
+  id                  String   @id @default(cuid())
+  postsPerPage        Int      @default(10)
+  allowComments       Boolean  @default(true)
+  moderateComments    Boolean  @default(true)
+  featuredPostsCount  Int      @default(3)
+  showRelatedPosts    Boolean  @default(true)
+  showAuthorInfo      Boolean  @default(true)
+  defaultCategory     String?
+  seoTitle            String   @default("Blog | IWLAG")
+  seoDescription      String   @default("Latest news, stories, and updates from IWLAG")
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
+
+model Comment {
+  id        String        @id @default(cuid())
+  content   String        @db.Text
+  name      String
+  email     String
+  website   String?
+  status    CommentStatus @default(PENDING)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  postId    String
+  post      Post          @relation(fields: [postId], references: [id], onDelete: Cascade)
+  parentId  String?
+  parent    Comment?      @relation("CommentToComment", fields: [parentId], references: [id], onDelete: SetNull)
+  replies   Comment[]     @relation("CommentToComment")
+
+  @@index([postId])
+  @@index([parentId])
+}
+
 enum Role {
   USER
   ADMIN
@@ -315,5 +350,12 @@ enum ContactStatus {
   READ
   REPLIED
   ARCHIVED
+}
+
+enum CommentStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  SPAM
 }
 
