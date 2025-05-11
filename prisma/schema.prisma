@@ -116,10 +116,10 @@ model Program {
   category    ProgramCategory @relation(fields: [categoryId], references: [id])
 
   donations   Donation[] @relation("ProgramDonations") // The relation name here must match in Donation model
+  images      ProgramImage[]
 
   @@index([categoryId])
 }
-
 
 model ProgramCategory {
   id          String    @id @default(cuid())
@@ -130,6 +130,19 @@ model ProgramCategory {
   updatedAt   DateTime  @updatedAt
   programs    Program[]
 }
+
+model ProgramImage {
+  id          String   @id @default(cuid())
+  programId   String
+  imageUrl    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  program     Program  @relation(fields: [programId], references: [id], onDelete: Cascade)
+
+  @@index([programId])
+}
+
 model AboutUs {
   id        Int     @id @default(autoincrement())
   mission   String
@@ -186,7 +199,6 @@ model Donation {
 
   @@index([programId])
 }
-
 
 model Event {
   id          String    @id @default(cuid())
@@ -359,4 +371,3 @@ enum CommentStatus {
   REJECTED
   SPAM
 }
-
