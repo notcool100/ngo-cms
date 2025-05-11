@@ -165,6 +165,18 @@ export function AdminLayout({ children }: AdminLayoutProps) {
 							Messages
 						</Link>
 						<Link
+							href="/admin/about"
+							className={`flex items-center gap-2 rounded-lg px-3 py-2 ${
+								pathname === "/admin/about" ||
+								pathname.startsWith("/admin/about/")
+									? "bg-primary text-primary-foreground"
+									: "text-muted-foreground hover:bg-muted hover:text-foreground"
+							}`}
+						>
+							<MessageSquare className="h-5 w-5" />
+							About Us
+						</Link>
+						<Link
 							href="/admin/reports"
 							className={`flex items-center gap-2 rounded-lg px-3 py-2 ${
 								pathname === "/admin/reports" ||
