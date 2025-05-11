@@ -33,6 +33,7 @@ import { ParallaxScroll } from "@/components/animations/parallax-scroll";
 import { CountUp } from "@/components/animations/count-up";
 import { HeroParallax } from "@/components/animations/hero-parallax";
 import { ScaleIn } from "@/components/animations/scale-in";
+import { TeamHierarchy } from "@/components/team-hierarchy";
 
 // Types for the about page data
 interface TeamMember {
@@ -647,7 +648,7 @@ export default function AboutPage() {
           <div className="text-center mb-16">
             <FadeIn>
               <Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20 py-1.5 px-4">Our People</Badge>
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-gradient mb-6">Meet Our Team</h2>
+              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-gradient mb-6">Meet Our Boards</h2>
               <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
                 The dedicated individuals working together to fulfill our mission.
               </p>
@@ -655,83 +656,19 @@ export default function AboutPage() {
           </div>
 
           {isLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="animate-pulse">
-                  <div className="h-64 bg-gray-200 rounded-lg mb-4"></div>
-                  <div className="h-6 bg-gray-200 rounded mb-2 w-3/4"></div>
-                  <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-                </div>
-              ))}
+            <div className="animate-pulse space-y-8">
+              <div className="h-32 bg-gray-200 rounded-lg mb-4"></div>
+              <div className="h-32 bg-gray-200 rounded-lg mb-4 ml-12"></div>
+              <div className="h-32 bg-gray-200 rounded-lg mb-4 ml-12"></div>
+              <div className="h-32 bg-gray-200 rounded-lg mb-4"></div>
             </div>
           ) : aboutData?.team && aboutData.team.length > 0 ? (
-            <StaggerChildren className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8" staggerDelay={0.1}>
-              {aboutData.team.map((member, index) => (
-                <StaggerItem key={member.id}>
-                  <motion.div
-                    className="bg-white rounded-2xl overflow-hidden shadow-lg border border-muted/10 transition-all duration-500 group"
-                    whileHover={{ y: -15, boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.15)" }}
-                  >
-                    <div className="relative h-80 overflow-hidden">
-                      <Image
-                        src={
-                          member.image ||
-                          `/placeholder.svg?height=320&width=320&text=${member.name}`
-                        }
-                        alt={member.name}
-                        fill
-                        className="object-cover transition-transform duration-700 group-hover:scale-110"
-                      />
-                      {/* Overlay gradient that appears on hover */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent opacity-0 group-hover:opacity-70 transition-opacity duration-500" />
-                    </div>
-                    <div className="p-8">
-                      <h3 className="text-2xl font-bold mb-2">{member.name}</h3>
-                      <p className="text-primary mb-4 font-medium">{member.position}</p>
-                      <p className="text-muted-foreground line-clamp-3 mb-6">{member.bio}</p>
-
-                      {member.socialLinks && (
-                        <div className="flex mt-4 space-x-4">
-                          {member.socialLinks.twitter && (
-                            <motion.a
-                              href={member.socialLinks.twitter}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-muted-foreground hover:text-primary transition-colors"
-                              whileHover={{ scale: 1.2, rotate: 5 }}
-                            >
-                              <Twitter className="h-5 w-5" />
-                            </motion.a>
-                          )}
-                          {member.socialLinks.linkedin && (
-                            <motion.a
-                              href={member.socialLinks.linkedin}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-muted-foreground hover:text-primary transition-colors"
-                              whileHover={{ scale: 1.2, rotate: 5 }}
-                            >
-                              <Linkedin className="h-5 w-5" />
-                            </motion.a>
-                          )}
-                          {member.socialLinks.instagram && (
-                            <motion.a
-                              href={member.socialLinks.instagram}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-muted-foreground hover:text-primary transition-colors"
-                              whileHover={{ scale: 1.2, rotate: 5 }}
-                            >
-                              <Instagram className="h-5 w-5" />
-                            </motion.a>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  </motion.div>
-                </StaggerItem>
-              ))}
-            </StaggerChildren>
+            <FadeIn>
+              <div className="bg-gradient-to-r from-muted/30 to-muted/10 rounded-2xl p-8">
+                {/* Import the TeamHierarchy component */}
+                <TeamHierarchy teamMembers={aboutData.team} />
+              </div>
+            </FadeIn>
           ) : (
             <div className="text-center py-12">
               <p className="text-gray-500">Team information not available.</p>

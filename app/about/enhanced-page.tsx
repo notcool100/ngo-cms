@@ -147,7 +147,7 @@ export default function AboutPage() {
           <HeroParallax
             imageUrl="/placeholder.svg?height=1200&width=1920"
             alt="About IWLAG"
-            overlayColor="from-primary/80 to-primary/60"
+            overlayColor="from-primary/90 to-primary/70"
           >
             <div className="text-center text-white max-w-5xl mx-auto px-4">
               <motion.div
@@ -258,10 +258,10 @@ export default function AboutPage() {
           
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-4">
             {[
-              { icon: <Users className="h-6 w-6" />, value: 15000, label: "Women Empowered", color: "from-blue-500 to-indigo-600" },
-              { icon: <Globe className="h-6 w-6" />, value: 25, label: "Countries Reached", color: "from-green-500 to-emerald-600" },
-              { icon: <Award className="h-6 w-6" />, value: 120, label: "Projects Completed", color: "from-amber-500 to-orange-600" },
-              { icon: <Heart className="h-6 w-6" />, value: 8500, label: "Donors Supporting", color: "from-pink-500 to-rose-600" },
+              { icon: <Users className="h-6 w-6" />, value: 15000, label: "Women Empowered", color: "from-primary to-blue-600" },
+              { icon: <Globe className="h-6 w-6" />, value: 25, label: "Countries Reached", color: "from-blue-500 to-indigo-600" },
+              { icon: <Award className="h-6 w-6" />, value: 120, label: "Projects Completed", color: "from-secondary to-cyan-600" },
+              { icon: <Heart className="h-6 w-6" />, value: 8500, label: "Donors Supporting", color: "from-blue-600 to-indigo-700" },
             ].map((stat, index) => (
               <motion.div
                 key={index}
@@ -462,13 +462,19 @@ export default function AboutPage() {
 
       {/* Enhanced Values Section */}
       <section className="py-24 bg-gradient-to-b from-muted/20 to-white relative overflow-hidden">
+        {/* Background decorative elements */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute top-40 left-20 w-80 h-80 rounded-full bg-primary/5 blur-3xl" />
+          <div className="absolute bottom-40 right-20 w-80 h-80 rounded-full bg-secondary/5 blur-3xl" />
+        </div>
+        
         <div className="container relative z-10">
           <div className="text-center mb-16">
             <FadeIn>
               <Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20 py-1.5 px-4">Our Principles</Badge>
               <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-gradient mb-6">Our Core Values</h2>
               <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
-                The principles that guide our work and decision-making every day.
+                The fundamental principles that guide our mission and shape our approach to creating positive change.
               </p>
             </FadeIn>
           </div>
@@ -489,11 +495,11 @@ export default function AboutPage() {
               {valuesSections.map((value, index) => (
                 <StaggerItem key={value.id}>
                   <motion.div
-                    className="bg-white rounded-2xl p-10 text-center border border-muted/10 transition-all duration-500 shadow-md hover:shadow-xl"
-                    whileHover={{ y: -15, backgroundColor: "var(--primary-light, #f0f7ff)" }}
+                    className="bg-white rounded-2xl p-10 text-center border border-muted/10 transition-all duration-500 shadow-md hover:shadow-xl hover:border-primary/20"
+                    whileHover={{ y: -15, backgroundColor: "hsl(var(--primary) / 0.05)" }}
                   >
                     <motion.div 
-                      className="bg-gradient-to-br from-primary to-primary/80 text-white h-24 w-24 rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg"
+                      className="bg-gradient-to-br from-primary to-blue-600 text-white h-24 w-24 rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg"
                       whileHover={{ scale: 1.1, rotate: 5 }}
                       transition={{ type: "spring", stiffness: 300 }}
                     >
@@ -642,13 +648,19 @@ export default function AboutPage() {
 
       {/* Enhanced Team Section */}
       <section className="py-24 bg-gradient-to-b from-muted/20 to-white relative overflow-hidden">
+        {/* Background decorative elements */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute top-40 right-20 w-80 h-80 rounded-full bg-primary/5 blur-3xl" />
+          <div className="absolute bottom-40 left-20 w-80 h-80 rounded-full bg-secondary/5 blur-3xl" />
+        </div>
+        
         <div className="container relative z-10">
           <div className="text-center mb-16">
             <FadeIn>
-              <Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20 py-1.5 px-4">Our People</Badge>
+              <Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20 py-1.5 px-4">Our Leadership</Badge>
               <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-gradient mb-6">Meet Our Team</h2>
               <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
-                The dedicated individuals working together to fulfill our mission.
+                The dedicated professionals working together to create positive change around the world.
               </p>
             </FadeIn>
           </div>
@@ -668,7 +680,7 @@ export default function AboutPage() {
               {aboutData.team.map((member, index) => (
                 <StaggerItem key={member.id}>
                   <motion.div
-                    className="bg-white rounded-2xl overflow-hidden shadow-lg border border-muted/10 transition-all duration-500 group"
+                    className="bg-white rounded-2xl overflow-hidden shadow-lg border border-muted/10 transition-all duration-500 group hover:border-primary/20"
                     whileHover={{ y: -15, boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.15)" }}
                   >
                     <div className="relative h-80 overflow-hidden">
@@ -682,10 +694,17 @@ export default function AboutPage() {
                         className="object-cover transition-transform duration-700 group-hover:scale-110"
                       />
                       {/* Overlay gradient that appears on hover */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent opacity-0 group-hover:opacity-70 transition-opacity duration-500" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-primary/90 to-primary/30 opacity-0 group-hover:opacity-80 transition-opacity duration-500" />
+                      
+                      {/* Position badge that appears on hover */}
+                      <div className="absolute bottom-0 left-0 right-0 p-4 transform translate-y-full group-hover:translate-y-0 transition-transform duration-500">
+                        <span className="inline-block bg-white/90 text-primary font-medium px-4 py-2 rounded-full text-sm backdrop-blur-sm">
+                          {member.position}
+                        </span>
+                      </div>
                     </div>
                     <div className="p-8">
-                      <h3 className="text-2xl font-bold mb-2">{member.name}</h3>
+                      <h3 className="text-2xl font-bold mb-2 text-gradient">{member.name}</h3>
                       <p className="text-primary mb-4 font-medium">{member.position}</p>
                       <p className="text-muted-foreground line-clamp-3 mb-6">{member.bio}</p>
 
@@ -696,10 +715,10 @@ export default function AboutPage() {
                               href={member.socialLinks.twitter}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-muted-foreground hover:text-primary transition-colors"
-                              whileHover={{ scale: 1.2, rotate: 5 }}
+                              className="bg-primary/10 text-primary hover:bg-primary hover:text-white p-2 rounded-full transition-colors"
+                              whileHover={{ scale: 1.1, rotate: 5 }}
                             >
-                              <Twitter className="h-5 w-5" />
+                              <Twitter className="h-4 w-4" />
                             </motion.a>
                           )}
                           {member.socialLinks.linkedin && (
@@ -707,10 +726,10 @@ export default function AboutPage() {
                               href={member.socialLinks.linkedin}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-muted-foreground hover:text-primary transition-colors"
-                              whileHover={{ scale: 1.2, rotate: 5 }}
+                              className="bg-primary/10 text-primary hover:bg-primary hover:text-white p-2 rounded-full transition-colors"
+                              whileHover={{ scale: 1.1, rotate: 5 }}
                             >
-                              <Linkedin className="h-5 w-5" />
+                              <Linkedin className="h-4 w-4" />
                             </motion.a>
                           )}
                           {member.socialLinks.instagram && (
@@ -718,10 +737,10 @@ export default function AboutPage() {
                               href={member.socialLinks.instagram}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-muted-foreground hover:text-primary transition-colors"
-                              whileHover={{ scale: 1.2, rotate: 5 }}
+                              className="bg-primary/10 text-primary hover:bg-primary hover:text-white p-2 rounded-full transition-colors"
+                              whileHover={{ scale: 1.1, rotate: 5 }}
                             >
-                              <Instagram className="h-5 w-5" />
+                              <Instagram className="h-4 w-4" />
                             </motion.a>
                           )}
                         </div>

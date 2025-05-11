@@ -49,6 +49,7 @@ interface TeamMember {
 	};
 	order: number;
 	active: boolean;
+	parentId?: number | null;
 }
 
 interface AboutSection {

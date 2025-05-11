@@ -24,6 +24,7 @@ export interface TeamMember {
   socialLinks?: Record<string, string> | null;
   order: number;
   active: boolean;
+  parentId?: number | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -46,6 +47,7 @@ export interface TeamMemberCreateInput {
   socialLinks?: Record<string, string>;
   order: number;
   active?: boolean;
+  parentId?: number;
 }
 
 export interface AboutSectionUpdateInput extends Partial<AboutSectionCreateInput> {

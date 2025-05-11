@@ -164,6 +164,7 @@ model TeamMember {
   socialLinks Json?
   order       Int
   active      Boolean @default(true)
+  parentId    Int?    // Reference to parent team member for hierarchy
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
