@@ -218,6 +218,30 @@ export default function AdminLayout({
 								Settings
 							</Link>
 						)}
+						<Link
+							href="/admin/about"
+							className={`flex items-center gap-2 rounded-lg px-3 py-2 ${
+								pathname === "/admin/about" ||
+								pathname.startsWith("/admin/about/")
+									? "bg-primary text-primary-foreground"
+									: "text-muted-foreground hover:bg-muted hover:text-foreground"
+							}`}
+						>
+							<MessageSquare className="h-5 w-5" />
+							About Us
+						</Link>
+						<Link
+							href="/admin/blog"
+							className={`flex items-center gap-2 rounded-lg px-3 py-2 ${
+								pathname === "/admin/blog" ||
+								pathname.startsWith("/admin/blog/")
+									? "bg-primary text-primary-foreground"
+									: "text-muted-foreground hover:bg-muted hover:text-foreground"
+							}`}
+						>
+							<FileText className="h-5 w-5" />
+							Blog
+						</Link>
 					</nav>
 				</aside>
 				<main className="flex-1 p-6">{children}</main>

@@ -112,6 +112,7 @@ export default function BlogAdmin() {
 
   const columns: ColumnDef<Post>[] = [
     {
+      key: 'title',
       accessorKey: 'title',
       header: 'Title',
       cell: ({ row }) => (
@@ -124,10 +125,12 @@ export default function BlogAdmin() {
       ),
     },
     {
+      key: 'author.name',
       accessorKey: 'author.name',
       header: 'Author',
     },
     {
+      key: 'category.name',
       accessorKey: 'category.name',
       header: 'Category',
       cell: ({ row }) => (
@@ -135,6 +138,7 @@ export default function BlogAdmin() {
       ),
     },
     {
+      key: 'publishedAt',
       accessorKey: 'publishedAt',
       header: 'Published',
       cell: ({ row }) => (
@@ -154,6 +158,7 @@ export default function BlogAdmin() {
       ),
     },
     {
+      key: 'actions',
       id: 'actions',
       cell: ({ row }) => (
         <div className="flex items-center gap-2">

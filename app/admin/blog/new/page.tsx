@@ -124,7 +124,7 @@ export default function NewBlogPost() {
       const postData = {
         ...formData,
         authorId: userData.user.id,
-        tagIds: selectedTags.map(id => ({ id })),
+        tagIds: selectedTags,
         publishedAt: formData.published ? new Date().toISOString() : null,
       };
 
