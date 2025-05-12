@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar, Clock, MapPin } from "lucide-react";
 import prisma from "@/lib/prisma";
+import ProgramGallery from "@/components/program-gallery";
 
 interface ProgramPageProps {
 	params: {
@@ -38,6 +39,7 @@ export default async function ProgramPage({ params }: ProgramPageProps) {
 		},
 		include: {
 			category: true,
+			images: true, // Include gallery images
 		},
 	});
 
@@ -102,6 +104,9 @@ export default async function ProgramPage({ params }: ProgramPageProps) {
 									<p key={index}>{paragraph}</p>
 								))}
 							</div>
+
+							{/* Program Gallery */}
+							<ProgramGallery images={program.images} programTitle={program.title} />
 
 							<div className="pt-6">
 								<h3 className="text-xl font-bold mb-4">Program Impact</h3>

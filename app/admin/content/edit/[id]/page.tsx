@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect,use } from "react";
+import { useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/select";
 import { toast } from "@/components/ui/use-toast";
 import { ImageUpload } from "@/components/admin/image-upload";
+import { MultiImageUpload } from "@/components/admin/multi-image-upload"; // Import the new component
 
 const formSchema = z.object({
 	title: z.string().min(3, {
@@ -55,6 +56,7 @@ const formSchema = z.object({
 	categoryId: z.string({
 		required_error: "Please select a category.",
 	}),
+	galleryImages: z.array(z.string()).optional(), // Add gallery images field
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -72,6 +74,7 @@ export default function EditProgramPage({
 	const [isLoadingProgram, setIsLoadingProgram] = useState(true);
 	const [isLoadingCategories, setIsLoadingCategories] = useState(true);
 	const [imageUrl, setImageUrl] = useState<string | null>(null);
+	const [galleryImages, setGalleryImages] = useState<string[]>([]); // State for gallery images
 
 	const form = useForm<FormValues>({
 		resolver: zodResolver(formSchema),
@@ -112,6 +115,7 @@ export default function EditProgramPage({
 				if (data.image) {
 					setImageUrl(data.image);
 				}
+				setGalleryImages(data.galleryImages || []);
 			} catch (error) {
 				console.error("Error fetching program:", error);
 				toast({
@@ -160,6 +164,9 @@ export default function EditProgramPage({
 			if (imageUrl) {
 				data.image = imageUrl;
 			}
+
+			// Include the gallery images if any were uploaded
+			data.galleryImages = galleryImages;
 
 			const response = await fetch(`/api/programs/${id}`, {
 				method: "PATCH",
@@ -246,37 +253,37 @@ export default function EditProgramPage({
 						</div>
 
 						<FormField
-    control={form.control}
-    name="categoryId"
-    render={({ field }) => (
-        <FormItem>
-            <FormLabel>Category</FormLabel>
-            {isLoadingCategories ? (
-                <div className="text-sm text-muted-foreground">Loading categories...</div>
-            ) : (
-                <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    disabled={isLoadingCategories || (categories?.length || 0) === 0}
-                >
-                    <FormControl>
-                        <SelectTrigger>
-                            <SelectValue placeholder="Select a category" />
-                        </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                        {categories?.map((category) => (
-                            <SelectItem key={category.id} value={category.id}>
-                                {category.name}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
-            )}
-            <FormMessage />
-        </FormItem>
-    )}
-/>
+							control={form.control}
+							name="categoryId"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Category</FormLabel>
+									{isLoadingCategories ? (
+										<div className="text-sm text-muted-foreground">Loading categories...</div>
+									) : (
+										<Select
+											onValueChange={field.onChange}
+											defaultValue={field.value}
+											disabled={isLoadingCategories || (categories?.length || 0) === 0}
+										>
+											<FormControl>
+												<SelectTrigger>
+													<SelectValue placeholder="Select a category" />
+												</SelectTrigger>
+											</FormControl>
+											<SelectContent>
+												{categories?.map((category) => (
+													<SelectItem key={category.id} value={category.id}>
+														{category.name}
+													</SelectItem>
+												))}
+											</SelectContent>
+										</Select>
+									)}
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
 
 						<FormField
 							control={form.control}
@@ -329,6 +336,29 @@ export default function EditProgramPage({
 											}}
 										/>
 									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+
+						<FormField
+							control={form.control}
+							name="galleryImages"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Gallery Images</FormLabel>
+									<FormControl>
+										<MultiImageUpload
+											value={galleryImages}
+											onChange={(images) => {
+												setGalleryImages(images);
+												field.onChange(images);
+											}}
+										/>
+									</FormControl>
+									<FormDescription>
+										Upload multiple images to display in the program's gallery.
+									</FormDescription>
 									<FormMessage />
 								</FormItem>
 							)}

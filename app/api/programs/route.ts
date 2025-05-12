@@ -15,6 +15,7 @@ const programSchema = z.object({
 	featured: z.boolean().default(false),
 	active: z.boolean().default(true),
 	categoryId: z.string(),
+	galleryImages: z.array(z.string()).optional(),
 });
 
 // Make sure the response is always an array
@@ -54,12 +55,19 @@ export async function GET(request: Request) {
 			where,
 			include: {
 				category: true,
+				images: true, // Include gallery images
 			},
 			orderBy: {
 				createdAt: "desc",
 			},
 			take: limit,
 		});
+		
+		// Format the response to include galleryImages as an array of URLs
+		const formattedPrograms = programs.map(program => ({
+			...program,
+			galleryImages: program.images.map(img => img.imageUrl)
+		}));
 
 		return NextResponse.json(programs);
 	} catch (error) {
@@ -91,9 +99,23 @@ export async function POST(req: Request) {
 			);
 		}
 
+		// Extract gallery images from validated data
+		const { galleryImages, ...programData } = validatedData;
+		
+		// Create the program
 		const program = await prisma.program.create({
-			data: validatedData,
+			data: programData,
 		});
+
+		// If gallery images are provided, create them
+		if (galleryImages && galleryImages.length > 0) {
+			await prisma.programImage.createMany({
+				data: galleryImages.map(imageUrl => ({
+					programId: program.id,
+					imageUrl,
+				})),
+			});
+		}
 
 		return NextResponse.json(program, { status: 201 });
 	} catch (error) {

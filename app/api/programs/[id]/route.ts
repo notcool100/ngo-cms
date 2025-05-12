@@ -16,6 +16,7 @@ const programUpdateSchema = z.object({
 	featured: z.boolean().optional(),
 	active: z.boolean().optional(),
 	categoryId: z.string().optional(),
+	galleryImages: z.array(z.string()).optional(),
 });
 export async function GET(
     req: Request,
@@ -30,8 +31,14 @@ export async function GET(
             },
             include: {
                 category: true,
+                images: true, // Include gallery images
             },
         });
+        
+        // Format the response to include galleryImages as an array of URLs
+        if (program && program.images) {
+            (program as any).galleryImages = program.images.map(img => img.imageUrl);
+        }
 
         if (!program) {
             return NextResponse.json({ error: "Program not found" }, { status: 404 });
@@ -81,12 +88,34 @@ export async function PATCH(
             }
         }
 
+        // Extract gallery images from validated data
+        const { galleryImages, ...programData } = validatedData;
+        
+        // Update the program
         const program = await prisma.program.update({
             where: {
                 id: params.id,
             },
-            data: validatedData,
+            data: programData,
         });
+
+        // If gallery images are provided, update them
+        if (galleryImages) {
+            // Delete existing images
+            await prisma.programImage.deleteMany({
+                where: { programId: params.id },
+            });
+            
+            // Create new images if any
+            if (galleryImages.length > 0) {
+                await prisma.programImage.createMany({
+                    data: galleryImages.map(imageUrl => ({
+                        programId: params.id,
+                        imageUrl,
+                    })),
+                });
+            }
+        }
 
         return NextResponse.json(program);
     } catch (error) {

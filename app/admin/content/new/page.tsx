@@ -31,6 +31,7 @@ import {
 } from "@/components/ui/select";
 import { toast } from "@/components/ui/use-toast";
 import { ImageUpload } from "@/components/admin/image-upload";
+import { MultiImageUpload } from "@/components/admin/multi-image-upload"; // Import the new component
 
 const formSchema = z.object({
 	title: z.string().min(3, {
@@ -57,6 +58,7 @@ const formSchema = z.object({
 	categoryId: z.string({
 		required_error: "Please select a category.",
 	}),
+	galleryImages: z.array(z.string()).optional(), // Add gallery images field
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -69,6 +71,7 @@ export default function NewProgramPage() {
 	const [isLoading, setIsLoading] = useState(false);
 	const [isLoadingCategories, setIsLoadingCategories] = useState(true);
 	const [imageUrl, setImageUrl] = useState<string | null>(null);
+	const [galleryImages, setGalleryImages] = useState<string[]>([]); // State for gallery images
 
 	// Fetch categories on component mount
 	useEffect(() => {
@@ -116,6 +119,9 @@ export default function NewProgramPage() {
 			if (imageUrl) {
 				data.image = imageUrl;
 			}
+
+			// Include the gallery images if any were uploaded
+			data.galleryImages = galleryImages;
 
 			const response = await fetch("/api/programs", {
 				method: "POST",
@@ -301,6 +307,29 @@ export default function NewProgramPage() {
 											}}
 										/>
 									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+
+						<FormField
+							control={form.control}
+							name="galleryImages"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Gallery Images</FormLabel>
+									<FormControl>
+										<MultiImageUpload
+											value={galleryImages}
+											onChange={(images) => {
+												setGalleryImages(images);
+												field.onChange(images);
+											}}
+										/>
+									</FormControl>
+									<FormDescription>
+										Upload multiple images to display in the program's gallery.
+									</FormDescription>
 									<FormMessage />
 								</FormItem>
 							)}
