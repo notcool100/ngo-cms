@@ -109,7 +109,16 @@ export const PublicationForm: React.FC<PublicationFormProps> = ({
 		try {
 			await upsertPublication({
 				...data,
+				title: data.title,
 				slug: initialData?.slug,
+				description: data.description || "", // Ensure description is provided
+				fileUrl: data.fileUrl || "",
+				coverImage: data.coverImage || "",
+				type: data.type || "BOOK",
+				featured: data.featured || false,
+				published: data.published || false,
+				categoryId: data.categoryId,
+				authorId: data.authorId || "",
 			});
 			router.push("/admin/publications");
 			router.refresh();
