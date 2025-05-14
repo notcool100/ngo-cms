@@ -18,6 +18,12 @@ import {
 	MessageSquare,
 	Settings,
 	Users,
+	BookOpen,
+	Video,
+	Newspaper,
+	AlertCircle,
+	UserRound,
+	Building,
 } from "lucide-react";
 import { usePermissions } from "@/hooks/use-permissions";
 
@@ -218,6 +224,7 @@ export default function AdminLayout({
 								Settings
 							</Link>
 						)}
+						
 						<Link
 							href="/admin/about"
 							className={`flex items-center gap-2 rounded-lg px-3 py-2 ${
@@ -230,18 +237,92 @@ export default function AdminLayout({
 							<MessageSquare className="h-5 w-5" />
 							About Us
 						</Link>
+						
 						<Link
-							href="/admin/blog"
-							className={`flex items-center gap-2 rounded-lg px-3 py-2 ${
-								pathname === "/admin/blog" ||
-								pathname.startsWith("/admin/blog/")
+							href="/admin/about/board"
+							className={`flex items-center gap-2 rounded-lg px-3 py-2 ml-4 ${
+								pathname === "/admin/about/board" ||
+								pathname.startsWith("/admin/about/board/")
 									? "bg-primary text-primary-foreground"
 									: "text-muted-foreground hover:bg-muted hover:text-foreground"
 							}`}
 						>
-							<FileText className="h-5 w-5" />
-							Blog
+							<Building className="h-5 w-5" />
+							Meet Our Board
 						</Link>
+						
+						<Link
+							href="/admin/about/team"
+							className={`flex items-center gap-2 rounded-lg px-3 py-2 ml-4 ${
+								pathname === "/admin/about/team" ||
+								pathname.startsWith("/admin/about/team/")
+									? "bg-primary text-primary-foreground"
+									: "text-muted-foreground hover:bg-muted hover:text-foreground"
+							}`}
+						>
+							<UserRound className="h-5 w-5" />
+							Office Team
+						</Link>
+						
+						{permissions.hasPermission("manage:publications") && (
+							<Link
+								href="/admin/publications"
+								className={`flex items-center gap-2 rounded-lg px-3 py-2 ${
+									pathname === "/admin/publications" ||
+									pathname.startsWith("/admin/publications/")
+										? "bg-primary text-primary-foreground"
+										: "text-muted-foreground hover:bg-muted hover:text-foreground"
+								}`}
+							>
+								<BookOpen className="h-5 w-5" />
+								Publications
+							</Link>
+						)}
+						
+						{permissions.hasPermission("manage:notices") && (
+							<Link
+								href="/admin/notices"
+								className={`flex items-center gap-2 rounded-lg px-3 py-2 ${
+									pathname === "/admin/notices" ||
+									pathname.startsWith("/admin/notices/")
+										? "bg-primary text-primary-foreground"
+										: "text-muted-foreground hover:bg-muted hover:text-foreground"
+								}`}
+							>
+								<AlertCircle className="h-5 w-5" />
+								Notices
+							</Link>
+						)}
+						
+						{permissions.hasPermission("manage:press-releases") && (
+							<Link
+								href="/admin/press-releases"
+								className={`flex items-center gap-2 rounded-lg px-3 py-2 ${
+									pathname === "/admin/press-releases" ||
+									pathname.startsWith("/admin/press-releases/")
+										? "bg-primary text-primary-foreground"
+										: "text-muted-foreground hover:bg-muted hover:text-foreground"
+								}`}
+							>
+								<Newspaper className="h-5 w-5" />
+								Press Releases
+							</Link>
+						)}
+						
+						{permissions.hasPermission("manage:media") && (
+							<Link
+								href="/admin/media"
+								className={`flex items-center gap-2 rounded-lg px-3 py-2 ${
+									pathname === "/admin/media" ||
+									pathname.startsWith("/admin/media/")
+										? "bg-primary text-primary-foreground"
+										: "text-muted-foreground hover:bg-muted hover:text-foreground"
+								}`}
+							>
+								<Video className="h-5 w-5" />
+								Media
+							</Link>
+						)}
 					</nav>
 				</aside>
 				<main className="flex-1 p-6">{children}</main>
