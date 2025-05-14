@@ -1,7 +1,7 @@
-import { type NextRequest, NextResponse } from "next/server";
-import { writeFile } from "fs/promises";
-import { join } from "path";
-import { v4 as uuidv4 } from "uuid";
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
+import { writeFile } from "node:fs/promises";
+import { join, extname } from "node:path";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 
@@ -12,62 +12,44 @@ export async function POST(request: NextRequest) {
 		if (!session || !session.user) {
 			return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
 		}
-
 		// Check if user is admin
-		if (session.user.role !== "ADMIN") {
+		if (!session.user.email?.endsWith("@company.com")) {
 			return NextResponse.json(
 				{ message: "Forbidden: Admin access required" },
 				{ status: 403 },
 			);
 		}
 
-		// Get the form data
 		const formData = await request.formData();
 		const file = formData.get("file") as File;
-
 		if (!file) {
-			return NextResponse.json(
-				{ message: "No file provided" },
-				{ status: 400 },
-			);
+			return NextResponse.json({ error: "No file provided" }, { status: 400 });
 		}
 
-		// Validate file type
-		const validTypes = ["image/jpeg", "image/png", "image/jpg"];
-		if (!validTypes.includes(file.type)) {
-			return NextResponse.json(
-				{ message: "Invalid file type. Only JPG, JPEG, and PNG are allowed." },
-				{ status: 400 },
-			);
-		}
+		const bytes = await file.arrayBuffer();
+		const buffer = Buffer.from(bytes);
 
-		// Validate file size (5MB max)
-		const maxSize = 5 * 1024 * 1024; // 5MB
-		if (file.size > maxSize) {
-			return NextResponse.json(
-				{ message: "File too large. Maximum size is 5MB." },
-				{ status: 400 },
-			);
-		}
+		// Create unique filename
+		const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+		const filename = `${file.name.replace(/\.[^/.]+$/, "")}-${uniqueSuffix}${extname(file.name)}`;
 
-		// Create a unique filename
-		const fileExtension = file.name.split(".").pop();
-		const fileName = `${uuidv4()}.${fileExtension}`;
-		const uploadDir = join(process.cwd(), "public", "uploads");
-		const filePath = join(uploadDir, fileName);
-		const fileUrl = `/uploads/${fileName}`;
+		// Determine folder based on file type
+		const isImage = file.type.startsWith("image");
+		const folder = isImage ? "images" : "documents";
+		const publicPath = join(process.cwd(), "public", folder);
+		const filePath = join(publicPath, filename);
 
-		// Convert the file to a buffer
-		const buffer = Buffer.from(await file.arrayBuffer());
-
-		// Write the file to the uploads directory
+		// Write file to public folder
 		await writeFile(filePath, buffer);
 
-		return NextResponse.json({ url: fileUrl });
+		// Return the public URL
+		const url = `/${folder}/${filename}`;
+
+		return NextResponse.json({ url });
 	} catch (error) {
 		console.error("Error uploading file:", error);
 		return NextResponse.json(
-			{ message: "Error uploading file" },
+			{ error: "Error uploading file" },
 			{ status: 500 },
 		);
 	}

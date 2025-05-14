@@ -13,25 +13,17 @@ const userCreateSchema = z.object({
 	password: z.string().min(6),
 });
 
-export async function GET(req: Request) {
+export async function GET() {
 	try {
-		const permissionCheck = await checkPermission("manage:users");
-
-		if (!permissionCheck.hasPermission) {
-			return permissionCheck.response;
-		}
-
 		const users = await prisma.user.findMany({
 			select: {
 				id: true,
 				name: true,
 				email: true,
 				role: true,
-				image: true,
-				createdAt: true,
 			},
 			orderBy: {
-				createdAt: "desc",
+				name: "asc",
 			},
 		});
 

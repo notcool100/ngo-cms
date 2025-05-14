@@ -1,19 +1,20 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { hasPermission } from "@/lib/permissions";
+import type { PublicationType } from "@prisma/client";
 
 export async function GET(request: NextRequest) {
 	try {
 		const { searchParams } = new URL(request.url);
 		const id = searchParams.get("id");
 		const slug = searchParams.get("slug");
-		const type = searchParams.get("type");
+		const type = searchParams.get("type") as PublicationType | null;
 		const limit = searchParams.get("limit")
-			? parseInt(searchParams.get("limit")!)
+			? Number.parseInt(searchParams.get("limit") ?? "10", 10)
 			: undefined;
 		const featured = searchParams.get("featured") === "true";
+		const categoryId = searchParams.get("categoryId") || undefined;
+		const admin = searchParams.get("admin") === "true";
 
 		if (id) {
 			const publication = await prisma.publication.findUnique({
@@ -68,17 +69,12 @@ export async function GET(request: NextRequest) {
 		}
 
 		// Build the where clause based on parameters
-		const where: any = {
-			published: true,
+		const where = {
+			...(admin ? {} : { published: true }),
+			...(type && { type }),
+			...(featured && { featured: true }),
+			...(categoryId && { categoryId }),
 		};
-
-		if (type) {
-			where.type = type;
-		}
-
-		if (featured) {
-			where.featured = true;
-		}
 
 		const publications = await prisma.publication.findMany({
 			where,
@@ -111,41 +107,69 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
 	try {
-		const session = await getServerSession(authOptions);
-		if (!session || !session.user) {
-			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-		}
+		const body = await request.json();
 
-		const userRole = session.user.role as string;
-		if (!hasPermission(userRole, "manage:publications")) {
-			return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-		}
-
-		const data = await request.json();
 		const {
 			title,
-			slug,
 			description,
 			fileUrl,
 			coverImage,
+			type,
 			featured,
 			published,
 			categoryId,
-			tags,
-			type,
-		} = data;
+			authorId,
+		} = body;
 
-		// Validate required fields
-		if (!title || !slug || !description || !fileUrl) {
+		if (!title) {
+			return NextResponse.json({ error: "Title is required" }, { status: 400 });
+		}
+
+		if (!description) {
 			return NextResponse.json(
-				{ error: "Missing required fields" },
+				{ error: "Description is required" },
+				{ status: 400 },
+			);
+		}
+
+		if (!fileUrl) {
+			return NextResponse.json(
+				{ error: "File URL is required" },
+				{ status: 400 },
+			);
+		}
+
+		if (!type) {
+			return NextResponse.json({ error: "Type is required" }, { status: 400 });
+		}
+
+		if (!authorId) {
+			return NextResponse.json(
+				{ error: "Author is required" },
+				{ status: 400 },
+			);
+		}
+
+		// Check if author exists
+		const author = await prisma.user.findUnique({
+			where: { id: authorId },
+		});
+
+		if (!author) {
+			return NextResponse.json(
+				{ error: "Selected author not found" },
 				{ status: 400 },
 			);
 		}
 
 		// Check if slug already exists
 		const existingPublication = await prisma.publication.findUnique({
-			where: { slug },
+			where: {
+				slug: title
+					.toLowerCase()
+					.replace(/[^a-z0-9]+/g, "-")
+					.replace(/(^-|-$)/g, ""),
+			},
 		});
 
 		if (existingPublication) {
@@ -159,21 +183,19 @@ export async function POST(request: NextRequest) {
 		const publication = await prisma.publication.create({
 			data: {
 				title,
-				slug,
+				slug: title
+					.toLowerCase()
+					.replace(/[^a-z0-9]+/g, "-")
+					.replace(/(^-|-$)/g, ""),
 				description,
 				fileUrl,
 				coverImage,
+				type,
 				featured: featured || false,
 				published: published || false,
 				publishedAt: published ? new Date() : null,
-				authorId: session.user.id,
+				authorId,
 				categoryId,
-				type: type || "BOOK",
-				tags: tags
-					? {
-							connect: tags.map((tagId: string) => ({ id: tagId })),
-						}
-					: undefined,
 			},
 		});
 
@@ -189,21 +211,10 @@ export async function POST(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
 	try {
-		const session = await getServerSession(authOptions);
-		if (!session || !session.user) {
-			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-		}
-
-		const userRole = session.user.role as string;
-		if (!hasPermission(userRole, "manage:publications")) {
-			return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-		}
-
 		const data = await request.json();
 		const {
-			id,
+			slug: currentSlug,
 			title,
-			slug,
 			description,
 			fileUrl,
 			coverImage,
@@ -212,10 +223,11 @@ export async function PUT(request: NextRequest) {
 			categoryId,
 			tags,
 			type,
+			authorId,
 		} = data;
 
 		// Validate required fields
-		if (!id || !title || !slug || !description || !fileUrl) {
+		if (!currentSlug || !title || !description || !fileUrl || !authorId) {
 			return NextResponse.json(
 				{ error: "Missing required fields" },
 				{ status: 400 },
@@ -224,7 +236,7 @@ export async function PUT(request: NextRequest) {
 
 		// Check if publication exists
 		const existingPublication = await prisma.publication.findUnique({
-			where: { id },
+			where: { slug: currentSlug },
 			include: { tags: true },
 		});
 
@@ -235,15 +247,33 @@ export async function PUT(request: NextRequest) {
 			);
 		}
 
-		// Check if slug already exists (for a different publication)
-		if (slug !== existingPublication.slug) {
+		// Check if author exists
+		const author = await prisma.user.findUnique({
+			where: { id: authorId },
+		});
+
+		if (!author) {
+			return NextResponse.json(
+				{ error: "Selected author not found" },
+				{ status: 400 },
+			);
+		}
+
+		// Generate new slug from title
+		const newSlug = title
+			.toLowerCase()
+			.replace(/[^a-z0-9]+/g, "-")
+			.replace(/(^-|-$)/g, "");
+
+		// Check if new slug already exists (for a different publication)
+		if (newSlug !== currentSlug) {
 			const slugExists = await prisma.publication.findUnique({
-				where: { slug },
+				where: { slug: newSlug },
 			});
 
 			if (slugExists) {
 				return NextResponse.json(
-					{ error: "Slug already exists" },
+					{ error: "Title would create a duplicate slug" },
 					{ status: 400 },
 				);
 			}
@@ -251,10 +281,10 @@ export async function PUT(request: NextRequest) {
 
 		// Update the publication
 		const publication = await prisma.publication.update({
-			where: { id },
+			where: { slug: currentSlug },
 			data: {
 				title,
-				slug,
+				slug: newSlug,
 				description,
 				fileUrl,
 				coverImage,
@@ -266,6 +296,7 @@ export async function PUT(request: NextRequest) {
 						: existingPublication.publishedAt,
 				categoryId,
 				type,
+				authorId,
 				tags: {
 					disconnect: existingPublication.tags.map((tag) => ({ id: tag.id })),
 					connect: tags ? tags.map((tagId: string) => ({ id: tagId })) : [],
@@ -285,16 +316,6 @@ export async function PUT(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
 	try {
-		const session = await getServerSession(authOptions);
-		if (!session || !session.user) {
-			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-		}
-
-		const userRole = session.user.role as string;
-		if (!hasPermission(userRole, "manage:publications")) {
-			return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-		}
-
 		const { searchParams } = new URL(request.url);
 		const id = searchParams.get("id");
 
