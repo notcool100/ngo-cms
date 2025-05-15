@@ -1,39 +1,55 @@
-import { Notice } from "@prisma/client";
+import type { Notice } from "@prisma/client";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
+
+interface NoticeWithAuthor extends Notice {
+	author: {
+		id: string;
+		name: string | null;
+		image: string | null;
+	};
+}
 
 interface NoticePayload extends Partial<Notice> {
 	title: string;
 	content: string;
 }
 
-export const useNotices = () => {
-	return useQuery({
-		queryKey: ["notices"],
+export const useNotices = (params?: {
+	important?: boolean;
+	active?: boolean;
+	limit?: number;
+}) => {
+	const queryString = new URLSearchParams();
+	if (params?.important) queryString.append("important", "true");
+	if (params?.active) queryString.append("active", "true");
+	if (params?.limit) queryString.append("limit", params.limit.toString());
+
+	return useQuery<NoticeWithAuthor[]>({
+		queryKey: ["notices", params],
 		queryFn: async () => {
-			const response = await axios.get("/api/notices");
+			const response = await axios.get(`/api/notices?${queryString}`);
 			return response.data;
 		},
 	});
 };
 
 export const useNotice = (id: string | null) => {
-	return useQuery({
+	return useQuery<NoticeWithAuthor>({
 		queryKey: ["notice", id],
 		queryFn: async () => {
-			if (!id || id === "new") return null;
 			const response = await axios.get(`/api/notices/${id}`);
 			return response.data;
 		},
-		enabled: !!id && id !== "new",
+		enabled: !!id,
 	});
 };
 
 export const useUpsertNotice = () => {
-	return useMutation({
+	return useMutation<Notice, Error, NoticePayload>({
 		mutationFn: async (data: NoticePayload) => {
 			if (data.id) {
-				const response = await axios.patch(`/api/notices/${data.id}`, data);
+				const response = await axios.put(`/api/notices/${data.id}`, data);
 				return response.data;
 			}
 			const response = await axios.post("/api/notices", data);
@@ -43,10 +59,9 @@ export const useUpsertNotice = () => {
 };
 
 export const useDeleteNotice = () => {
-	return useMutation({
+	return useMutation<void, Error, string>({
 		mutationFn: async (id: string) => {
-			const response = await axios.delete(`/api/notices/${id}`);
-			return response.data;
+			await axios.delete(`/api/notices/${id}`);
 		},
 	});
 };
