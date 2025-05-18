@@ -1,17 +1,35 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
+import type { Session } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { hasPermission } from "@/lib/permissions";
 
+interface SessionUser {
+	id: string;
+	name?: string | null;
+	email?: string | null;
+	image?: string | null;
+	role: string;
+}
+
+interface ExtendedSession extends Session {
+	user: SessionUser;
+}
+
 export async function GET(request: NextRequest) {
 	try {
+		const session = (await getServerSession(
+			authOptions,
+		)) as ExtendedSession | null;
+		console.log("Session in GET /api/press-releases:", session);
+
 		const { searchParams } = new URL(request.url);
 		const id = searchParams.get("id");
 		const slug = searchParams.get("slug");
 		const featured = searchParams.get("featured") === "true";
 		const limit = searchParams.get("limit")
-			? parseInt(searchParams.get("limit")!)
+			? Number.parseInt(searchParams.get("limit") || "10", 10)
 			: undefined;
 
 		if (id) {
@@ -62,15 +80,29 @@ export async function GET(request: NextRequest) {
 			return NextResponse.json(pressRelease);
 		}
 
-		// Build the where clause based on parameters
-		const where: any = {
-			published: true,
-		};
+		// Build the where clause based on parameters and user role
+		const where = {} as Record<string, unknown>;
+
+		// Only filter by published for non-admin users
+		if (
+			!session?.user ||
+			!hasPermission(session.user.role, "manage:press-releases")
+		) {
+			console.log(
+				"User does not have manage:press-releases permission, filtering published only",
+			);
+			where.published = true;
+		} else {
+			console.log(
+				"User has manage:press-releases permission, showing all press releases",
+			);
+		}
 
 		if (featured) {
 			where.featured = true;
 		}
 
+		console.log("Fetching press releases with where clause:", where);
 		const pressReleases = await prisma.pressRelease.findMany({
 			where,
 			include: {
@@ -87,6 +119,7 @@ export async function GET(request: NextRequest) {
 			},
 			take: limit,
 		});
+		console.log(`Found ${pressReleases.length} press releases`);
 
 		return NextResponse.json(pressReleases);
 	} catch (error) {

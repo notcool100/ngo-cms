@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
+import { useRouter } from "next/navigation";
 
 export type PressRelease = {
 	id: string;
@@ -34,6 +35,39 @@ export type PressRelease = {
 		name: string | null;
 		image: string | null;
 	};
+};
+
+const CellAction = ({ data }: { data: PressRelease }) => {
+	const router = useRouter();
+
+	return (
+		<DropdownMenu>
+			<DropdownMenuTrigger asChild>
+				<Button variant="ghost" className="h-8 w-8 p-0">
+					<span className="sr-only">Open menu</span>
+					<MoreHorizontal className="h-4 w-4" />
+				</Button>
+			</DropdownMenuTrigger>
+			<DropdownMenuContent align="end">
+				<DropdownMenuLabel>Actions</DropdownMenuLabel>
+				<DropdownMenuItem
+					onClick={() => navigator.clipboard.writeText(data.id)}
+				>
+					Copy ID
+				</DropdownMenuItem>
+				<DropdownMenuItem
+					onClick={() => router.push(`/admin/press-releases/${data.id}/edit`)}
+				>
+					<Pencil className="mr-2 h-4 w-4" />
+					Edit
+				</DropdownMenuItem>
+				<DropdownMenuItem className="text-red-600">
+					<Trash className="mr-2 h-4 w-4" />
+					Delete
+				</DropdownMenuItem>
+			</DropdownMenuContent>
+		</DropdownMenu>
+	);
 };
 
 export const columns: ColumnDef<PressRelease>[] = [
@@ -85,35 +119,6 @@ export const columns: ColumnDef<PressRelease>[] = [
 	},
 	{
 		id: "actions",
-		cell: ({ row }) => {
-			const pressRelease = row.original;
-
-			return (
-				<DropdownMenu>
-					<DropdownMenuTrigger asChild>
-						<Button variant="ghost" className="h-8 w-8 p-0">
-							<span className="sr-only">Open menu</span>
-							<MoreHorizontal className="h-4 w-4" />
-						</Button>
-					</DropdownMenuTrigger>
-					<DropdownMenuContent align="end">
-						<DropdownMenuLabel>Actions</DropdownMenuLabel>
-						<DropdownMenuItem
-							onClick={() => navigator.clipboard.writeText(pressRelease.id)}
-						>
-							Copy ID
-						</DropdownMenuItem>
-						<DropdownMenuItem>
-							<Pencil className="mr-2 h-4 w-4" />
-							Edit
-						</DropdownMenuItem>
-						<DropdownMenuItem className="text-red-600">
-							<Trash className="mr-2 h-4 w-4" />
-							Delete
-						</DropdownMenuItem>
-					</DropdownMenuContent>
-				</DropdownMenu>
-			);
-		},
+		cell: ({ row }) => <CellAction data={row.original} />,
 	},
 ];

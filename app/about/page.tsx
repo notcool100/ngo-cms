@@ -49,6 +49,7 @@ interface TeamMember {
 	};
 	order: number;
 	active: boolean;
+	teamType: string;
 }
 
 interface AboutSection {
@@ -710,137 +711,152 @@ export default function AboutPage() {
 				</div>
 			</section>
 
-			{/* Enhanced Team Section */}
+			{/* Enhanced Team Section - Split into BOD and Staff */}
 			<section className="py-24 bg-gradient-to-b from-muted/20 to-white relative overflow-hidden">
 				<div className="container relative z-10">
-					<div className="text-center mb-16">
-						<FadeIn>
-							<Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20 py-1.5 px-4">
-								Our People
-							</Badge>
-							<h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-gradient mb-6">
-								Our Leadership
-							</h2>
-							<p className="text-muted-foreground max-w-2xl mx-auto text-lg">
-								The dedicated individuals working together to fulfill our
-								mission.
-							</p>
-						</FadeIn>
-					</div>
-
-					<div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-						<Link href="/about/board">
+					{/* Board of Directors Section */}
+					<div className="mb-32">
+						<div className="text-center mb-16">
 							<FadeIn>
-								<div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 h-full">
-									<div className="relative h-64 w-full">
-										<Image
-											src="/placeholder.svg?height=400&width=600&text=Board+Members"
-											alt="Board Members"
-											fill
-											className="object-cover"
-										/>
-										<div className="absolute inset-0 bg-gradient-to-t from-black/70 to-black/20 flex items-end">
-											<div className="p-8 text-white">
-												<h3 className="text-2xl font-bold mb-2">
-													Meet Our Board
-												</h3>
-												<p className="text-white/80 mb-4">
-													Our board members bring diverse expertise and passion
-													to guide our organization.
-												</p>
-												<Button
-													variant="outline"
-													className="text-white border-white/30 hover:bg-white/20"
-												>
-													View Board Members{" "}
-													<ArrowRight className="ml-2 h-4 w-4" />
-												</Button>
-											</div>
-										</div>
-									</div>
-								</div>
+								<Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20 py-1.5 px-4">
+									Board of Directors
+								</Badge>
+								<h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-gradient mb-6">
+									Our Leadership
+								</h2>
+								<p className="text-muted-foreground max-w-2xl mx-auto text-lg">
+									Meet our distinguished board members who guide our vision and
+									strategic direction.
+								</p>
 							</FadeIn>
-						</Link>
+						</div>
 
-						<Link href="/about/team">
-							<FadeIn delay={0.2}>
-								<div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 h-full">
-									<div className="relative h-64 w-full">
-										<Image
-											src="/placeholder.svg?height=400&width=600&text=Team+Members"
-											alt="Team Members"
-											fill
-											className="object-cover"
-										/>
-										<div className="absolute inset-0 bg-gradient-to-t from-black/70 to-black/20 flex items-end">
-											<div className="p-8 text-white">
-												<h3 className="text-2xl font-bold mb-2">Office Team</h3>
-												<p className="text-white/80 mb-4">
-													Meet the dedicated professionals who work tirelessly
-													to advance our mission.
-												</p>
-												<Button
-													variant="outline"
-													className="text-white border-white/30 hover:bg-white/20"
-												>
-													View Team Members{" "}
-													<ArrowRight className="ml-2 h-4 w-4" />
-												</Button>
-											</div>
-										</div>
-									</div>
+						{isLoading ? (
+							<div className="animate-pulse space-y-8">
+								<div className="h-32 bg-gray-200 rounded-lg mb-4" />
+								<div className="h-32 bg-gray-200 rounded-lg mb-4 ml-12" />
+								<div className="h-32 bg-gray-200 rounded-lg mb-4" />
+							</div>
+						) : aboutData?.team ? (
+							<FadeIn>
+								<div className="bg-white rounded-2xl shadow-lg p-8">
+									<TeamHierarchy
+										teamMembers={aboutData.team.filter(
+											(member) => member.teamType === "BOARD",
+										)}
+									/>
 								</div>
 							</FadeIn>
-						</Link>
+						) : (
+							<div className="text-center py-12">
+								<p className="text-gray-500">
+									Board information not available.
+								</p>
+							</div>
+						)}
 					</div>
 
-					{isLoading ? (
-						<div className="animate-pulse space-y-8">
-							<div className="h-32 bg-gray-200 rounded-lg mb-4"></div>
-							<div className="h-32 bg-gray-200 rounded-lg mb-4 ml-12"></div>
-							<div className="h-32 bg-gray-200 rounded-lg mb-4 ml-12"></div>
-							<div className="h-32 bg-gray-200 rounded-lg mb-4"></div>
+					{/* Staff Section */}
+					<div>
+						<div className="text-center mb-16">
+							<FadeIn>
+								<Badge className="mb-4 bg-secondary/10 text-secondary hover:bg-secondary/20 py-1.5 px-4">
+									Our Team
+								</Badge>
+								<h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-gradient mb-6">
+									Office Staff
+								</h2>
+								<p className="text-muted-foreground max-w-2xl mx-auto text-lg">
+									Meet the dedicated professionals working tirelessly to achieve
+									our mission.
+								</p>
+							</FadeIn>
 						</div>
-					) : aboutData?.team && aboutData.team.length > 0 ? (
-						<FadeIn>
-							<div className="bg-gradient-to-r from-muted/30 to-muted/10 rounded-2xl p-8">
-								{/* Import the TeamHierarchy component */}
-								<TeamHierarchy teamMembers={aboutData.team} />
+
+						{isLoading ? (
+							<div className="animate-pulse grid grid-cols-1 md:grid-cols-3 gap-8">
+								{[1, 2, 3].map((i) => (
+									<div key={i} className="h-64 bg-gray-200 rounded-lg" />
+								))}
 							</div>
-						</FadeIn>
-					) : (
-						<div className="text-center py-12">
-							<p className="text-gray-500">Team information not available.</p>
-						</div>
-					)}
+						) : aboutData?.team ? (
+							<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+								{aboutData.team
+									.filter((member) => member.teamType === "STAFF")
+									.map((member) => (
+										<FadeIn key={member.id}>
+											<div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300">
+												<div className="relative h-48 w-full">
+													<Image
+														src={
+															member.image ||
+															`/placeholder.svg?height=200&width=300&text=${member.name}`
+														}
+														alt={member.name}
+														fill
+														className="object-cover"
+													/>
+												</div>
+												<div className="p-6">
+													<h3 className="text-xl font-bold mb-1">
+														{member.name}
+													</h3>
+													<p className="text-primary font-medium mb-3">
+														{member.position}
+													</p>
+													<p className="text-muted-foreground text-sm line-clamp-3">
+														{member.bio}
+													</p>
+													{member.socialLinks && (
+														<div className="flex gap-3 mt-4">
+															{member.socialLinks.twitter && (
+																<Link
+																	href={member.socialLinks.twitter}
+																	target="_blank"
+																	rel="noopener noreferrer"
+																>
+																	<Twitter className="h-5 w-5 text-muted-foreground hover:text-primary transition-colors" />
+																</Link>
+															)}
+															{member.socialLinks.linkedin && (
+																<Link
+																	href={member.socialLinks.linkedin}
+																	target="_blank"
+																	rel="noopener noreferrer"
+																>
+																	<Linkedin className="h-5 w-5 text-muted-foreground hover:text-primary transition-colors" />
+																</Link>
+															)}
+															{member.socialLinks.instagram && (
+																<Link
+																	href={member.socialLinks.instagram}
+																	target="_blank"
+																	rel="noopener noreferrer"
+																>
+																	<Instagram className="h-5 w-5 text-muted-foreground hover:text-primary transition-colors" />
+																</Link>
+															)}
+														</div>
+													)}
+												</div>
+											</div>
+										</FadeIn>
+									))}
+							</div>
+						) : (
+							<div className="text-center py-12">
+								<p className="text-gray-500">
+									Staff information not available.
+								</p>
+							</div>
+						)}
+					</div>
 				</div>
 
 				{/* Background decorative elements */}
 				<div className="absolute inset-0 pointer-events-none overflow-hidden">
-					<motion.div
-						className="absolute top-40 right-20 w-72 h-72 rounded-full bg-primary/5 blur-3xl"
-						animate={{
-							x: [0, -50, 0],
-							y: [0, 30, 0],
-						}}
-						transition={{
-							repeat: Infinity,
-							duration: 20,
-							ease: "easeInOut",
-						}}
-					/>
-					<motion.div
-						className="absolute bottom-40 left-20 w-96 h-96 rounded-full bg-primary/5 blur-3xl"
-						animate={{
-							x: [0, 50, 0],
-							y: [0, -30, 0],
-						}}
-						transition={{
-							repeat: Infinity,
-							duration: 25,
-							ease: "easeInOut",
-						}}
-					/>
+					<div className="absolute top-40 right-20 w-80 h-80 rounded-full bg-primary/5 blur-3xl" />
+					<div className="absolute bottom-40 left-20 w-80 h-80 rounded-full bg-secondary/5 blur-3xl" />
 				</div>
 			</section>
 

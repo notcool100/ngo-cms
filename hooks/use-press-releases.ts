@@ -1,7 +1,15 @@
 import useSWR from "swr";
 import type { PressRelease } from "@/app/admin/press-releases/columns";
 
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
+const fetcher = async (url: string) => {
+	console.log("Fetching press releases from:", url);
+	const response = await fetch(url, {
+		credentials: "include",
+	});
+	const data = await response.json();
+	console.log("Fetched press releases:", data);
+	return data;
+};
 
 export function usePressReleases() {
 	const { data, error, isLoading, mutate } = useSWR<PressRelease[]>(
