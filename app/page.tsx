@@ -164,7 +164,7 @@ export default function HomePage() {
 		<div className="flex flex-col">
 			{/* Scroll Progress Indicator */}
 			<motion.div
-				className="fixed top-0 left-0 right-0 h-1 bg-primary z-50"
+				className="fixed top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary to-primary/80 z-50"
 				style={{ scaleX: scrollProgress / 100, transformOrigin: "0%" }}
 			/>
 
@@ -172,35 +172,65 @@ export default function HomePage() {
 			<HeroParallax
 				imageUrl="/placeholder.svg?height=1200&width=1920"
 				alt="Women empowerment"
-				overlayColor="from-primary/90 to-primary/70"
+				overlayColor="from-primary/90 via-primary/80 to-primary/70"
 			>
-				<div className="text-center text-white relative z-10">
+				<div className="text-center text-white relative z-10 px-4">
 					<motion.div
 						initial={{ opacity: 0, y: 20 }}
 						animate={{ opacity: 1, y: 0 }}
 						transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
 					>
-						<Badge className="mb-6 bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm">
+						<Badge className="mb-6 bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm py-2 px-4 border border-white/20">
 							<motion.span
-								animate={{ opacity: [1, 0.5, 1] }}
+								animate={{ opacity: [1, 0.7, 1] }}
 								transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
+								className="flex items-center gap-2"
 							>
-								Empowering Since 2010
+								<Sparkles className="h-4 w-4" />
+								<span>Empowering Communities Since 2010</span>
+								<Sparkles className="h-4 w-4" />
 							</motion.span>
 						</Badge>
 					</motion.div>
 
-					<AnimatedText
-						text="Empowering Women, Transforming Communities"
-						className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl bg-clip-text text-transparent bg-gradient-to-r from-white to-white/80"
-					/>
+					<div className="relative">
+						<motion.div 
+							className="absolute -left-16 -top-16 w-32 h-32 rounded-full bg-white/10 blur-3xl"
+							animate={{ 
+								scale: [1, 1.2, 1],
+								opacity: [0.3, 0.5, 0.3]
+							}}
+							transition={{ 
+								duration: 8, 
+								repeat: Number.POSITIVE_INFINITY,
+								repeatType: "reverse" 
+							}}
+						/>
+						<motion.div 
+							className="absolute -right-16 -bottom-16 w-32 h-32 rounded-full bg-white/10 blur-3xl"
+							animate={{ 
+								scale: [1.2, 1, 1.2],
+								opacity: [0.5, 0.3, 0.5]
+							}}
+							transition={{ 
+								duration: 8, 
+								repeat: Number.POSITIVE_INFINITY,
+								repeatType: "reverse" 
+							}}
+						/>
+						
+						<AnimatedText
+							text="Empowering Women, Transforming Communities"
+							className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl bg-clip-text text-transparent bg-gradient-to-r from-white to-white/80 drop-shadow-lg"
+						/>
+					</div>
 
 					<FadeIn
 						direction="up"
 						delay={0.5}
-						className="mx-auto mt-6 max-w-[700px] text-lg text-white/90 md:text-xl"
+						className="mx-auto mt-8 max-w-[700px] text-lg text-white/90 md:text-xl"
 					>
-						<p className="leading-relaxed">
+						<p className="leading-relaxed backdrop-blur-sm bg-black/5 p-4 rounded-lg inline-block">
 							Join our mission to create a world where every woman has the
 							opportunity to thrive, lead, and inspire positive change.
 						</p>
@@ -209,7 +239,7 @@ export default function HomePage() {
 					<FadeIn
 						direction="up"
 						delay={0.7}
-						className="mt-10 flex flex-wrap justify-center gap-4"
+						className="mt-12 flex flex-wrap justify-center gap-6"
 					>
 						<Link href="/programs">
 							<motion.div
@@ -218,10 +248,26 @@ export default function HomePage() {
 							>
 								<Button
 									size="lg"
-									variant="outline"
-									className="border-white text-white hover:bg-white hover:text-primary font-medium px-8 rounded-full transition-all duration-300"
+									className="bg-white text-primary hover:bg-white/90 font-medium px-8 rounded-full transition-all duration-300 shadow-lg"
 								>
-									Our Programs
+									<span>Our Programs</span>
+									<ArrowRight className="ml-2 h-4 w-4" />
+								</Button>
+							</motion.div>
+						</Link>
+						
+						<Link href="/donate">
+							<motion.div
+								whileHover={{ scale: 1.05 }}
+								whileTap={{ scale: 0.95 }}
+							>
+								<Button
+									size="lg"
+									variant="outline"
+									className="border-white text-white hover:bg-white/20 font-medium px-8 rounded-full transition-all duration-300 backdrop-blur-sm"
+								>
+									<Heart className="mr-2 h-4 w-4" />
+									<span>Donate Now</span>
 								</Button>
 							</motion.div>
 						</Link>
@@ -233,7 +279,6 @@ export default function HomePage() {
 						animate={{
 							opacity: 1,
 							y: [0, 10, 0],
-							scale: [1, 1.1, 1],
 						}}
 						transition={{
 							delay: 1.5,
@@ -242,7 +287,9 @@ export default function HomePage() {
 							repeatType: "reverse",
 						}}
 					>
-						<ChevronRight size={30} className="rotate-90 text-white/70" />
+						<div className="p-2 rounded-full bg-white/20 backdrop-blur-sm">
+							<ChevronRight size={30} className="rotate-90 text-white" />
+						</div>
 					</motion.div>
 				</div>
 			</HeroParallax>
@@ -288,10 +335,10 @@ export default function HomePage() {
 								}}
 								transition={{ duration: 0.8 }}
 							>
-								<Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20">
-									Our Mission
+								<Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20 py-1.5 px-3">
+									<span className="font-medium">Our Mission</span>
 								</Badge>
-								<h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-gradient mb-6">
+								<h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent mb-6">
 									Creating a world of equal opportunities
 								</h2>
 								<div className="text-lg text-muted-foreground space-y-6">
@@ -334,11 +381,11 @@ export default function HomePage() {
 									].map((item, i) => (
 										<motion.div
 											key={item.text}
-											className="flex items-center gap-2 bg-primary/5 px-4 py-2 rounded-full"
+											className="flex items-center gap-2 bg-primary/5 px-4 py-2 rounded-full border border-primary/10"
 											initial={{ opacity: 0, y: 20 }}
 											animate={{ opacity: 1, y: 0 }}
 											transition={{ delay: i * 0.1 }}
-											whileHover={{ scale: 1.05 }}
+											whileHover={{ scale: 1.05, backgroundColor: "var(--primary-10)" }}
 										>
 											<span className="text-primary">{item.icon}</span>
 											<span className="text-sm font-medium">{item.text}</span>
@@ -434,10 +481,10 @@ export default function HomePage() {
 							viewport={{ once: true }}
 							transition={{ duration: 0.6 }}
 						>
-							<Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20">
-								Our Impact
+							<Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20 py-1.5 px-3">
+								<span className="font-medium">Our Impact</span>
 							</Badge>
-							<h2 className="text-3xl font-bold tracking-tighter sm:text-4xl text-gradient">
+							<h2 className="text-3xl font-bold tracking-tighter sm:text-4xl bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
 								Making a Difference
 							</h2>
 							<p className="mx-auto mt-6 max-w-[700px] text-muted-foreground">
@@ -477,12 +524,12 @@ export default function HomePage() {
 						].map((stat, index) => (
 							<motion.div
 								key={stat.label}
-								className="bg-white rounded-xl shadow-sm p-8 text-center border border-muted/20 hover:border-primary/20 transition-all duration-300 relative group"
+								className="bg-white rounded-xl shadow-md p-8 text-center border border-muted/20 hover:border-primary/20 transition-all duration-300 relative group"
 								initial={{ opacity: 0, y: 20 }}
 								whileInView={{ opacity: 1, y: 0 }}
 								viewport={{ once: true, margin: "-50px" }}
 								transition={{ delay: index * 0.1, duration: 0.5 }}
-								whileHover={{ y: -5 }}
+								whileHover={{ y: -5, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
 							>
 								<motion.div
 									className="absolute inset-0 bg-primary/5 rounded-xl"
@@ -501,7 +548,7 @@ export default function HomePage() {
 										<motion.div
 											className="mx-auto mb-4 p-3 rounded-full bg-primary/10 w-fit"
 											initial={{ rotate: 0 }}
-											whileHover={{ rotate: 360 }}
+											whileHover={{ rotate: 360, backgroundColor: "var(--primary-20)" }}
 											transition={{ duration: 0.5 }}
 										>
 											<stat.icon className="h-6 w-6 text-primary" />
@@ -515,7 +562,7 @@ export default function HomePage() {
 										duration={2.5}
 									/>
 									<motion.p
-										className="mt-2 text-muted-foreground"
+										className="mt-2 text-muted-foreground font-medium"
 										initial={{ opacity: 0.7 }}
 										whileHover={{ opacity: 1 }}
 									>
@@ -546,10 +593,10 @@ export default function HomePage() {
 						viewport={{ once: true }}
 						transition={{ duration: 0.6 }}
 					>
-						<Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20">
-							Our Programs
+						<Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20 py-1.5 px-3">
+							<span className="font-medium">Our Programs</span>
 						</Badge>
-						<h2 className="text-3xl font-bold tracking-tighter sm:text-4xl text-gradient">
+						<h2 className="text-3xl font-bold tracking-tighter sm:text-4xl bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
 							Featured Initiatives
 						</h2>
 						<p className="mx-auto mt-6 max-w-[700px] text-muted-foreground">
@@ -578,7 +625,7 @@ export default function HomePage() {
 									.map((_, index) => (
 										<motion.div
 											key={`skeleton-loading-${Math.random().toString(36).substring(7)}`}
-											className="bg-white rounded-xl overflow-hidden shadow-sm border border-muted/20"
+											className="bg-white rounded-xl overflow-hidden shadow-md border border-muted/20"
 											initial={{ opacity: 0, scale: 0.9 }}
 											animate={{ opacity: 1, scale: 1 }}
 											transition={{ duration: 0.5, delay: index * 0.1 }}
@@ -669,7 +716,7 @@ export default function HomePage() {
 								<Button
 									variant="outline"
 									size="lg"
-									className="rounded-full px-8 gap-2 group"
+									className="rounded-full px-8 gap-2 group border-primary/20 hover:border-primary"
 								>
 									<span>View All Programs</span>
 									<motion.span
@@ -702,12 +749,12 @@ export default function HomePage() {
 				<div className="container relative z-10">
 					<div className="mb-16 text-center">
 						<FadeIn>
-							<Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20">
-								Events
+							<Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20 py-1.5 px-3">
+								<span className="font-medium">Events</span>
 							</Badge>
 						</FadeIn>
 						<FadeIn direction="up" delay={0.2}>
-							<h2 className="text-3xl font-bold tracking-tighter sm:text-4xl text-gradient">
+							<h2 className="text-3xl font-bold tracking-tighter sm:text-4xl bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
 								Upcoming Events
 							</h2>
 						</FadeIn>
@@ -731,7 +778,7 @@ export default function HomePage() {
 								.map((item, index) => (
 									<div
 										key={`skeleton-${Math.random()}`}
-										className="bg-white rounded-xl overflow-hidden shadow-sm border border-muted/20"
+										className="bg-white rounded-xl overflow-hidden shadow-md border border-muted/20"
 									>
 										<div className="p-6 space-y-4">
 											<div className="h-5 w-1/3 bg-muted rounded animate-pulse" />
@@ -791,7 +838,7 @@ export default function HomePage() {
 								<Button
 									variant="outline"
 									size="lg"
-									className="rounded-full px-8 gap-2"
+									className="rounded-full px-8 gap-2 border-primary/20 hover:border-primary"
 								>
 									View All Events
 									<ArrowRight className="h-4 w-4" />
@@ -807,12 +854,12 @@ export default function HomePage() {
 				<div className="container relative z-10">
 					<div className="mb-16 text-center">
 						<FadeIn>
-							<Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20">
-								Get Involved
+							<Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20 py-1.5 px-3">
+								<span className="font-medium">Get Involved</span>
 							</Badge>
 						</FadeIn>
 						<FadeIn direction="up" delay={0.2}>
-							<h2 className="text-3xl font-bold tracking-tighter sm:text-4xl text-gradient">
+							<h2 className="text-3xl font-bold tracking-tighter sm:text-4xl bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
 								Join Our Cause
 							</h2>
 						</FadeIn>
@@ -830,13 +877,14 @@ export default function HomePage() {
 
 					<div className="grid grid-cols-1 gap-8 md:grid-cols-3 text-black">
 						{[
-							// {
-							//   icon: <Heart className="h-10 w-10" />,
-							//   title: "Donate",
-							//   description: "Your financial support helps us expand our programs and reach more women in need. Every contribution makes a difference.",
-							//   cta: "Donate Now",
-							//   href: "/donate"
-							// },
+							{
+								icon: <Heart className="h-10 w-10" />,
+								title: "Donate",
+								description:
+									"Your financial support helps us expand our programs and reach more women in need. Every contribution makes a difference.",
+								cta: "Donate Now",
+								href: "/donate",
+							},
 							{
 								icon: <Users className="h-10 w-10" />,
 								title: "Volunteer",
@@ -853,14 +901,19 @@ export default function HomePage() {
 								cta: "Become a Partner",
 								href: "/partner",
 							},
-						].map((item) => (
+						].map((item, index) => (
 							<motion.div
 								key={item.title}
-								className="bg-white rounded-xl p-8 text-center shadow-sm border border-muted/20 h-full flex flex-col items-center card-hover"
+								className="bg-white rounded-xl p-8 text-center shadow-md border border-muted/20 h-full flex flex-col items-center card-hover"
 								initial={{ opacity: 0, y: 20 }}
 								whileInView={{ opacity: 1, y: 0 }}
 								viewport={{ once: true, margin: "-50px" }}
-								transition={{ delay: 0.1, duration: 0.5 }}
+								transition={{ delay: index * 0.1, duration: 0.5 }}
+								whileHover={{ 
+									y: -5, 
+									boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+									borderColor: "var(--primary-20)"
+								}}
 							>
 								<motion.div
 									className="flex h-20 w-20 items-center justify-center rounded-full bg-primary/10 text-primary mb-6"
@@ -882,13 +935,81 @@ export default function HomePage() {
 										whileHover={{ scale: 1.05 }}
 										whileTap={{ scale: 0.95 }}
 									>
-										<Button className="rounded-full px-6 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary">
+										<Button className="rounded-full px-6 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-md">
 											{item.cta}
 										</Button>
 									</motion.div>
 								</Link>
 							</motion.div>
 						))}
+					</div>
+				</div>
+			</section>
+
+			{/* Newsletter Subscription */}
+			<section className="py-24 bg-gradient-to-b from-muted/20 to-background relative overflow-hidden">
+				<motion.div
+					className="absolute inset-0"
+					initial={{ opacity: 0 }}
+					animate={{ opacity: 1 }}
+					transition={{ duration: 1 }}
+				>
+					<motion.div
+						className="absolute inset-0"
+						style={{
+							background:
+								"radial-gradient(circle at 50% 50%, var(--primary) 1px, transparent 1px)",
+							backgroundSize: "32px 32px",
+						}}
+						animate={{
+							opacity: [0.05, 0.1, 0.05],
+							backgroundPosition: ["0% 0%", "100% 100%"],
+						}}
+						transition={{
+							duration: 15,
+							repeat: Number.POSITIVE_INFINITY,
+							repeatType: "reverse",
+						}}
+					/>
+				</motion.div>
+				
+				<div className="container relative z-10">
+					<div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-lg p-10 border border-muted/20">
+						<div className="text-center mb-8">
+							<motion.div
+								initial={{ opacity: 0, y: 20 }}
+								whileInView={{ opacity: 1, y: 0 }}
+								viewport={{ once: true }}
+								transition={{ duration: 0.6 }}
+							>
+								<Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20 py-1.5 px-3">
+									<span className="font-medium">Stay Updated</span>
+								</Badge>
+								<h2 className="text-3xl font-bold tracking-tighter sm:text-4xl bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent mb-4">
+									Subscribe to Our Newsletter
+								</h2>
+								<p className="text-muted-foreground">
+									Get the latest updates on our programs, events, and impact stories delivered to your inbox.
+								</p>
+							</motion.div>
+						</div>
+						
+						<form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-4 max-w-xl mx-auto">
+							<Input
+								type="email"
+								placeholder="Enter your email address"
+								value={email}
+								onChange={(e) => setEmail(e.target.value)}
+								className="flex-grow rounded-full px-4 py-6 border-primary/20 focus:border-primary"
+								required
+							/>
+							<Button 
+								type="submit" 
+								className="rounded-full px-8 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-md"
+							>
+								Subscribe
+							</Button>
+						</form>
 					</div>
 				</div>
 			</section>
@@ -947,11 +1068,11 @@ export default function HomePage() {
 							whileInView={{ scale: 1 }}
 							transition={{ duration: 0.6 }}
 						>
-							<Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20">
-								Latest Updates
+							<Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20 py-1.5 px-3">
+								<span className="font-medium">Latest Updates</span>
 							</Badge>
 						</motion.div>
-						<h2 className="text-4xl md:text-5xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent mb-4">
+						<h2 className="text-4xl md:text-5xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent mb-4">
 							Featured Publications
 						</h2>
 						<p className="text-lg text-muted-foreground">
@@ -983,7 +1104,7 @@ export default function HomePage() {
 							}}
 							whileHover={{ y: -5 }}
 							transition={{ duration: 0.4 }}
-							className="group bg-white/80 backdrop-blur-sm rounded-xl shadow-sm border border-muted/20 p-8 hover:shadow-lg hover:border-primary/20 transition-all duration-300"
+							className="group bg-white/80 backdrop-blur-sm rounded-xl shadow-md border border-muted/20 p-8 hover:shadow-lg hover:border-primary/20 transition-all duration-300"
 						>
 							<div className="flex items-center justify-between mb-8">
 								<motion.h3
@@ -1038,7 +1159,7 @@ export default function HomePage() {
 							}}
 							whileHover={{ y: -5 }}
 							transition={{ duration: 0.4 }}
-							className="group bg-white/80 backdrop-blur-sm rounded-xl shadow-sm border border-muted/20 p-8 hover:shadow-lg hover:border-primary/20 transition-all duration-300"
+							className="group bg-white/80 backdrop-blur-sm rounded-xl shadow-md border border-muted/20 p-8 hover:shadow-lg hover:border-primary/20 transition-all duration-300"
 						>
 							<div className="flex items-center justify-between mb-8">
 								<motion.h3
