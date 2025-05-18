@@ -111,7 +111,18 @@ export async function POST(request: NextRequest) {
 		}
 
 		const data = await request.json();
-		const { title, slug, content, excerpt, image, featured, published } = data;
+		const {
+			title,
+			slug,
+			content,
+			excerpt,
+			image,
+			featured,
+			published,
+			youtubeUrl,
+			websiteUrls,
+			images,
+		} = data;
 
 		// Validate required fields
 		if (!title || !slug || !content) {
@@ -141,6 +152,9 @@ export async function POST(request: NextRequest) {
 				content,
 				excerpt,
 				image,
+				youtubeUrl,
+				websiteUrls,
+				images,
 				featured: featured || false,
 				published: published || false,
 				publishedAt: published ? new Date() : null,
@@ -171,8 +185,19 @@ export async function PUT(request: NextRequest) {
 		}
 
 		const data = await request.json();
-		const { id, title, slug, content, excerpt, image, featured, published } =
-			data;
+		const {
+			id,
+			title,
+			slug,
+			content,
+			excerpt,
+			image,
+			featured,
+			published,
+			youtubeUrl,
+			websiteUrls,
+			images,
+		} = data;
 
 		// Validate required fields
 		if (!id || !title || !slug || !content) {
@@ -217,6 +242,9 @@ export async function PUT(request: NextRequest) {
 				content,
 				excerpt,
 				image,
+				youtubeUrl,
+				websiteUrls,
+				images,
 				featured: featured || false,
 				published: published || false,
 				publishedAt:

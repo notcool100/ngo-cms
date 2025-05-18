@@ -4,6 +4,16 @@ import { writeFile } from "node:fs/promises";
 import { join, extname } from "node:path";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { hasPermission } from "@/lib/permissions";
+import type { Role } from "@prisma/client";
+
+interface SessionUser {
+	id: string;
+	name?: string | null;
+	email?: string | null;
+	image?: string | null;
+	role: Role;
+}
 
 export async function POST(request: NextRequest) {
 	try {
@@ -12,10 +22,12 @@ export async function POST(request: NextRequest) {
 		if (!session || !session.user) {
 			return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
 		}
-		// Check if user is admin
-		if (!session.user.email?.endsWith("@company.com")) {
+
+		// Check if user has permission to upload files
+		const user = session.user as SessionUser;
+		if (!hasPermission(user.role, "manage:media")) {
 			return NextResponse.json(
-				{ message: "Forbidden: Admin access required" },
+				{ message: "Forbidden: Insufficient permissions" },
 				{ status: 403 },
 			);
 		}

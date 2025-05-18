@@ -358,6 +358,9 @@ model PressRelease {
   slug        String    @unique
   content     String    @db.Text
   excerpt     String?   @db.Text
+  youtubeUrl  String?   // URL for YouTube video
+  websiteUrls Json?     // Array of related website URLs
+  images      Json?     // Array of image URLs
   featured    Boolean   @default(false)
   published   Boolean   @default(false)
   publishedAt DateTime?
@@ -365,7 +368,7 @@ model PressRelease {
   updatedAt   DateTime  @updatedAt
   authorId    String
   author      User      @relation(fields: [authorId], references: [id])
-  image       String?
+  image       String?   // Main featured image
 
   @@index([authorId])
 }

@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -102,9 +103,9 @@ export async function POST(req: Request) {
 				title,
 				content,
 				important: important || false,
-				published: published || true,
+				published: published !== undefined ? published : true,
 				expiresAt: expiresAt ? new Date(expiresAt) : null,
-				authorId: session.user.id,
+				authorId: session.user?.id,
 			},
 		});
 
@@ -176,7 +177,7 @@ export async function DELETE(request: NextRequest) {
 			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 		}
 
-		const userRole = session.user.role as string;
+		const userRole = session.user.role ?? "user";
 		if (!hasPermission(userRole, "manage:notices")) {
 			return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 		}

@@ -23,7 +23,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 
-interface DataTableProps<T> {
+interface DataTableProps<T extends { id?: string }> {
 	data: T[];
 	columns: {
 		key: string;
@@ -41,7 +41,7 @@ interface DataTableProps<T> {
 	searchPlaceholder?: string;
 }
 
-export function DataTable<T>({
+export function DataTable<T extends { id?: string }>({
 	data,
 	columns,
 	pagination,
@@ -56,6 +56,13 @@ export function DataTable<T>({
 		if (onSearch) {
 			onSearch(searchQuery);
 		}
+	};
+
+	const generateUniqueKey = (
+		prefix: string,
+		...parts: (string | number)[]
+	): string => {
+		return `${prefix}-${parts.filter((part) => part !== undefined).join("-")}`;
 	};
 
 	return (
@@ -80,8 +87,12 @@ export function DataTable<T>({
 				<Table>
 					<TableHeader>
 						<TableRow>
-							{columns.map((column) => (
-								<TableHead key={column.key}>{column.title}</TableHead>
+							{columns.map((column, colIndex) => (
+								<TableHead
+									key={generateUniqueKey("header", colIndex, column.key)}
+								>
+									{column.title}
+								</TableHead>
 							))}
 						</TableRow>
 					</TableHeader>
@@ -96,17 +107,29 @@ export function DataTable<T>({
 								</TableCell>
 							</TableRow>
 						) : (
-							data.map((item, index) => (
-								<TableRow key={index}>
-									{columns.map((column) => (
-										<TableCell key={`${index}-${column.key}`}>
-											{column.render
-												? column.render(item)
-												: (item as any)[column.key]}
-										</TableCell>
-									))}
-								</TableRow>
-							))
+							data.map((item, rowIndex) => {
+								const rowKey = item.id || `row-${rowIndex}`;
+								return (
+									<TableRow key={rowKey}>
+										{columns.map((column, colIndex) => (
+											<TableCell
+												key={generateUniqueKey(
+													"cell",
+													rowKey,
+													column.key || colIndex,
+												)}
+											>
+												{column.render
+													? column.render(item)
+													: String(
+															(item as Record<string, unknown>)[column.key] ??
+																"",
+														)}
+											</TableCell>
+										))}
+									</TableRow>
+								);
+							})
 						)}
 					</TableBody>
 				</Table>
@@ -130,7 +153,7 @@ export function DataTable<T>({
 						</PaginationItem>
 						{Array.from({ length: pagination.pages }, (_, i) => i + 1).map(
 							(page) => (
-								<PaginationItem key={page}>
+								<PaginationItem key={`page-${page}`}>
 									<PaginationLink
 										href="#"
 										onClick={(e) => {

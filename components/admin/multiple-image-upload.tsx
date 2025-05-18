@@ -1,107 +1,136 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { Button } from "../ui/button";
-import { toast } from "../ui/use-toast";
+import React, { useState } from "react";
 import Image from "next/image";
+import { Upload, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
 
 interface MultipleImageUploadProps {
-  programId: string;
-  images: string[];
-  onChange: (images: string[]) => void;
+	value: string[];
+	onChange: (urls: string[]) => void;
+	onRemove: (url: string) => void;
 }
 
 export const MultipleImageUpload: React.FC<MultipleImageUploadProps> = ({
-  programId,
-  images: initialImages,
-  onChange,
+	value,
+	onChange,
+	onRemove,
 }) => {
-  const [images, setImages] = useState<string[]>(initialImages || []);
-  const [uploading, setUploading] = useState(false);
+	const [isUploading, setIsUploading] = useState(false);
+	const fileInputRef = React.useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    setImages(initialImages || []);
-  }, [initialImages]);
+	const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+		if (!event.target.files || event.target.files.length === 0) return;
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files || files.length === 0) return;
+		const files = Array.from(event.target.files);
 
-    setUploading(true);
+		// Validate file types and sizes
+		const validTypes = ["image/jpeg", "image/png", "image/jpg"];
+		const maxSize = 5 * 1024 * 1024; // 5MB
 
-    try {
-      const uploadedUrls: string[] = [];
+		const invalidFiles = files.filter(
+			(file) => !validTypes.includes(file.type) || file.size > maxSize,
+		);
 
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        const formData = new FormData();
-        formData.append("file", file);
+		if (invalidFiles.length > 0) {
+			toast.error(
+				"Some files were not uploaded. Please ensure all files are JPG/PNG and under 5MB.",
+			);
+			return;
+		}
 
-        // Upload file to server or cloud storage
-        // Assuming an API endpoint /api/upload for single file upload
-        const res = await fetch("/api/upload", {
-          method: "POST",
-          body: formData,
-        });
+		setIsUploading(true);
 
-        if (!res.ok) {
-          throw new Error("Failed to upload image");
-        }
+		try {
+			const uploadPromises = files.map(async (file) => {
+				const formData = new FormData();
+				formData.append("file", file);
 
-        const data = await res.json();
-        uploadedUrls.push(data.url);
-      }
+				const response = await fetch("/api/upload", {
+					method: "POST",
+					body: formData,
+					credentials: "include",
+					headers: {
+						// The actual auth header will be automatically included by the browser
+						// when credentials: "include" is set
+					},
+				});
 
-      const newImages = [...images, ...uploadedUrls];
-      setImages(newImages);
-      onChange(newImages);
-      toast({
-        title: "Images uploaded",
-        description: `${uploadedUrls.length} images uploaded successfully.`,
-      });
-    } catch (error) {
-      toast({
-        title: "Upload error",
-        description: error instanceof Error ? error.message : "Failed to upload images",
-        variant: "destructive",
-      });
-    } finally {
-      setUploading(false);
-    }
-  };
+				if (!response.ok) {
+					const error = await response.json();
+					throw new Error(error.message || "Failed to upload image");
+				}
 
-  const handleRemoveImage = (index: number) => {
-    const newImages = images.filter((_, i) => i !== index);
-    setImages(newImages);
-    onChange(newImages);
-  };
+				const data = await response.json();
+				return data.url;
+			});
 
-  return (
-    <div>
-      <label className="block mb-2 font-medium">Gallery Images</label>
-      <input
-        type="file"
-        multiple
-        accept="image/*"
-        onChange={handleFileChange}
-        disabled={uploading}
-        className="mb-4"
-      />
-      <div className="flex flex-wrap gap-4">
-        {images.map((url, index) => (
-          <div key={index} className="relative w-24 h-24 rounded overflow-hidden border">
-            <Image src={url} alt={`Image ${index + 1}`} fill className="object-cover" />
-            <button
-              type="button"
-              onClick={() => handleRemoveImage(index)}
-              className="absolute top-1 right-1 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs"
-              aria-label="Remove image"
-            >
-              &times;
-            </button>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+			const uploadedUrls = await Promise.all(uploadPromises);
+			onChange([...value, ...uploadedUrls]);
+
+			toast.success(`${files.length} images uploaded successfully`);
+
+			if (fileInputRef.current) {
+				fileInputRef.current.value = "";
+			}
+		} catch (error: any) {
+			console.error("Error uploading images:", error);
+			toast.error("Failed to upload images");
+		} finally {
+			setIsUploading(false);
+		}
+	};
+
+	return (
+		<div className="space-y-4">
+			<div className="flex items-center gap-4">
+				<Button
+					type="button"
+					variant="outline"
+					onClick={() => fileInputRef.current?.click()}
+					disabled={isUploading}
+					className="w-full"
+				>
+					<Upload className="mr-2 h-4 w-4" />
+					{isUploading ? "Uploading..." : "Upload Images"}
+				</Button>
+				<Input
+					ref={fileInputRef}
+					type="file"
+					accept="image/jpeg,image/png,image/jpg"
+					onChange={handleUpload}
+					multiple
+					className="hidden"
+				/>
+			</div>
+
+			{value.length > 0 && (
+				<div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
+					{value.map((url) => (
+						<div key={url} className="group relative">
+							<div className="relative aspect-square w-full overflow-hidden rounded-md border">
+								<Image
+									src={url}
+									alt="Gallery image"
+									fill
+									className="object-cover"
+								/>
+							</div>
+							<Button
+								type="button"
+								variant="destructive"
+								size="icon"
+								className="absolute right-2 top-2 opacity-0 transition-opacity group-hover:opacity-100"
+								onClick={() => onRemove(url)}
+							>
+								<X className="h-4 w-4" />
+							</Button>
+						</div>
+					))}
+				</div>
+			)}
+		</div>
+	);
 };

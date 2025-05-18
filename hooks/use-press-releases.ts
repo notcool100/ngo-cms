@@ -1,80 +1,46 @@
-import type { PressRelease } from "@prisma/client";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import useSWR from "swr";
+import type { PressRelease } from "@/app/admin/press-releases/columns";
 
-interface PressReleaseWithAuthor extends PressRelease {
-	author: {
-		id: string;
-		name: string | null;
-		image: string | null;
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
+export function usePressReleases() {
+	const { data, error, isLoading, mutate } = useSWR<PressRelease[]>(
+		"/api/press-releases",
+		fetcher,
+	);
+
+	return {
+		pressReleases: data,
+		isLoading,
+		isError: error,
+		mutate,
 	};
 }
 
-interface PressReleasePayload extends Partial<PressRelease> {
-	title: string;
-	slug: string;
-	content: string;
+export function usePressRelease(id: string) {
+	const { data, error, isLoading, mutate } = useSWR<PressRelease>(
+		id ? `/api/press-releases?id=${id}` : null,
+		fetcher,
+	);
+
+	return {
+		pressRelease: data,
+		isLoading,
+		isError: error,
+		mutate,
+	};
 }
 
-export const usePressReleases = (params?: {
-	featured?: boolean;
-	limit?: number;
-}) => {
-	const queryString = new URLSearchParams();
-	if (params?.featured) queryString.append("featured", "true");
-	if (params?.limit) queryString.append("limit", params.limit.toString());
+export function usePressReleaseBySlug(slug: string) {
+	const { data, error, isLoading, mutate } = useSWR<PressRelease>(
+		slug ? `/api/press-releases?slug=${slug}` : null,
+		fetcher,
+	);
 
-	return useQuery<PressReleaseWithAuthor[]>({
-		queryKey: ["press-releases", params],
-		queryFn: async () => {
-			const response = await axios.get(`/api/press-releases?${queryString}`);
-			return response.data;
-		},
-	});
-};
-
-export const usePressRelease = (id: string | null) => {
-	return useQuery<PressReleaseWithAuthor>({
-		queryKey: ["press-release", id],
-		queryFn: async () => {
-			const response = await axios.get(`/api/press-releases/${id}`);
-			return response.data;
-		},
-		enabled: !!id,
-	});
-};
-
-export const usePressReleaseBySlug = (slug: string | null) => {
-	return useQuery<PressReleaseWithAuthor>({
-		queryKey: ["press-release", slug],
-		queryFn: async () => {
-			const response = await axios.get(`/api/press-releases?slug=${slug}`);
-			return response.data;
-		},
-		enabled: !!slug,
-	});
-};
-
-export const useUpsertPressRelease = () => {
-	return useMutation<PressRelease, Error, PressReleasePayload>({
-		mutationFn: async (data: PressReleasePayload) => {
-			if (data.id) {
-				const response = await axios.put(
-					`/api/press-releases/${data.id}`,
-					data,
-				);
-				return response.data;
-			}
-			const response = await axios.post("/api/press-releases", data);
-			return response.data;
-		},
-	});
-};
-
-export const useDeletePressRelease = () => {
-	return useMutation<void, Error, string>({
-		mutationFn: async (id: string) => {
-			await axios.delete(`/api/press-releases/${id}`);
-		},
-	});
-};
+	return {
+		data,
+		isLoading,
+		isError: error,
+		mutate,
+	};
+}
