@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
-
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import prismadb from "@/lib/prismadb";
 
 export async function GET(
@@ -37,14 +37,13 @@ export async function PATCH(
 	{ params }: { params: { noticeId: string } },
 ) {
 	try {
-		const { userId } = auth();
-		const body = await req.json();
-
-		const { title, content, important, published, expiresAt } = body;
-
-		if (!userId) {
-			return new NextResponse("Unauthenticated", { status: 403 });
+		const session = await getServerSession(authOptions);
+		if (!session || !session.user) {
+			return new NextResponse("Unauthorized", { status: 401 });
 		}
+
+		const body = await req.json();
+		const { title, content, important, published, expiresAt } = body;
 
 		if (!params.noticeId) {
 			return new NextResponse("Notice id is required", { status: 400 });
@@ -83,10 +82,9 @@ export async function DELETE(
 	{ params }: { params: { noticeId: string } },
 ) {
 	try {
-		const { userId } = auth();
-
-		if (!userId) {
-			return new NextResponse("Unauthenticated", { status: 403 });
+		const session = await getServerSession(authOptions);
+		if (!session || !session.user) {
+			return new NextResponse("Unauthorized", { status: 401 });
 		}
 
 		if (!params.noticeId) {

@@ -3,7 +3,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { hasPermission } from "@/lib/permissions";
-import { auth } from "@clerk/nextjs";
 
 export async function GET(request: NextRequest) {
 	try {
@@ -12,7 +11,7 @@ export async function GET(request: NextRequest) {
 		const important = searchParams.get("important") === "true";
 		const active = searchParams.get("active") === "true";
 		const limit = searchParams.get("limit")
-			? parseInt(searchParams.get("limit")!)
+			? Number.parseInt(searchParams.get("limit") || "")
 			: undefined;
 
 		if (id) {
@@ -82,14 +81,13 @@ export async function GET(request: NextRequest) {
 
 export async function POST(req: Request) {
 	try {
-		const { userId } = auth();
-		const body = await req.json();
-
-		const { title, content, important, published, expiresAt } = body;
-
-		if (!userId) {
-			return new NextResponse("Unauthenticated", { status: 403 });
+		const session = await getServerSession(authOptions);
+		if (!session || !session.user) {
+			return new NextResponse("Unauthorized", { status: 401 });
 		}
+
+		const body = await req.json();
+		const { title, content, important, published, expiresAt } = body;
 
 		if (!title) {
 			return new NextResponse("Title is required", { status: 400 });
@@ -106,7 +104,7 @@ export async function POST(req: Request) {
 				important: important || false,
 				published: published || true,
 				expiresAt: expiresAt ? new Date(expiresAt) : null,
-				authorId: userId,
+				authorId: session.user.id,
 			},
 		});
 
