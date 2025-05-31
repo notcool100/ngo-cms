@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Video, Music, Film, Mic, Newspaper, FileQuestion } from "lucide-react";
@@ -54,6 +54,30 @@ interface Category {
 }
 
 export default function MediaPage() {
+	return (
+		<Suspense fallback={<MediaPageLoading />}>
+			<MediaPageContent />
+		</Suspense>
+	);
+}
+
+function MediaPageLoading() {
+	return (
+		<div className="container mx-auto py-12">
+			<div className="text-center mb-12">
+				<h1 className="text-4xl font-bold mb-4">Media Gallery</h1>
+				<p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+					Explore our collection of videos, interviews, documentaries, and more.
+				</p>
+			</div>
+			<div className="flex justify-center items-center h-64">
+				<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+			</div>
+		</div>
+	);
+}
+
+function MediaPageContent() {
 	const [media, setMedia] = useState<Media[]>([]);
 	const [categories, setCategories] = useState<Category[]>([]);
 	const [loading, setLoading] = useState(true);
