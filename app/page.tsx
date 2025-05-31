@@ -37,7 +37,7 @@ import { ProgramCard } from "@/components/program-card";
 import { EventCard } from "@/components/event-card";
 import { toast } from "@/components/ui/use-toast";
 import { Container } from "@/components/ui/container";
-import { NoticesSection } from "@/components/notices-section";
+import { NoticesSection, ImportantNoticeOverlay} from "@/components/notices-section";
 import { FeaturedPublications } from "@/components/featured-publications";
 
 export default function HomePage() {
@@ -167,7 +167,7 @@ export default function HomePage() {
 				className="fixed top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary to-primary/80 z-50"
 				style={{ scaleX: scrollProgress / 100, transformOrigin: "0%" }}
 			/>
-
+  <ImportantNoticeOverlay />
 			{/* Hero Section with Enhanced Parallax */}
 			<HeroParallax
 				imageUrl="/placeholder.svg?height=1200&width=1920"
