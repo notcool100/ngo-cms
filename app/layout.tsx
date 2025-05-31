@@ -14,7 +14,6 @@ export const metadata = {
 		"Empowering women through education, support, and community initiatives",
 	generator: "v0.dev",
 };
-
 export default function RootLayout({
 	children,
 }: {
@@ -43,4 +42,4 @@ export default function RootLayout({
 	);
 }
 
-import "./globals.css";
+import "./globals.css"

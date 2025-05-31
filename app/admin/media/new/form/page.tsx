@@ -29,6 +29,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { Loader2 } from "lucide-react";
+import { ImageUpload } from "@/components/admin/image-upload";
 
 const mediaFormSchema = z.object({
 	title: z.string().min(3, {
@@ -46,20 +47,17 @@ const mediaFormSchema = z.object({
 	description: z.string().min(10, {
 		message: "Description must be at least 10 characters.",
 	}),
-	mediaUrl: z.string().url({
-		message: "Please enter a valid URL.",
+	mediaUrl: z.string().min(1, {
+		message: "Please upload a file or enter a valid URL.",
 	}),
 	mediaType: z.enum(
-		["VIDEO", "AUDIO", "DOCUMENTARY", "INTERVIEW", "NEWS", "OTHER"],
+		["IMAGE", "VIDEO"],
 		{
 			required_error: "Please select a media type.",
 		},
 	),
 	thumbnail: z
 		.string()
-		.url({
-			message: "Please enter a valid URL.",
-		})
 		.optional()
 		.nullable(),
 	featured: z.boolean().default(false),
@@ -253,26 +251,6 @@ export default function NewMediaFormPage() {
 							<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 								<FormField
 									control={form.control}
-									name="mediaUrl"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Media URL</FormLabel>
-											<FormControl>
-												<Input
-													placeholder="https://example.com/video.mp4"
-													{...field}
-												/>
-											</FormControl>
-											<FormDescription>
-												URL to the media file (video, audio, etc.)
-											</FormDescription>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-
-								<FormField
-									control={form.control}
 									name="mediaType"
 									render={({ field }) => (
 										<FormItem>
@@ -287,41 +265,12 @@ export default function NewMediaFormPage() {
 													</SelectTrigger>
 												</FormControl>
 												<SelectContent>
+													<SelectItem value="IMAGE">Image</SelectItem>
 													<SelectItem value="VIDEO">Video</SelectItem>
-													<SelectItem value="AUDIO">Audio</SelectItem>
-													<SelectItem value="DOCUMENTARY">
-														Documentary
-													</SelectItem>
-													<SelectItem value="INTERVIEW">Interview</SelectItem>
-													<SelectItem value="NEWS">News</SelectItem>
-													<SelectItem value="OTHER">Other</SelectItem>
 												</SelectContent>
 											</Select>
 											<FormDescription>
 												The type of media content.
-											</FormDescription>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-							</div>
-
-							<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-								<FormField
-									control={form.control}
-									name="thumbnail"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Thumbnail URL</FormLabel>
-											<FormControl>
-												<Input
-													placeholder="https://example.com/thumbnail.jpg"
-													{...field}
-													value={field.value || ""}
-												/>
-											</FormControl>
-											<FormDescription>
-												URL to the thumbnail image (optional).
 											</FormDescription>
 											<FormMessage />
 										</FormItem>
@@ -364,6 +313,58 @@ export default function NewMediaFormPage() {
 											<FormDescription>
 												Assign this media to a category (optional).
 											</FormDescription>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+							</div>
+
+							<div className="grid grid-cols-1 gap-6">
+								<FormField
+									control={form.control}
+									name="mediaUrl"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Media File</FormLabel>
+											<FormDescription>
+												Upload a file or enter a URL for your {form.getValues("mediaType")?.toLowerCase() || "media"}.
+											</FormDescription>
+											<div className="grid grid-cols-1 gap-4">
+												<ImageUpload
+													value={field.value}
+													onChange={field.onChange}
+												/>
+												<div className="flex items-center gap-2">
+													<div className="w-full">
+														<FormControl>
+															<Input
+																placeholder={`Enter ${form.getValues("mediaType")?.toLowerCase() || "media"} URL`}
+																{...field}
+															/>
+														</FormControl>
+													</div>
+												</div>
+											</div>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+							</div>
+
+							<div className="grid grid-cols-1 gap-6">
+								<FormField
+									control={form.control}
+									name="thumbnail"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Thumbnail</FormLabel>
+											<FormDescription>
+												Upload a thumbnail image (optional).
+											</FormDescription>
+											<ImageUpload
+												value={field.value || ""}
+												onChange={field.onChange}
+											/>
 											<FormMessage />
 										</FormItem>
 									)}

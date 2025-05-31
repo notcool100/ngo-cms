@@ -473,12 +473,8 @@ enum PublicationType {
 }
 
 enum MediaType {
+  IMAGE
   VIDEO
-  AUDIO
-  DOCUMENTARY
-  INTERVIEW
-  NEWS
-  OTHER
 }
 
 enum TeamType {
