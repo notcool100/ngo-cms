@@ -9,7 +9,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-	title: "IWLAG - Women's Empowerment NGO",
+	title: "INWOLAG - Women's Empowerment NGO",
 	description:
 		"Empowering women through education, support, and community initiatives",
 	generator: "v0.dev",

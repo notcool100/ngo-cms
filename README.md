@@ -65,7 +65,7 @@ IWLAG is a full-featured website for a women's empowerment NGO that includes bot
    ```bash
    npx prisma generate
    npx prisma migrate dev
-   npm run db:seed
+   npx prisma db seed
 5. Start the development server:
    ```bash
    npm run dev

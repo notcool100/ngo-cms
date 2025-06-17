@@ -90,9 +90,7 @@ export default function PublicationsPage() {
 							<SelectItem value="BOOK">Books</SelectItem>
 							<SelectItem value="ARTICLE">Articles</SelectItem>
 							<SelectItem value="REPORT">Reports</SelectItem>
-							<SelectItem value="ACT">Acts</SelectItem>
-							<SelectItem value="RULE">Rules</SelectItem>
-							<SelectItem value="GUIDELINE">Guidelines</SelectItem>
+							
 							<SelectItem value="OTHER">Other</SelectItem>
 						</SelectContent>
 					</Select>

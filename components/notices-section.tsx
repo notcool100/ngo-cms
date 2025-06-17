@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react"; // <-- Add this line
+import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { motion } from "framer-motion";
 import { AlertCircle, ChevronRight, Newspaper } from "lucide-react";
@@ -19,6 +19,49 @@ export function ImportantNoticeOverlay() {
 	});
 
 	const [isVisible, setIsVisible] = useState(true);
+
+	useEffect(() => {
+		if (!mostImportantNotice?.length) return;
+
+		const notice = mostImportantNotice[0];
+		const storageKey = `notice_hidden_${notice.id}`;
+		
+		try {
+			const hiddenUntil = localStorage.getItem(storageKey);
+			if (hiddenUntil) {
+				const hiddenUntilTime = new Date(hiddenUntil);
+				const now = new Date();
+				if (now < hiddenUntilTime) {
+					setIsVisible(false);
+				} else {
+					localStorage.removeItem(storageKey);
+				}
+			}
+		} catch (error) {
+			console.warn('localStorage not available:', error);
+		}
+	}, [mostImportantNotice]);
+
+	const handleUnderstand = () => {
+		if (!mostImportantNotice?.length) return;
+
+		const notice = mostImportantNotice[0];
+		const storageKey = `notice_hidden_${notice.id}`;
+		
+		try {
+			const hideUntil = new Date();
+			hideUntil.setHours(hideUntil.getHours() + 24);
+			localStorage.setItem(storageKey, hideUntil.toISOString());
+		} catch (error) {
+			console.warn('localStorage not available:', error);
+		}
+		
+		setIsVisible(false);
+	};
+
+	const handleClose = () => {
+		setIsVisible(false);
+	};
 
 	if (isLoading || !mostImportantNotice?.length || !isVisible) {
 		return null;
@@ -39,7 +82,7 @@ export function ImportantNoticeOverlay() {
 				className="bg-white rounded-xl max-w-2xl w-full p-6 shadow-2xl relative"
 			>
 				<button
-					onClick={() => setIsVisible(false)}
+					onClick={handleClose}
 					className="absolute top-4 right-4 p-1 rounded-full hover:bg-gray-100 transition-colors"
 					aria-label="Close notice"
 				>
@@ -84,7 +127,7 @@ export function ImportantNoticeOverlay() {
 				</div>
 
 				<button
-					onClick={() => setIsVisible(false)}
+					onClick={handleUnderstand}
 					className="mt-6 w-full bg-primary text-white py-2 px-4 rounded-lg hover:bg-primary/90 transition-colors"
 				>
 					I Understand
@@ -93,6 +136,7 @@ export function ImportantNoticeOverlay() {
 		</motion.div>
 	);
 }
+
 export function NoticesSection() {
 	// Fetch the single most important notice
 	const { data: mostImportantNotice, isLoading: loadingMostImportant } =

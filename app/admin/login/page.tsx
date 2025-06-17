@@ -22,6 +22,8 @@ export default function AdminLoginPage() {
 	const router = useRouter();
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const [showPassword, setShowPassword] = useState(false);
+
 	const [isLoading, setIsLoading] = useState(false);
 
 	const handleSubmit = async (e: React.FormEvent) => {
@@ -102,14 +104,24 @@ export default function AdminLoginPage() {
 										Forgot password?
 									</Link>
 								</div>
-								<Input
-									id="password"
-									type="password"
-									placeholder="Enter your password"
-									value={password}
-									onChange={(e) => setPassword(e.target.value)}
-									required
-								/>
+								<div className="relative">
+									<Input
+										id="password"
+										type={showPassword ? "text" : "password"}
+										placeholder="Enter your password"
+										value={password}
+										onChange={(e) => setPassword(e.target.value)}
+										required
+										className="pr-10"
+									/>
+									<span
+										onClick={() => setShowPassword(!showPassword)}
+										className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer select-none text-gray-500 text-sm"
+									>
+										{showPassword ? "👁️" : "🙈"}
+									</span>
+								</div>
+
 							</div>
 							<Button type="submit" className="w-full" disabled={isLoading}>
 								{isLoading ? "Signing in..." : "Sign In"}

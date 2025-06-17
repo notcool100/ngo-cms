@@ -172,7 +172,7 @@ export default function Footer() {
 									sizes="40px"
 								/>
 							</div>
-							<h3 className="text-xl font-bold text-gradient">{settings?.siteName || "IWLAG"}</h3>
+							<h3 className="text-xl font-bold text-gradient">{settings?.siteName || "INWOLAG"}</h3>
 						</div>
 						<p className="text-muted-foreground">
 							{settings?.siteDescription || "Empowering women through education, support, and community initiatives since 2010."}
@@ -293,7 +293,7 @@ export default function Footer() {
 				
 				<div className="mt-16 pt-8 border-t border-muted/30 flex flex-col md:flex-row justify-between items-center gap-4">
 					<p className="text-sm text-muted-foreground text-center md:text-left">
-						&copy; {new Date().getFullYear()} {settings?.siteName || "IWLAG"}. All rights reserved.
+						&copy; {new Date().getFullYear()} {settings?.siteName || "INWOLAG"}. All rights reserved.
 					</p>
 					<div className="flex items-center gap-2">
 						<Heart className="h-4 w-4 text-primary" />

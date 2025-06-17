@@ -19,7 +19,7 @@ const navigation = [
 	{ name: "Media", href: "/media" },
 	{ name: "Events", href: "/events" },
 	// { name: "Blog", href: "/blog" },
-	{ name: "Volunteer", href: "/volunteer" },
+	{ name: "Contribution", href: "/volunteer" },
 	{ name: "Contact", href: "/contact" },
 ];
 
@@ -62,7 +62,7 @@ export default function Header() {
 						<div className="relative h-10 w-10 overflow-hidden rounded-full">
 							<Image
 								src="/uploads/logo.jpg"
-								alt={settings?.siteName || "IWLAG Logo"}
+								alt={settings?.siteName || "INWOLAG Logo"}
 								fill
 								className="object-cover"
 								sizes="40px"
@@ -75,7 +75,7 @@ export default function Header() {
 							animate={{ opacity: 1, x: 0 }}
 							transition={{ delay: 0.2 }}
 						>
-							{settings?.siteName || "IWLAG"}
+							{settings?.siteName || "INWOLAG"}
 						</motion.span>
 					</Link>
 				</div>
@@ -157,14 +157,14 @@ export default function Header() {
 								<div className="relative h-8 w-8 overflow-hidden rounded-full">
 									<Image
 										src="/uploads/logo.jpg"
-										alt={settings?.siteName || "IWLAG Logo"}
+										alt={settings?.siteName || "INWOLAG Logo"}
 										fill
 										className="object-cover"
 										sizes="32px"
 									/>
 								</div>
 								<span className="text-lg font-bold text-gray-800">
-									{settings?.siteName || "IWLAG"}
+									{settings?.siteName || "INWOLAG"}
 								</span>
 							</div>
 							<Button

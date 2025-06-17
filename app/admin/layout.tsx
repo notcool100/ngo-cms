@@ -86,7 +86,7 @@ export default function AdminLayout({
 						href="/admin/dashboard"
 						className="flex items-center gap-2 font-semibold"
 					>
-						<span className="text-primary">IWLAG</span>
+						<span className="text-primary">INWOLAG</span>
 						<span className="text-muted-foreground">Admin</span>
 					</Link>
 				</div>
@@ -131,7 +131,7 @@ export default function AdminLayout({
 								}`}
 							>
 								<FileText className="h-5 w-5" />
-								Content Management
+								Program Management
 							</Link>
 						)}
 

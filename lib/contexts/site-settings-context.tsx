@@ -24,7 +24,7 @@ interface SiteSettingsContextType {
 }
 
 const defaultSettings: SiteSettings = {
-  siteName: "IWLAG",
+  siteName: "INWOLAG",
   siteDescription: "Empowering women through education and support",
   contactEmail: "contact@empowertogether.org",
   maintenanceMode: false,
