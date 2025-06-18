@@ -17,8 +17,8 @@ export async function GET() {
           featuredPostsCount: 3,
           showRelatedPosts: true,
           showAuthorInfo: true,
-          seoTitle: 'Blog | IWLAG',
-          seoDescription: 'Latest news, stories, and updates from IWLAG',
+          seoTitle: 'Blog | INWOLAG',
+          seoDescription: 'Latest news, stories, and updates from INWOLAG',
         },
       });
     }

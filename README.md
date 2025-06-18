@@ -1,12 +1,12 @@
-# IWLAG - Women's Empowerment NGO Website
+# INWOLAG - Women's Empowerment NGO Website
 
 A modern, responsive CMS website for a women's empowerment NGO built with Next.js, React, and Prisma.
 
-![IWLAG](https://placeholder.svg?height=400&width=800&text=Empower+Together)
+![INWOLAG](https://placeholder.svg?height=400&width=800&text=Empower+Together)
 
 ## Overview
 
-IWLAG is a full-featured website for a women's empowerment NGO that includes both public-facing pages and an administrative backend. The platform enables the organization to manage content, events, donations, volunteers, and communications through an intuitive interface.
+INWOLAG is a full-featured website for a women's empowerment NGO that includes both public-facing pages and an administrative backend. The platform enables the organization to manage content, events, donations, volunteers, and communications through an intuitive interface.
 
 ## Features test
 

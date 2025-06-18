@@ -152,10 +152,14 @@ export default function ProgramsPage() {
               </Badge>
             </motion.div>
             
+           <div className="flex justify-center">
             <AnimatedText
-              text="Our Programs"
-              className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl"
+            text="Our Programs"
+            className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl mb-6 text-center"
+            
             />
+
+           </div>
             
             <FadeIn
               direction="up"
@@ -398,7 +402,7 @@ export default function ProgramsPage() {
                       <Link href={`/programs?category=${category.slug}`}>
                         <Button 
                           variant="outline" 
-                          className="w-full border-white/30 text-white hover:bg-white/20 group-hover:border-white/60"
+                          className="w-full border-white/30 text-black hover:bg-white/20 group-hover:border-white/60"
                         >
                           View Programs
                           <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -433,7 +437,7 @@ export default function ProgramsPage() {
             <div className="flex flex-wrap justify-center gap-4">
               <FadeIn delay={0.3}>
                 <Link href="/volunteer">
-                  <Button variant="outline" className="border-white text-white hover:bg-white/20">
+                  <Button variant="outline" className="border-white text-black hover:bg-white/20">
                     Volunteer With Us
                   </Button>
                 </Link>
@@ -449,7 +453,7 @@ export default function ProgramsPage() {
               
               <FadeIn delay={0.5}>
                 <Link href="/contact">
-                  <Button variant="outline" className="border-white text-white hover:bg-white/20">
+                  <Button variant="outline" className="border-white text-black hover:bg-white/20">
                     Partner With Us
                   </Button>
                 </Link>

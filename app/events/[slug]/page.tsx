@@ -23,13 +23,13 @@ export async function generateMetadata({
 
 	if (!event) {
 		return {
-			title: "Event Not Found | IWLAG",
+			title: "Event Not Found | INWOLAG",
 			description: "The requested event could not be found.",
 		};
 	}
 
 	return {
-		title: `${event.title} | IWLAG`,
+		title: `${event.title} | INWOLAG`,
 		description: event.description,
 	};
 }

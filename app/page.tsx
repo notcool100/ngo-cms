@@ -37,7 +37,7 @@ import { ProgramCard } from "@/components/program-card";
 import { EventCard } from "@/components/event-card";
 import { toast } from "@/components/ui/use-toast";
 import { Container } from "@/components/ui/container";
-import { NoticesSection, ImportantNoticeOverlay} from "@/components/notices-section";
+import { NoticesSection, ImportantNoticeOverlay } from "@/components/notices-section";
 import { FeaturedPublications } from "@/components/featured-publications";
 
 export default function HomePage() {
@@ -167,7 +167,7 @@ export default function HomePage() {
 				className="fixed top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary to-primary/80 z-50"
 				style={{ scaleX: scrollProgress / 100, transformOrigin: "0%" }}
 			/>
-  <ImportantNoticeOverlay />
+			<ImportantNoticeOverlay />
 			{/* Hero Section with Enhanced Parallax */}
 			<HeroParallax
 				imageUrl="/placeholder.svg?height=1200&width=1920"
@@ -194,35 +194,43 @@ export default function HomePage() {
 					</motion.div>
 
 					<div className="relative">
-						<motion.div 
+						<motion.div
 							className="absolute -left-16 -top-16 w-32 h-32 rounded-full bg-white/10 blur-3xl"
-							animate={{ 
+							animate={{
 								scale: [1, 1.2, 1],
 								opacity: [0.3, 0.5, 0.3]
 							}}
-							transition={{ 
-								duration: 8, 
+							transition={{
+								duration: 8,
 								repeat: Number.POSITIVE_INFINITY,
-								repeatType: "reverse" 
+								repeatType: "reverse"
 							}}
 						/>
-						<motion.div 
+						<motion.div
 							className="absolute -right-16 -bottom-16 w-32 h-32 rounded-full bg-white/10 blur-3xl"
-							animate={{ 
+							animate={{
 								scale: [1.2, 1, 1.2],
 								opacity: [0.5, 0.3, 0.5]
 							}}
-							transition={{ 
-								duration: 8, 
+							transition={{
+								duration: 8,
 								repeat: Number.POSITIVE_INFINITY,
-								repeatType: "reverse" 
+								repeatType: "reverse"
 							}}
 						/>
-						
-						<AnimatedText
-							text="Empowering Women, Transforming Communities"
-							className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl bg-clip-text text-transparent bg-gradient-to-r from-white to-white/80 drop-shadow-lg"
-						/>
+
+						<div className="flex flex-col items-center text-center space-y-2">
+							<AnimatedText
+								text="For Nepalese Indigenous Women"
+								className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl bg-clip-text text-transparent bg-gradient-to-r from-white to-white/80 drop-shadow-lg"
+							/>
+							<AnimatedText
+								text="By Nepalese Indigenous Women"
+								className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl bg-clip-text text-transparent bg-gradient-to-r from-white to-white/80 drop-shadow-lg"
+							/>
+						</div>
+
+
 					</div>
 
 					<FadeIn
@@ -255,7 +263,7 @@ export default function HomePage() {
 								</Button>
 							</motion.div>
 						</Link>
-						
+
 						<Link href="/donate">
 							<motion.div
 								whileHover={{ scale: 1.05 }}
@@ -264,7 +272,7 @@ export default function HomePage() {
 								<Button
 									size="lg"
 									variant="outline"
-									className="border-white text-white hover:bg-white/20 font-medium px-8 rounded-full transition-all duration-300 backdrop-blur-sm"
+									className="border-white text-black hover:bg-white/20 font-medium px-8 rounded-full transition-all duration-300 backdrop-blur-sm"
 								>
 									<Heart className="mr-2 h-4 w-4" />
 									<span>Donate Now</span>
@@ -343,7 +351,7 @@ export default function HomePage() {
 								</h2>
 								<div className="text-lg text-muted-foreground space-y-6">
 									<p className="leading-relaxed">
-										IWLAG is dedicated to advancing women's rights, promoting
+										INWOLAG is dedicated to advancing women's rights, promoting
 										gender equality, and creating opportunities for women to
 										achieve their full potential through education, economic
 										empowerment, and leadership development.
@@ -620,41 +628,66 @@ export default function HomePage() {
 					>
 						{isLoading
 							? // Enhanced skeleton loaders
-								Array(3)
-									.fill(0)
-									.map((_, index) => (
-										<motion.div
-											key={`skeleton-loading-${Math.random().toString(36).substring(7)}`}
-											className="bg-white rounded-xl overflow-hidden shadow-md border border-muted/20"
-											initial={{ opacity: 0, scale: 0.9 }}
-											animate={{ opacity: 1, scale: 1 }}
-											transition={{ duration: 0.5, delay: index * 0.1 }}
-										>
-											<div className="h-52 bg-muted animate-pulse relative overflow-hidden">
-												<motion.div
-													className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-													animate={{
-														x: ["-100%", "100%"],
-													}}
-													transition={{
-														duration: 1.5,
-														repeat: Number.POSITIVE_INFINITY,
-														ease: "linear",
-													}}
-												/>
-											</div>
-											<div className="p-6 space-y-4">
-												<div className="h-6 w-3/4 bg-muted rounded animate-pulse" />
-												<div className="h-4 w-full bg-muted rounded animate-pulse" />
-												<div className="h-4 w-3/4 bg-muted rounded animate-pulse" />
-												<div className="h-10 w-1/3 bg-muted rounded animate-pulse" />
-											</div>
-										</motion.div>
-									))
+							Array(3)
+								.fill(0)
+								.map((_, index) => (
+									<motion.div
+										key={`skeleton-loading-${Math.random().toString(36).substring(7)}`}
+										className="bg-white rounded-xl overflow-hidden shadow-md border border-muted/20"
+										initial={{ opacity: 0, scale: 0.9 }}
+										animate={{ opacity: 1, scale: 1 }}
+										transition={{ duration: 0.5, delay: index * 0.1 }}
+									>
+										<div className="h-52 bg-muted animate-pulse relative overflow-hidden">
+											<motion.div
+												className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+												animate={{
+													x: ["-100%", "100%"],
+												}}
+												transition={{
+													duration: 1.5,
+													repeat: Number.POSITIVE_INFINITY,
+													ease: "linear",
+												}}
+											/>
+										</div>
+										<div className="p-6 space-y-4">
+											<div className="h-6 w-3/4 bg-muted rounded animate-pulse" />
+											<div className="h-4 w-full bg-muted rounded animate-pulse" />
+											<div className="h-4 w-3/4 bg-muted rounded animate-pulse" />
+											<div className="h-10 w-1/3 bg-muted rounded animate-pulse" />
+										</div>
+									</motion.div>
+								))
 							: featuredPrograms.length > 0
 								? featuredPrograms.map((program, index) => (
+									<motion.div
+										key={program.id}
+										variants={{
+											hidden: { opacity: 0, y: 20 },
+											visible: { opacity: 1, y: 0 },
+										}}
+										transition={{ duration: 0.5 }}
+										whileHover={{ y: -5 }}
+										className="group"
+									>
+										<ProgramCard
+											id={program.id}
+											title={program.title}
+											slug={program.slug}
+											description={program.description}
+											content={program.content}
+											image={program.image}
+											isFeatured={true}
+										/>
+									</motion.div>
+								))
+								: // Enhanced sample cards
+								Array(3)
+									.fill(0)
+									.map((_, i) => (
 										<motion.div
-											key={program.id}
+											key={crypto.randomUUID()}
 											variants={{
 												hidden: { opacity: 0, y: 20 },
 												visible: { opacity: 1, y: 0 },
@@ -664,41 +697,16 @@ export default function HomePage() {
 											className="group"
 										>
 											<ProgramCard
-												id={program.id}
-												title={program.title}
-												slug={program.slug}
-												description={program.description}
-												content={program.content}
-												image={program.image}
+												id={`sample-${i}`}
+												title={`Program ${i + 1}`}
+												slug={`sample-${i + 1}`}
+												description="Sample program description"
+												content="This is a sample program description. In a real implementation, this would contain actual program content."
+												image={`/placeholder.svg?height=400&width=600&text=Program+${i + 1}`}
 												isFeatured={true}
 											/>
 										</motion.div>
-									))
-								: // Enhanced sample cards
-									Array(3)
-										.fill(0)
-										.map((_, i) => (
-											<motion.div
-												key={crypto.randomUUID()}
-												variants={{
-													hidden: { opacity: 0, y: 20 },
-													visible: { opacity: 1, y: 0 },
-												}}
-												transition={{ duration: 0.5 }}
-												whileHover={{ y: -5 }}
-												className="group"
-											>
-												<ProgramCard
-													id={`sample-${i}`}
-													title={`Program ${i + 1}`}
-													slug={`sample-${i + 1}`}
-													description="Sample program description"
-													content="This is a sample program description. In a real implementation, this would contain actual program content."
-													image={`/placeholder.svg?height=400&width=600&text=Program+${i + 1}`}
-													isFeatured={true}
-												/>
-											</motion.div>
-										))}
+									))}
 					</motion.div>
 
 					<motion.div
@@ -909,8 +917,8 @@ export default function HomePage() {
 								whileInView={{ opacity: 1, y: 0 }}
 								viewport={{ once: true, margin: "-50px" }}
 								transition={{ delay: index * 0.1, duration: 0.5 }}
-								whileHover={{ 
-									y: -5, 
+								whileHover={{
+									y: -5,
 									boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
 									borderColor: "var(--primary-20)"
 								}}
@@ -972,7 +980,7 @@ export default function HomePage() {
 						}}
 					/>
 				</motion.div>
-				
+
 				<div className="container relative z-10">
 					<div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-lg p-10 border border-muted/20">
 						<div className="text-center mb-8">
@@ -993,7 +1001,7 @@ export default function HomePage() {
 								</p>
 							</motion.div>
 						</div>
-						
+
 						<form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-4 max-w-xl mx-auto">
 							<Input
 								type="email"
@@ -1003,8 +1011,8 @@ export default function HomePage() {
 								className="flex-grow rounded-full px-4 py-6 border-primary/20 focus:border-primary"
 								required
 							/>
-							<Button 
-								type="submit" 
+							<Button
+								type="submit"
 								className="rounded-full px-8 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-md"
 							>
 								Subscribe

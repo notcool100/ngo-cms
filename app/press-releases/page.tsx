@@ -4,8 +4,8 @@ import { prisma } from "@/lib/prisma";
 import type { PressRelease } from "@/app/admin/press-releases/columns";
 
 export const metadata: Metadata = {
-	title: "Press Releases | IWLAG",
-	description: "Latest press releases, news, and updates from IWLAG",
+	title: "Press Releases | INWOLAG",
+	description: "Latest press releases, news, and updates from INWOLAG",
 };
 
 export const revalidate = 3600;

@@ -15,12 +15,12 @@ export async function generateMetadata({
 
 	if (!pressRelease) {
 		return {
-			title: "Press Release Not Found | IWLAG",
+			title: "Press Release Not Found | INWOLAG",
 		};
 	}
 
 	return {
-		title: `${pressRelease.title} | IWLAG`,
+		title: `${pressRelease.title} | INWOLAG`,
 		description: pressRelease.excerpt || pressRelease.content.substring(0, 160),
 	};
 }

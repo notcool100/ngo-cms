@@ -43,8 +43,8 @@ export default function BlogSettingsPage() {
     showRelatedPosts: true,
     showAuthorInfo: true,
     defaultCategory: '',
-    seoTitle: 'Blog | IWLAG',
-    seoDescription: 'Latest news, stories, and updates from IWLAG',
+    seoTitle: 'Blog | INWOLAG',
+    seoDescription: 'Latest news, stories, and updates from INWOLAG',
   });
 
   useEffect(() => {

@@ -104,10 +104,12 @@ export default function EventsPage() {
         </ParallaxScroll>
         <div className="absolute inset-0 z-20 flex items-center justify-center">
           <div className="container text-center text-white">
-            <AnimatedText
+            <div className="flex justify-center">
+              <AnimatedText
               text="Upcoming Events"
-              className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl"
+              className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl text-center"
             />
+            </div>
             <FadeIn
               direction="up"
               delay={0.3}

@@ -92,7 +92,7 @@ export default function ContactPage() {
         <ParallaxScroll speed={0.3} className="relative h-[50vh] md:h-[60vh] w-full">
           <Image
             src="/placeholder.svg?height=600&width=1600"
-            alt="Contact IWLAG"
+            alt="Contact INWOLAG"
             fill
             className="object-cover"
             priority
@@ -110,10 +110,12 @@ export default function ContactPage() {
               </Badge>
             </motion.div>
             
-            <AnimatedText
+           <div className="flex justify-center">
+             <AnimatedText
               text="Contact Us"
-              className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl"
+              className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl text-center"
             />
+           </div>
             
             <FadeIn
               direction="up"
@@ -272,7 +274,7 @@ export default function ContactPage() {
                         required
                       />
                       <Label htmlFor="consent" className="text-sm text-muted-foreground">
-                        I consent to IWLAG storing and processing my personal information to respond to my inquiry. I understand that I can withdraw my consent at any time.
+                        I consent to INWOLAG storing and processing my personal information to respond to my inquiry. I understand that I can withdraw my consent at any time.
                       </Label>
                     </div>
                     

@@ -7,12 +7,12 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { 
-  Users, 
-  History, 
-  Heart, 
-  Target, 
-  Globe, 
+import {
+  Users,
+  History,
+  Heart,
+  Target,
+  Globe,
   ArrowRight,
   Twitter,
   Linkedin,
@@ -70,13 +70,13 @@ export default function AboutPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("mission");
   const heroRef = useRef<HTMLDivElement>(null);
-  
+
   // Scroll animation for the hero section
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"],
   });
-  
+
   const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
   const heroScale = useTransform(scrollYProgress, [0, 0.5], [1, 1.1]);
 
@@ -88,7 +88,7 @@ export default function AboutPage() {
           throw new Error("Failed to fetch about data");
         }
         const responseData = await response.json();
-        
+
         // Check if the data is in the expected format
         if (responseData.data) {
           setAboutData(responseData.data);
@@ -140,13 +140,13 @@ export default function AboutPage() {
     <div className="flex flex-col">
       {/* Enhanced Hero Section with Parallax */}
       <section ref={heroRef} className="relative min-h-[100vh] flex items-center justify-center overflow-hidden">
-        <motion.div 
+        <motion.div
           className="absolute inset-0 z-0"
           style={{ opacity: heroOpacity, scale: heroScale }}
         >
           <HeroParallax
             imageUrl="/placeholder.svg?height=1200&width=1920"
-            alt="About IWLAG"
+            alt="About INWOLAG"
             overlayColor="from-primary/90 to-primary/70"
           >
             <div className="text-center text-white max-w-5xl mx-auto px-4">
@@ -159,12 +159,19 @@ export default function AboutPage() {
                   Our Story
                 </Badge>
               </motion.div>
-              
-              <AnimatedText
-                text="Empowering Communities Worldwide"
-                className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl mb-6"
-              />
-              
+
+              <div className="flex flex-col items-center">
+                <AnimatedText
+                  text="Empowering Communities"
+                  className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl mb-6 text-center"
+                />
+                <AnimatedText
+                  text="Worldwide"
+                  className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl mb-6 text-center"
+                />
+              </div>
+
+
               <FadeIn
                 direction="up"
                 delay={0.5}
@@ -174,16 +181,16 @@ export default function AboutPage() {
                   Discover our mission, vision, and the dedicated team working to create lasting positive change in communities around the globe.
                 </p>
               </FadeIn>
-              
+
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8, duration: 0.5 }}
                 className="mt-12"
               >
-                <Button 
+                <Button
                   onClick={scrollToContent}
-                  variant="outline" 
+                  variant="outline"
                   size="lg"
                   className="rounded-full border-white/30 text-white hover:bg-white/20 backdrop-blur-sm group"
                 >
@@ -194,7 +201,7 @@ export default function AboutPage() {
             </div>
           </HeroParallax>
         </motion.div>
-        
+
         {/* Animated background elements */}
         <div className="absolute inset-0 z-0 pointer-events-none">
           <motion.div
@@ -224,17 +231,17 @@ export default function AboutPage() {
             }}
           />
         </div>
-        
+
         {/* Scroll indicator */}
-        <motion.div 
+        <motion.div
           className="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-20"
-          animate={{ 
+          animate={{
             y: [0, 10, 0],
           }}
-          transition={{ 
-            repeat: Infinity, 
+          transition={{
+            repeat: Infinity,
             duration: 2,
-            ease: "easeInOut" 
+            ease: "easeInOut"
           }}
         >
           <ChevronDown className="h-8 w-8 text-white/70" />
@@ -255,7 +262,7 @@ export default function AboutPage() {
               </p>
             </ScaleIn>
           </div>
-          
+
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-4">
             {[
               { icon: <Users className="h-6 w-6" />, value: 15000, label: "Women Empowered", color: "from-primary to-blue-600" },
@@ -270,7 +277,7 @@ export default function AboutPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ delay: index * 0.15, duration: 0.6 }}
-                whileHover={{ 
+                whileHover={{
                   y: -10,
                   transition: { duration: 0.3 }
                 }}
@@ -299,10 +306,10 @@ export default function AboutPage() {
           <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-primary/5 blur-3xl" />
           <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-primary/5 blur-3xl" />
         </div>
-        
+
         <div className="container relative z-10">
-          <Tabs 
-            defaultValue="mission" 
+          <Tabs
+            defaultValue="mission"
             className="w-full"
             onValueChange={setActiveTab}
           >
@@ -317,24 +324,24 @@ export default function AboutPage() {
                 </p>
               </FadeIn>
             </div>
-            
+
             <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 mb-16 p-1 bg-muted/20 rounded-full">
-              <TabsTrigger 
-                value="mission" 
+              <TabsTrigger
+                value="mission"
                 className="data-[state=active]:bg-primary data-[state=active]:text-white rounded-full py-3 transition-all duration-300"
               >
                 <Target className="mr-2 h-4 w-4" />
                 Our Mission
               </TabsTrigger>
-              <TabsTrigger 
-                value="vision" 
+              <TabsTrigger
+                value="vision"
                 className="data-[state=active]:bg-primary data-[state=active]:text-white rounded-full py-3 transition-all duration-300"
               >
                 <Globe className="mr-2 h-4 w-4" />
                 Our Vision
               </TabsTrigger>
             </TabsList>
-            
+
             <TabsContent value="mission" className="focus-visible:outline-none focus-visible:ring-0">
               {isLoading ? (
                 renderSkeleton()
@@ -351,7 +358,7 @@ export default function AboutPage() {
                           __html: missionSections[0].content,
                         }}
                       />
-                      <motion.div 
+                      <motion.div
                         className="mt-10"
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -366,9 +373,9 @@ export default function AboutPage() {
                       </motion.div>
                     </div>
                   </FadeIn>
-                  
+
                   <FadeIn direction="left">
-                    <motion.div 
+                    <motion.div
                       className="relative h-[450px] rounded-2xl overflow-hidden shadow-xl"
                       whileHover={{ scale: 1.03 }}
                       transition={{ duration: 0.4 }}
@@ -395,14 +402,14 @@ export default function AboutPage() {
                 </div>
               )}
             </TabsContent>
-            
+
             <TabsContent value="vision" className="focus-visible:outline-none focus-visible:ring-0">
               {isLoading ? (
                 renderSkeleton()
               ) : visionSections.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
                   <FadeIn direction="right">
-                    <motion.div 
+                    <motion.div
                       className="relative h-[450px] rounded-2xl overflow-hidden shadow-xl md:order-first"
                       whileHover={{ scale: 1.03 }}
                       transition={{ duration: 0.4 }}
@@ -420,7 +427,7 @@ export default function AboutPage() {
                       <div className="absolute inset-0 bg-gradient-to-t from-primary/30 to-transparent opacity-70" />
                     </motion.div>
                   </FadeIn>
-                  
+
                   <FadeIn direction="left">
                     <div>
                       <h2 className="text-3xl font-bold mb-6 text-gradient">
@@ -432,7 +439,7 @@ export default function AboutPage() {
                           __html: visionSections[0].content,
                         }}
                       />
-                      <motion.div 
+                      <motion.div
                         className="mt-10"
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -467,7 +474,7 @@ export default function AboutPage() {
           <div className="absolute top-40 left-20 w-80 h-80 rounded-full bg-primary/5 blur-3xl" />
           <div className="absolute bottom-40 right-20 w-80 h-80 rounded-full bg-secondary/5 blur-3xl" />
         </div>
-        
+
         <div className="container relative z-10">
           <div className="text-center mb-16">
             <FadeIn>
@@ -498,7 +505,7 @@ export default function AboutPage() {
                     className="bg-white rounded-2xl p-10 text-center border border-muted/10 transition-all duration-500 shadow-md hover:shadow-xl hover:border-primary/20"
                     whileHover={{ y: -15, backgroundColor: "hsl(var(--primary) / 0.05)" }}
                   >
-                    <motion.div 
+                    <motion.div
                       className="bg-gradient-to-br from-primary to-blue-600 text-white h-24 w-24 rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg"
                       whileHover={{ scale: 1.1, rotate: 5 }}
                       transition={{ type: "spring", stiffness: 300 }}
@@ -526,10 +533,10 @@ export default function AboutPage() {
             </div>
           )}
         </div>
-        
+
         {/* Background decorative elements */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <motion.div 
+          <motion.div
             className="absolute top-20 left-10 w-64 h-64 rounded-full bg-primary/5 blur-3xl"
             animate={{
               x: [0, 50, 0],
@@ -541,7 +548,7 @@ export default function AboutPage() {
               ease: "easeInOut",
             }}
           />
-          <motion.div 
+          <motion.div
             className="absolute bottom-20 right-10 w-80 h-80 rounded-full bg-primary/5 blur-3xl"
             animate={{
               x: [0, -50, 0],
@@ -583,8 +590,8 @@ export default function AboutPage() {
           ) : historySections.length > 0 ? (
             <div className="space-y-24">
               {historySections.map((section, index) => (
-                <FadeIn 
-                  key={section.id} 
+                <FadeIn
+                  key={section.id}
                   direction={index % 2 === 0 ? "right" : "left"}
                   delay={index * 0.1}
                 >
@@ -596,20 +603,20 @@ export default function AboutPage() {
                         </div>
                         <h3 className="text-3xl font-bold text-gradient">{section.title}</h3>
                       </div>
-                      
+
                       {section.subtitle && (
                         <p className="text-primary font-medium text-lg mb-6">
                           {section.subtitle}
                         </p>
                       )}
-                      
+
                       <div
                         className="prose prose-lg max-w-none text-muted-foreground leading-relaxed"
                         dangerouslySetInnerHTML={{ __html: section.content }}
                       />
                     </div>
-                    
-                    <motion.div 
+
+                    <motion.div
                       className="relative h-[400px] rounded-2xl overflow-hidden shadow-xl"
                       whileHover={{ scale: 1.03 }}
                       transition={{ duration: 0.4 }}
@@ -638,7 +645,7 @@ export default function AboutPage() {
             </div>
           )}
         </div>
-        
+
         {/* Background decorative elements */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <div className="absolute -top-40 -left-40 w-80 h-80 rounded-full bg-primary/5 blur-3xl" />
@@ -653,7 +660,7 @@ export default function AboutPage() {
           <div className="absolute top-40 right-20 w-80 h-80 rounded-full bg-primary/5 blur-3xl" />
           <div className="absolute bottom-40 left-20 w-80 h-80 rounded-full bg-secondary/5 blur-3xl" />
         </div>
-        
+
         <div className="container relative z-10">
           <div className="text-center mb-16">
             <FadeIn>
@@ -695,7 +702,7 @@ export default function AboutPage() {
                       />
                       {/* Overlay gradient that appears on hover */}
                       <div className="absolute inset-0 bg-gradient-to-t from-primary/90 to-primary/30 opacity-0 group-hover:opacity-80 transition-opacity duration-500" />
-                      
+
                       {/* Position badge that appears on hover */}
                       <div className="absolute bottom-0 left-0 right-0 p-4 transform translate-y-full group-hover:translate-y-0 transition-transform duration-500">
                         <span className="inline-block bg-white/90 text-primary font-medium px-4 py-2 rounded-full text-sm backdrop-blur-sm">
@@ -756,10 +763,10 @@ export default function AboutPage() {
             </div>
           )}
         </div>
-        
+
         {/* Background decorative elements */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <motion.div 
+          <motion.div
             className="absolute top-40 right-20 w-72 h-72 rounded-full bg-primary/5 blur-3xl"
             animate={{
               x: [0, -50, 0],
@@ -771,7 +778,7 @@ export default function AboutPage() {
               ease: "easeInOut",
             }}
           />
-          <motion.div 
+          <motion.div
             className="absolute bottom-40 left-20 w-96 h-96 rounded-full bg-primary/5 blur-3xl"
             animate={{
               x: [0, 50, 0],
@@ -789,7 +796,7 @@ export default function AboutPage() {
       {/* Enhanced Call to Action */}
       <section className="py-24 bg-white">
         <div className="container">
-          <motion.div 
+          <motion.div
             className="rounded-3xl bg-gradient-to-r from-primary/90 to-primary/70 p-12 md:p-16 text-white text-center relative overflow-hidden shadow-2xl"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -825,7 +832,7 @@ export default function AboutPage() {
                 }}
               />
             </div>
-            
+
             <div className="relative z-10">
               <FadeIn>
                 <h2 className="text-3xl md:text-4xl font-bold mb-6">Join Our Mission</h2>
@@ -835,12 +842,12 @@ export default function AboutPage() {
                   There are many ways to get involved and support our work to empower women worldwide.
                 </p>
               </FadeIn>
-              
+
               <div className="flex flex-wrap justify-center gap-6">
                 <FadeIn delay={0.3}>
                   <Link href="/volunteer">
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       size="lg"
                       className="border-white text-white hover:bg-white/20 rounded-full group"
                     >
@@ -849,10 +856,10 @@ export default function AboutPage() {
                     </Button>
                   </Link>
                 </FadeIn>
-                
+
                 <FadeIn delay={0.4}>
                   <Link href="/donate">
-                    <Button 
+                    <Button
                       size="lg"
                       className="bg-white text-primary hover:bg-white/90 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group"
                     >
@@ -861,11 +868,11 @@ export default function AboutPage() {
                     </Button>
                   </Link>
                 </FadeIn>
-                
+
                 <FadeIn delay={0.5}>
                   <Link href="/contact">
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       size="lg"
                       className="border-white text-white hover:bg-white/20 rounded-full group"
                     >

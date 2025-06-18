@@ -152,7 +152,7 @@ export default function AboutPage() {
 				>
 					<HeroParallax
 						imageUrl="/placeholder.svg?height=1200&width=1920"
-						alt="About IWLAG"
+						alt="About INWOLAG"
 						overlayColor="from-primary/80 to-primary/60"
 					>
 						<div className="text-center text-white max-w-5xl mx-auto px-4">
@@ -193,7 +193,7 @@ export default function AboutPage() {
 									onClick={scrollToContent}
 									variant="outline"
 									size="lg"
-									className="rounded-full border-white/30 text-white hover:bg-white/20 backdrop-blur-sm group"
+									className="rounded-full border-white/30 text-black hover:bg-white/20 backdrop-blur-sm group"
 								>
 									Explore Our Story
 									<ChevronDown className="ml-2 h-4 w-4 transition-transform group-hover:translate-y-1" />
@@ -572,7 +572,7 @@ export default function AboutPage() {
 											{value.title}
 										</h3>
 										<div
-											className="prose max-w-none text-muted-foreground"
+											className="prose max-w-none text-muted-foreground text-justify"
 											dangerouslySetInnerHTML={{ __html: value.content }}
 										/>
 									</motion.div>
@@ -919,7 +919,7 @@ export default function AboutPage() {
 										<Button
 											variant="outline"
 											size="lg"
-											className="border-white text-white hover:bg-white/20 rounded-full group"
+											className="border-white text-black hover:bg-white/20 rounded-full group"
 										>
 											Volunteer With Us
 											<ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -944,7 +944,7 @@ export default function AboutPage() {
 										<Button
 											variant="outline"
 											size="lg"
-											className="border-white text-white hover:bg-white/20 rounded-full group"
+											className="border-white text-black hover:bg-white/20 rounded-full group"
 										>
 											Contact Us
 											<ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />

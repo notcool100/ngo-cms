@@ -84,7 +84,7 @@ export default function VolunteerPage() {
         <ParallaxScroll speed={0.3} className="relative h-[50vh] md:h-[60vh] w-full">
           <Image
             src="/placeholder.svg?height=600&width=1600"
-            alt="Volunteer with IWLAG"
+            alt="Volunteer with INWOLAG"
             fill
             className="object-cover"
             priority
@@ -102,10 +102,12 @@ export default function VolunteerPage() {
               </Badge>
             </motion.div>
             
-            <AnimatedText
-              text="Volunteer With Us"
-              className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl"
-            />
+            <div className="flex justify-center">
+  <AnimatedText
+    text="Volunteer With Us"
+    className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl text-center"
+  />
+</div>
             
             <FadeIn
               direction="up"
@@ -300,7 +302,7 @@ export default function VolunteerPage() {
                 Why Volunteer With Us
               </h2>
               <p className="text-muted-foreground max-w-2xl mx-auto">
-                Volunteering with IWLAG offers numerous benefits and opportunities for personal and professional growth.
+                Volunteering with INWOLAG offers numerous benefits and opportunities for personal and professional growth.
               </p>
             </FadeIn>
           </div>
@@ -501,7 +503,7 @@ export default function VolunteerPage() {
                     <Textarea 
                       id="motivation" 
                       name="motivation" 
-                      placeholder="Share your motivation for volunteering with IWLAG"
+                      placeholder="Share your motivation for volunteering with INWOLAG"
                       className="min-h-[120px]"
                     />
                   </div>
@@ -515,7 +517,7 @@ export default function VolunteerPage() {
                       required
                     />
                     <Label htmlFor="consent" className="text-sm text-muted-foreground">
-                      I consent to IWLAG storing and processing my personal information for volunteer recruitment purposes. I understand that I can withdraw my consent at any time.
+                      I consent to INWOLAG storing and processing my personal information for volunteer recruitment purposes. I understand that I can withdraw my consent at any time.
                     </Label>
                   </div>
                   
@@ -635,7 +637,7 @@ export default function VolunteerPage() {
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
             {[
               {
-                quote: "Volunteering with IWLAG has been one of the most rewarding experiences of my life. I've developed new skills, made lasting friendships, and seen firsthand the impact of our work.",
+                quote: "Volunteering with INWOLAG has been one of the most rewarding experiences of my life. I've developed new skills, made lasting friendships, and seen firsthand the impact of our work.",
                 name: "Sarah Johnson",
                 role: "Education Program Volunteer",
                 image: "/placeholder.svg?height=100&width=100"
@@ -710,7 +712,7 @@ export default function VolunteerPage() {
               
               <FadeIn delay={0.4}>
                 <Link href="/contact">
-                  <Button variant="outline" className="border-white text-white hover:bg-white/20">
+                  <Button variant="outline" className="border-white text-black hover:bg-white/20">
                     Contact Us
                   </Button>
                 </Link>

@@ -166,7 +166,7 @@ export default function Footer() {
 							<div className="relative h-10 w-10 overflow-hidden rounded-full">
 								<Image 
 									src="/uploads/logo.jpg" 
-									alt={settings?.siteName || "IWLAG Logo"} 
+									alt={settings?.siteName || "INWOLAG Logo"} 
 									fill
 									className="object-cover"
 									sizes="40px"
@@ -217,7 +217,7 @@ export default function Footer() {
 						</div>
 					</div>
 					
-					<div className="space-y-6">
+					{/* <div className="space-y-6">
 						<h3 className="text-lg font-bold">Quick Links</h3>
 						<ul className="space-y-3">
 							{[
@@ -239,9 +239,9 @@ export default function Footer() {
 								</li>
 							))}
 						</ul>
-					</div>
+					</div> */}
 					
-					<div className="space-y-6">
+					{/* <div className="space-y-6">
 						<h3 className="text-lg font-bold">Resources</h3>
 						<ul className="space-y-3">
 							{[
@@ -263,7 +263,7 @@ export default function Footer() {
 								</li>
 							))}
 						</ul>
-					</div>
+					</div> */}
 					
 					<div className="space-y-6">
 						<h3 className="text-lg font-bold">Contact Us</h3>
@@ -289,6 +289,19 @@ export default function Footer() {
 							</li>
 						</ul>
 					</div>
+					<div className="space-y-6">
+  {/* <h3 className="text-lg font-bold">Our Location</h3> */}
+  <div className="w-[40vw] h-[40vh] rounded-xl overflow-hidden shadow-md">
+    <iframe
+      src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d7066.9736941417!2d85.320029!3d27.671344!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb19fc86cf01c1%3A0xefa5a71b59b21c44!2sInwolag!5e0!3m2!1sen!2snp!4v1750227403238!5m2!1sen!2snp"
+      className="w-full h-full border-0"
+      allowFullScreen
+      loading="lazy"
+      referrerPolicy="no-referrer-when-downgrade"
+    />
+  </div>
+</div>
+
 				</div>
 				
 				<div className="mt-16 pt-8 border-t border-muted/30 flex flex-col md:flex-row justify-between items-center gap-4">

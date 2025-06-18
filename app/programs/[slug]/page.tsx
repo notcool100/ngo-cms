@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: ProgramPageProps) {
 	}
 
 	return {
-		title: `${program.title} | IWLAG`,
+		title: `${program.title} | INWOLAG`,
 		description: program.description,
 	};
 }
