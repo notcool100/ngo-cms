@@ -11,14 +11,23 @@ const fetcher = async (url: string) => {
 	return data;
 };
 
-export function usePressReleases() {
+export function usePressReleases(params?: {
+	featured?: boolean;
+	limit?: number;
+}) {
+	const queryString = new URLSearchParams();
+	if (params?.featured) queryString.append("featured", "true");
+	if (params?.limit) queryString.append("limit", params.limit.toString());
+	
+	const url = `/api/press-releases${queryString.toString() ? `?${queryString.toString()}` : ''}`;
+	
 	const { data, error, isLoading, mutate } = useSWR<PressRelease[]>(
-		"/api/press-releases",
+		url,
 		fetcher,
 	);
 
 	return {
-		pressReleases: data,
+		data,
 		isLoading,
 		isError: error,
 		mutate,

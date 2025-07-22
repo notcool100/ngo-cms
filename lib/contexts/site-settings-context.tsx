@@ -38,7 +38,7 @@ const defaultSettings: SiteSettings = {
 };
 
 const SiteSettingsContext = createContext<SiteSettingsContextType>({
-  settings: defaultSettings,
+  settings: null,
   isLoading: false,
   error: null,
   refreshSettings: async () => {},
@@ -63,7 +63,18 @@ export function SiteSettingsProvider({ children }: { children: ReactNode }) {
       }
       
       const data = await response.json();
-      setSettings(data.settings);
+      
+      // Check if data.settings exists and has the expected properties
+      if (data.settings && typeof data.settings === 'object') {
+        // Merge with default settings to ensure all properties exist
+        setSettings({
+          ...defaultSettings,
+          ...data.settings
+        });
+      } else {
+        console.warn("Invalid settings data received from API, using defaults");
+        setSettings(defaultSettings);
+      }
     } catch (err) {
       console.error("Error fetching site settings:", err);
       setError(err instanceof Error ? err.message : "An error occurred");
