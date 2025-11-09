@@ -81,11 +81,11 @@ stages:
         downloadPath: '$(System.ArtifactsDirectory)'
 
     - script: |
-        # Create frontend Staging directory
-        sudo mkdir -p $(stagingPath)
-        sudo chown -R $(whoami):$(whoami) $(stagingPath)
+        echo "$(SUDO_PASSWORD)" | sudo -S mkdir -p $(stagingPath)
+        echo "$(SUDO_PASSWORD)" | sudo -S chown -R $(whoami):$(whoami) $(stagingPath)
         echo "Created frontend Staging directory"
       displayName: 'Create Frontend Directory'
+
 
     - script: |
         # Extract new frontend build
