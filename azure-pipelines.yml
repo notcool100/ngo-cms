@@ -40,13 +40,13 @@ stages:
         includeRootFolder: false
         archiveType: 'tar'
         tarCompression: 'gz'
-        archiveFile: '$(Build.ArtifactStagingDirectory)/frontend_staging.tar.gz'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/inwolag_staging.tar.gz'
         replaceExistingArchive: true
       displayName: 'Archive Frontend Files'
     
     - task: PublishBuildArtifacts@1
       inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)/frontend_staging.tar.gz'
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)/inwolag_staging.tar.gz'
         ArtifactName: 'frontend'
         publishLocation: 'Container'
       displayName: 'Publish Frontend Artifact'
@@ -93,10 +93,10 @@ stages:
         echo "Artifacts directory contents:"
         ls -la $(System.ArtifactsDirectory)/
         echo "Frontend artifact contents:"
-        ls -la $(System.ArtifactsDirectory)/frontend/
+        ls -la $(System.ArtifactsDirectory)/
         
         # Extract frontend build
-        tar -xzf $(System.ArtifactsDirectory)/frontend/frontend_staging.tar.gz -C $(stagingPath)/
+        tar -xzf $(System.ArtifactsDirectory)/inwolag_staging.tar.gz -C $(stagingPath)/
         echo "Frontend extracted to $(stagingPath)/frontend-staging"
         
         # Set proper permissions
