@@ -24,13 +24,19 @@ stages:
       inputs:
         versionSpec: '$(nodeVersion)'
       displayName: 'Install Node.js'
+    
     - script: |
         echo "Installing frontend dependencies"
         npm install --legacy-peer-deps
       displayName: 'Install Frontend Dependencies'
     
     - script: |
-        echo "Building frontend application (includes Prisma generate)"
+        echo "Generating Prisma client..."
+        npx prisma generate
+      displayName: 'Run Prisma Generate'
+    
+    - script: |
+        echo "Building frontend application"
         npm run build
       displayName: 'Build Frontend Application'
     
@@ -86,21 +92,11 @@ stages:
         echo "Created frontend Staging directory"
       displayName: 'Create Frontend Directory'
 
-
     - script: |
-        # Extract new frontend build
-        echo "Debugging artifact extraction..."
-        echo "Artifacts directory contents:"
-        ls -la $(System.ArtifactsDirectory)/
-        echo "Frontend artifact contents:"
-        ls -la $(System.ArtifactsDirectory)/
-        
-        # Extract frontend build
+        echo "Extracting frontend build..."
         tar -xzf $(System.ArtifactsDirectory)/frontend/inwolag_staging.tar.gz -C $(stagingPath)/
-        echo "Frontend extracted to $(stagingPath)/frontend-staging"
-        
-        # Set proper permissions
         chmod -R 755 $(stagingPath)/
+        echo "Frontend extracted to $(stagingPath)"
       displayName: 'Extract Frontend Build'
 
     - script: |
@@ -118,26 +114,18 @@ stages:
           npm install --omit=dev
           echo "Staging dependencies installed via npm install"
         fi
-      displayName: 'Install Dependencies'
+
+        # Ensure Prisma and UUID are installed
+        npx prisma generate
+        npm install uuid
+      displayName: 'Install Dependencies & Generate Prisma'
 
     - script: |
-        # Restart frontend with PM2
         cd $(stagingPath)/
-        echo "Starting frontend deployment..."
-        echo "Current directory: $(pwd)"
-        echo "Files in directory:"
-       
-        
-        # Stop existing frontend if running
+        echo "Restarting frontend..."
         pm2 delete inwolag-staging 2>/dev/null || true
-        
-        # Start frontend with PM2
-        pm2 start npm --name "inwolag-staging" -- start -- --port 6000
+        pm2 start npm --name "inwolag-staging" -- start -- --port 7000
         pm2 save
-        pm2 startup 2>/dev/null || true
-        echo "Frontend restarted with PM2 on port 6000"
-        
-        # Show PM2 logs for debugging
-        echo "PM2 status after frontend start:"
+        echo "Frontend restarted with PM2 on port 7000"
         pm2 list
       displayName: 'Restart Frontend with PM2'
