@@ -96,7 +96,7 @@ stages:
         ls -la $(System.ArtifactsDirectory)/
         
         # Extract frontend build
-        tar -xzf $(System.ArtifactsDirectory)/inwolag_staging.tar.gz -C $(stagingPath)/
+        tar -xzf $(System.ArtifactsDirectory)/frontend/inwolag_staging.tar.gz -C $(stagingPath)/
         echo "Frontend extracted to $(stagingPath)/frontend-staging"
         
         # Set proper permissions
