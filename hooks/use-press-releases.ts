@@ -8,6 +8,12 @@ const fetcher = async (url: string) => {
 	});
 	const data = await response.json();
 	console.log("Fetched press releases:", data);
+
+	// If the response contains an error, throw it so SWR can handle it
+	if (data.error) {
+		throw new Error(data.error);
+	}
+
 	return data;
 };
 
@@ -18,16 +24,16 @@ export function usePressReleases(params?: {
 	const queryString = new URLSearchParams();
 	if (params?.featured) queryString.append("featured", "true");
 	if (params?.limit) queryString.append("limit", params.limit.toString());
-	
+
 	const url = `/api/press-releases${queryString.toString() ? `?${queryString.toString()}` : ''}`;
-	
+
 	const { data, error, isLoading, mutate } = useSWR<PressRelease[]>(
 		url,
 		fetcher,
 	);
 
 	return {
-		data,
+		data: data || [], // Return empty array if no data
 		isLoading,
 		isError: error,
 		mutate,
