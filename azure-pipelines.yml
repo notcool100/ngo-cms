@@ -1,0 +1,143 @@
+trigger:
+  branches:
+    include:
+      - dev
+
+pool:
+  name: 'Astro'
+
+variables:
+  nodeVersion: '24.x'
+  stagingPath: '/var/www/inwolag_dev'
+
+stages:
+- stage: BuildFrontend 
+  displayName: 'Build Frontend'
+  jobs:
+  - job: BuildFrontendJob
+    displayName: 'Build Next.js Frontend'
+    steps:
+    - checkout: self
+      displayName: 'Checkout Code'
+    
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '$(nodeVersion)'
+      displayName: 'Install Node.js'
+    - script: |
+        echo "Installing frontend dependencies"
+        npm install --legacy-peer-deps
+      displayName: 'Install Frontend Dependencies'
+    
+    - script: |
+        echo "Building frontend application (includes Prisma generate)"
+        npm run build
+      displayName: 'Build Frontend Application'
+    
+    - task: ArchiveFiles@2
+      inputs:
+        rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
+        includeRootFolder: false
+        archiveType: 'tar'
+        tarCompression: 'gz'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/frontend_staging.tar.gz'
+        replaceExistingArchive: true
+      displayName: 'Archive Frontend Files'
+    
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)/frontend_staging.tar.gz'
+        ArtifactName: 'frontend'
+        publishLocation: 'Container'
+      displayName: 'Publish Frontend Artifact'
+
+- stage: PreDeploy
+  displayName: 'Pre-Deployment Checks'
+  dependsOn: 
+    - BuildFrontend
+  jobs:
+  - job: PreDeployChecks
+    displayName: 'Run Pre-Deployment Checks'
+    steps:
+    - script: |
+        echo "Running pre-deployment checks..."
+        echo "All build stages completed successfully"
+        echo "Ready for deployment to Staging"
+      displayName: 'Pre-Deployment Validation'
+
+- stage: DeployStaging
+  displayName: 'Deploy to Staging'
+  dependsOn: PreDeploy
+  condition: succeeded('PreDeploy')
+  jobs:
+  - job: DeployFrontendStaging
+    displayName: 'Deploy Frontend to Staging'
+    steps:
+    - task: DownloadBuildArtifacts@1
+      inputs:
+        buildType: 'current'
+        downloadType: 'single'
+        artifactName: 'frontend'
+        downloadPath: '$(System.ArtifactsDirectory)'
+
+    - script: |
+        # Create frontend Staging directory
+        sudo mkdir -p $(stagingPath)
+        sudo chown -R $(whoami):$(whoami) $(stagingPath)
+        echo "Created frontend Staging directory"
+      displayName: 'Create Frontend Directory'
+
+    - script: |
+        # Extract new frontend build
+        echo "Debugging artifact extraction..."
+        echo "Artifacts directory contents:"
+        ls -la $(System.ArtifactsDirectory)/
+        echo "Frontend artifact contents:"
+        ls -la $(System.ArtifactsDirectory)/frontend/
+        
+        # Extract frontend build
+        tar -xzf $(System.ArtifactsDirectory)/frontend/frontend_staging.tar.gz -C $(stagingPath)/
+        echo "Frontend extracted to $(stagingPath)/frontend-staging"
+        
+        # Set proper permissions
+        chmod -R 755 $(stagingPath)/
+      displayName: 'Extract Frontend Build'
+
+    - script: |
+        # Install PM2 if not present
+        if ! command -v pm2 &> /dev/null; then
+          npm install -g pm2
+          echo "PM2 installed"
+        fi
+        
+        cd $(stagingPath)/
+        if [ -f "package-lock.json" ]; then
+          npm ci --omit=dev
+          echo "Staging dependencies installed via npm ci"
+        else
+          npm install --omit=dev
+          echo "Staging dependencies installed via npm install"
+        fi
+      displayName: 'Install Dependencies'
+
+    - script: |
+        # Restart frontend with PM2
+        cd $(stagingPath)/
+        echo "Starting frontend deployment..."
+        echo "Current directory: $(pwd)"
+        echo "Files in directory:"
+       
+        
+        # Stop existing frontend if running
+        pm2 delete inwolag-staging 2>/dev/null || true
+        
+        # Start frontend with PM2
+        pm2 start npm --name "inwolag-staging" -- start -- --port 6000
+        pm2 save
+        pm2 startup 2>/dev/null || true
+        echo "Frontend restarted with PM2 on port 6000"
+        
+        # Show PM2 logs for debugging
+        echo "PM2 status after frontend start:"
+        pm2 list
+      displayName: 'Restart Frontend with PM2'
