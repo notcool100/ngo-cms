@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { z } from "zod"
+import { v4 as uuidv4 } from "uuid"
 
 const subscribeSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -27,7 +28,7 @@ export async function POST(request: Request) {
 
     await prisma.newsletter_subscribers.create({
       data: {
-        id: crypto.randomUUID(),
+        id: uuidv4(),
         email,
         active: true,
       },
