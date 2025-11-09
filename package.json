@@ -80,6 +80,7 @@
     "swr": "^2.3.6",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
+    "uuid": "^13.0.0",
     "vaul": "^0.9.6",
     "zod": "^3.22.4"
   },
