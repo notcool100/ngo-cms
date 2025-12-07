@@ -98,7 +98,7 @@ export default function HomePage() {
 		fetch("/api/events?upcoming=true&limit=2")
 			.then((res) => res.json())
 			.then((data) => {
-				setUpcomingEvents(data.events);
+				setUpcomingEvents(Array.isArray(data.events) ? data.events : []);
 			})
 			.catch((err) => {
 				console.error("Error fetching upcoming events:", err);
@@ -170,7 +170,7 @@ export default function HomePage() {
 			<ImportantNoticeOverlay />
 			{/* Hero Section with Enhanced Parallax */}
 			<HeroParallax
-				imageUrl="/placeholder.svg?height=1200&width=1920"
+				imageUrl="/heroimage.jpg?height=1200&width=1920"
 				alt="Women empowerment"
 				overlayColor="from-primary/90 via-primary/80 to-primary/70"
 			>
@@ -429,7 +429,7 @@ export default function HomePage() {
 								/>
 								<div className="relative overflow-hidden rounded-2xl shadow-xl">
 									<Image
-										src="/placeholder.svg?height=600&width=800"
+										src="/heroimage.jpg?height=600&width=800"
 										alt="Women in a community meeting"
 										width={600}
 										height={400}
