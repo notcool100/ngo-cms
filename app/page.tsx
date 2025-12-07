@@ -682,31 +682,30 @@ export default function HomePage() {
 										/>
 									</motion.div>
 								))
-								: // Enhanced sample cards
-								Array(3)
-									.fill(0)
-									.map((_, i) => (
-										<motion.div
-											key={crypto.randomUUID()}
-											variants={{
-												hidden: { opacity: 0, y: 20 },
-												visible: { opacity: 1, y: 0 },
-											}}
-											transition={{ duration: 0.5 }}
-											whileHover={{ y: -5 }}
-											className="group"
-										>
-											<ProgramCard
-												id={`sample-${i}`}
-												title={`Program ${i + 1}`}
-												slug={`sample-${i + 1}`}
-												description="Sample program description"
-												content="This is a sample program description. In a real implementation, this would contain actual program content."
-												image={`/placeholder.svg?height=400&width=600&text=Program+${i + 1}`}
-												isFeatured={true}
-											/>
-										</motion.div>
-									))}
+								: // Empty state when no programs exist
+								<motion.div
+									variants={{
+										hidden: { opacity: 0, y: 20 },
+										visible: { opacity: 1, y: 0 },
+									}}
+									className="col-span-full text-center py-16"
+								>
+									<div className="mx-auto max-w-md">
+										<div className="mx-auto mb-4 h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center">
+											<Sparkles className="h-8 w-8 text-primary" />
+										</div>
+										<h3 className="text-xl font-semibold mb-2">No Featured Programs Yet</h3>
+										<p className="text-muted-foreground mb-6">
+											Check back soon for our upcoming programs and initiatives.
+										</p>
+										<Link href="/programs">
+											<Button variant="outline" className="rounded-full">
+												View All Programs
+												<ArrowRight className="ml-2 h-4 w-4" />
+											</Button>
+										</Link>
+									</div>
+								</motion.div>}
 					</motion.div>
 
 					<motion.div
@@ -811,29 +810,24 @@ export default function HomePage() {
 								/>
 							))
 						) : (
-							// Fallback content if no events are found
-							<>
-								<EventCard
-									id="sample-1"
-									title="Women in Tech Conference"
-									slug="women-in-tech"
-									description="Join us for a day of inspiring talks, workshops, and networking opportunities focused on advancing women in technology fields."
-									startDate={new Date(
-										Date.now() + 30 * 24 * 60 * 60 * 1000,
-									).toISOString()}
-									location="Virtual Event"
-								/>
-								<EventCard
-									id="sample-2"
-									title="Fundraising Gala Dinner"
-									slug="gala-dinner"
-									description="An elegant evening of dining, entertainment, and fundraising to support our educational scholarship program for girls in underserved communities."
-									startDate={new Date(
-										Date.now() + 60 * 24 * 60 * 60 * 1000,
-									).toISOString()}
-									location="Grand Hotel, New York"
-								/>
-							</>
+							// Empty state when no events exist
+							<div className="col-span-full text-center py-16">
+								<div className="mx-auto max-w-md">
+									<div className="mx-auto mb-4 h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center">
+										<Calendar className="h-8 w-8 text-primary" />
+									</div>
+									<h3 className="text-xl font-semibold mb-2">No Upcoming Events</h3>
+									<p className="text-muted-foreground mb-6">
+										Stay tuned for future events and announcements.
+									</p>
+									<Link href="/events">
+										<Button variant="outline" className="rounded-full">
+											View All Events
+											<ArrowRight className="ml-2 h-4 w-4" />
+										</Button>
+									</Link>
+								</div>
+							</div>
 						)}
 					</div>
 
