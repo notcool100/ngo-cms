@@ -44,10 +44,10 @@ interface Media {
 export default function MediaDetailPage({
 	params,
 }: {
-	params: { slug: string };
+	params: Promise<{ slug: string }>;
 }) {
 	// Use React.use to unwrap params
-	const { slug } = params;
+	const { slug } = use(params);
 	const [media, setMedia] = useState<Media | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
