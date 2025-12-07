@@ -554,7 +554,7 @@ export default function AboutPage() {
 											className="bg-white rounded-2xl p-10 border border-muted/10 transition-all duration-500 shadow-md hover:shadow-xl"
 											whileHover={{
 												y: -10,
-												backgroundColor: "var(--primary-light, #f0f7ff)",
+												backgroundColor: "#f0f7ff",
 											}}
 										>
 											<div className="flex items-start gap-6">

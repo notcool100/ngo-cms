@@ -393,7 +393,7 @@ export default function HomePage() {
 											initial={{ opacity: 0, y: 20 }}
 											animate={{ opacity: 1, y: 0 }}
 											transition={{ delay: i * 0.1 }}
-											whileHover={{ scale: 1.05, backgroundColor: "var(--primary-10)" }}
+											whileHover={{ scale: 1.05, backgroundColor: "rgba(99, 102, 241, 0.1)" }}
 										>
 											<span className="text-primary">{item.icon}</span>
 											<span className="text-sm font-medium">{item.text}</span>
@@ -556,7 +556,7 @@ export default function HomePage() {
 										<motion.div
 											className="mx-auto mb-4 p-3 rounded-full bg-primary/10 w-fit"
 											initial={{ rotate: 0 }}
-											whileHover={{ rotate: 360, backgroundColor: "var(--primary-20)" }}
+											whileHover={{ rotate: 360, backgroundColor: "rgba(99, 102, 241, 0.2)" }}
 											transition={{ duration: 0.5 }}
 										>
 											<stat.icon className="h-6 w-6 text-primary" />
@@ -914,7 +914,7 @@ export default function HomePage() {
 								whileHover={{
 									y: -5,
 									boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
-									borderColor: "var(--primary-20)"
+									borderColor: "rgba(99, 102, 241, 0.2)"
 								}}
 							>
 								<motion.div
