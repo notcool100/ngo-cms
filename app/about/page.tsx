@@ -42,14 +42,12 @@ interface TeamMember {
 	position: string;
 	bio: string;
 	image: string;
-	socialLinks?: {
-		twitter?: string;
-		linkedin?: string;
-		instagram?: string;
-	};
+	socialLinks?: Record<string, string> | null;
 	order: number;
 	active: boolean;
 	teamType: string;
+	createdAt: Date;
+	updatedAt: Date;
 }
 
 interface AboutSection {
@@ -61,6 +59,8 @@ interface AboutSection {
 	order: number;
 	type: string;
 	active: boolean;
+	createdAt: Date;
+	updatedAt: Date;
 }
 
 interface AboutPageData {
@@ -542,43 +542,82 @@ export default function AboutPage() {
 							))}
 						</div>
 					) : valuesSections.length > 0 ? (
-						<StaggerChildren
-							className="grid grid-cols-1 md:grid-cols-3 gap-10"
-							staggerDelay={0.15}
-						>
-							{valuesSections.map((value, index) => (
-								<StaggerItem key={value.id}>
-									<motion.div
-										className="bg-white rounded-2xl p-10 text-center border border-muted/10 transition-all duration-500 shadow-md hover:shadow-xl"
-										whileHover={{
-											y: -15,
-											backgroundColor: "var(--primary-light, #f0f7ff)",
-										}}
-									>
+						<div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+							{/* Values Cards Section */}
+							<StaggerChildren
+								className="grid grid-cols-1 gap-10"
+								staggerDelay={0.15}
+							>
+								{valuesSections.map((value, index) => (
+									<StaggerItem key={value.id}>
 										<motion.div
-											className="bg-gradient-to-br from-primary to-primary/80 text-white h-24 w-24 rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg"
-											whileHover={{ scale: 1.1, rotate: 5 }}
-											transition={{ type: "spring", stiffness: 300 }}
+											className="bg-white rounded-2xl p-10 border border-muted/10 transition-all duration-500 shadow-md hover:shadow-xl"
+											whileHover={{
+												y: -10,
+												backgroundColor: "var(--primary-light, #f0f7ff)",
+											}}
 										>
-											{index === 0 ? (
-												<Heart className="h-10 w-10" />
-											) : index === 1 ? (
-												<Handshake className="h-10 w-10" />
-											) : (
-												<Lightbulb className="h-10 w-10" />
-											)}
+											<div className="flex items-start gap-6">
+												<motion.div
+													className="bg-gradient-to-br from-primary to-primary/80 text-white h-20 w-20 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg"
+													whileHover={{ scale: 1.1, rotate: 5 }}
+													transition={{ type: "spring", stiffness: 300 }}
+												>
+													{index === 0 ? (
+														<Heart className="h-8 w-8" />
+													) : index === 1 ? (
+														<Handshake className="h-8 w-8" />
+													) : (
+														<Lightbulb className="h-8 w-8" />
+													)}
+												</motion.div>
+												<div className="flex-1">
+													<h3 className="text-2xl font-bold mb-4 text-gradient">
+														{value.title}
+													</h3>
+													<div
+														className="prose max-w-none text-muted-foreground text-justify"
+														dangerouslySetInnerHTML={{ __html: value.content }}
+													/>
+												</div>
+											</div>
 										</motion.div>
-										<h3 className="text-2xl font-bold mb-4 text-gradient">
-											{value.title}
-										</h3>
-										<div
-											className="prose max-w-none text-muted-foreground text-justify"
-											dangerouslySetInnerHTML={{ __html: value.content }}
-										/>
+									</StaggerItem>
+								))}
+							</StaggerChildren>
+
+							{/* Values Image Section */}
+							<FadeIn direction="left">
+								<motion.div
+									className="relative h-[600px] rounded-2xl overflow-hidden shadow-xl"
+									whileHover={{ scale: 1.03 }}
+									transition={{ duration: 0.4 }}
+								>
+									<Image
+										src={
+											valuesSections[0]?.image ||
+											"/placeholder.svg?height=600&width=500"
+										}
+										alt="Our core values"
+										fill
+										className="object-cover"
+									/>
+									{/* Overlay gradient */}
+									<div className="absolute inset-0 bg-gradient-to-t from-primary/30 to-transparent opacity-70" />
+									{/* Floating badge */}
+									<motion.div
+										className="absolute bottom-8 left-8 bg-white/90 backdrop-blur-sm rounded-full px-6 py-3 shadow-lg"
+										initial={{ opacity: 0, y: 20 }}
+										whileInView={{ opacity: 1, y: 0 }}
+										transition={{ delay: 0.5 }}
+									>
+										<p className="text-primary font-bold text-lg">
+											{valuesSections.length} Core Values
+										</p>
 									</motion.div>
-								</StaggerItem>
-							))}
-						</StaggerChildren>
+								</motion.div>
+							</FadeIn>
+						</div>
 					) : (
 						<div className="text-center py-12">
 							<p className="text-gray-500">Values information not available.</p>
