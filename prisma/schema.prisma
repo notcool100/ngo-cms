@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -21,13 +18,13 @@ model User {
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
   accounts      Account[]
-  sessions      Session[]
-  posts         Post[]
   events        Event[]
-  publications  Publication[]
-  notices       Notice[]
-  pressReleases PressRelease[]
   media         Media[]
+  notices       Notice[]
+  posts         Post[]
+  pressReleases PressRelease[]
+  publications  Publication[]
+  sessions      Session[]
 }
 
 model Account {
@@ -36,15 +33,14 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -69,20 +65,20 @@ model Post {
   id          String    @id @default(cuid())
   title       String
   slug        String    @unique
-  content     String    @db.Text
-  excerpt     String?   @db.Text
+  content     String
+  excerpt     String?
   featured    Boolean   @default(false)
   published   Boolean   @default(false)
   publishedAt DateTime?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   authorId    String
-  author      User      @relation(fields: [authorId], references: [id])
   categoryId  String?
-  category    Category? @relation(fields: [categoryId], references: [id])
-  tags        Tag[]
   image       String?
   comments    Comment[]
+  author      User      @relation(fields: [authorId], references: [id])
+  category    Category? @relation(fields: [categoryId], references: [id])
+  tags        Tag[]     @relation("PostToTag")
 
   @@index([authorId])
   @@index([categoryId])
@@ -94,9 +90,9 @@ model Category {
   slug         String        @unique
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
+  media        Media[]
   posts        Post[]
   publications Publication[]
-  media        Media[]
 }
 
 model Tag {
@@ -105,24 +101,24 @@ model Tag {
   slug         String        @unique
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
-  posts        Post[]
-  publications Publication[]
+  posts        Post[]        @relation("PostToTag")
+  publications Publication[] @relation("PublicationToTag")
 }
-model Program {
-  id          String   @id @default(cuid())
-  title       String
-  slug        String   @unique
-  description String   @db.Text
-  content     String   @db.Text
-  image       String?
-  featured    Boolean  @default(false)
-  active      Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  categoryId  String
-  category    ProgramCategory @relation(fields: [categoryId], references: [id])
 
-  donations   Donation[] @relation("ProgramDonations") // The relation name here must match in Donation model
+model Program {
+  id          String          @id @default(cuid())
+  title       String
+  slug        String          @unique
+  description String
+  content     String
+  image       String?
+  featured    Boolean         @default(false)
+  active      Boolean         @default(true)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  categoryId  String
+  donations   Donation[]      @relation("ProgramDonations")
+  category    ProgramCategory @relation(fields: [categoryId], references: [id])
   images      ProgramImage[]
 
   @@index([categoryId])
@@ -132,26 +128,25 @@ model ProgramCategory {
   id          String    @id @default(cuid())
   name        String
   slug        String    @unique
-  description String?   @db.Text
+  description String?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   programs    Program[]
 }
 
 model ProgramImage {
-  id          String   @id @default(cuid())
-  programId   String
-  imageUrl    String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  program     Program  @relation(fields: [programId], references: [id], onDelete: Cascade)
+  id        String   @id @default(cuid())
+  programId String
+  imageUrl  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  program   Program  @relation(fields: [programId], references: [id], onDelete: Cascade)
 
   @@index([programId])
 }
 
 model AboutUs {
-  id        Int     @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   mission   String
   vision    String
   history   String
@@ -163,114 +158,114 @@ model AboutUs {
 }
 
 model AboutSection {
-  id        Int     @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   title     String
   subtitle  String?
   content   String
   image     String?
   order     Int
-  type      String  // mission, vision, history, team, etc.
-  active    Boolean @default(true)
+  type      String
+  active    Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model TeamMember {
-  id          Int     @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   name        String
   position    String
   bio         String
   image       String?
   socialLinks Json?
   order       Int
-  active      Boolean @default(true)
-  parentId    Int?    // Reference to parent team member for hierarchy
-  teamType    TeamType @default(STAFF) // BOARD or STAFF
+  active      Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  parentId    Int?
+  teamType    TeamType @default(STAFF)
 }
 
 model Donation {
-  id            String         @id @default(cuid())
+  id            String        @id @default(cuid())
   amount        Float
-  currency      String         @default("USD")
-  status        PaymentStatus  @default(PENDING)
-  type          DonationType   @default(ONE_TIME)
+  currency      String        @default("USD")
+  status        PaymentStatus @default(PENDING)
+  type          DonationType  @default(ONE_TIME)
   name          String?
   email         String?
-  message       String?        @db.Text
+  message       String?
   transactionId String?
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
   programId     String?
-  program       Program?       @relation("ProgramDonations", fields: [programId], references: [id]) // Match the relation name here
+  program       Program?      @relation("ProgramDonations", fields: [programId], references: [id])
 
   @@index([programId])
 }
 
 model Event {
-  id          String    @id @default(cuid())
+  id          String     @id @default(cuid())
   title       String
-  slug        String    @unique
-  description String    @db.Text
-  content     String    @db.Text
+  slug        String     @unique
+  description String
+  content     String
   location    String?
   startDate   DateTime
   endDate     DateTime?
   image       String?
-  featured    Boolean   @default(false)
-  published   Boolean   @default(false)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  featured    Boolean    @default(false)
+  published   Boolean    @default(false)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
   organizerId String
-  organizer   User      @relation(fields: [organizerId], references: [id])
   attendees   Attendee[]
+  organizer   User       @relation(fields: [organizerId], references: [id])
 
   @@index([organizerId])
 }
 
 model Attendee {
-  id        String   @id @default(cuid())
+  id        String         @id @default(cuid())
   name      String
   email     String
   phone     String?
   status    AttendeeStatus @default(REGISTERED)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
   eventId   String
-  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  event     Event          @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
   @@index([eventId])
 }
 
 model Volunteer {
-  id          String   @id @default(cuid())
-  firstName   String
-  lastName    String
-  email       String   @unique
-  phone       String?
-  address     String?
-  city        String?
-  state       String?
-  zipCode     String?
-  skills      String?  @db.Text
+  id           String          @id @default(cuid())
+  firstName    String
+  lastName     String
+  email        String          @unique
+  phone        String?
+  address      String?
+  city         String?
+  state        String?
+  zipCode      String?
+  skills       String?
   availability String?
-  motivation  String?  @db.Text
-  status      VolunteerStatus @default(PENDING)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  motivation   String?
+  status       VolunteerStatus @default(PENDING)
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
 }
 
 model Contact {
-  id        String   @id @default(cuid())
+  id        String        @id @default(cuid())
   name      String
   email     String
   phone     String?
   subject   String?
-  message   String   @db.Text
+  message   String
   status    ContactStatus @default(UNREAD)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
 }
 
 model Newsletter {
@@ -282,55 +277,55 @@ model Newsletter {
 }
 
 model SiteSettings {
-  id                String   @id @default(cuid())
-  siteName          String   @default("IWLAG")
-  siteDescription   String   @default("Empowering women through education and support")
-  contactEmail      String   @default("contact@empowertogether.org")
-  maintenanceMode   Boolean  @default(false)
-  backupFrequency   String   @default("weekly")
-  cacheLifetime     Int      @default(3600)
-  debugMode         Boolean  @default(false)
+  id                 String   @id @default(cuid())
+  siteName           String   @default("IWLAG")
+  siteDescription    String   @default("Empowering women through education and support")
+  contactEmail       String   @default("contact@empowertogether.org")
+  maintenanceMode    Boolean  @default(false)
+  backupFrequency    String   @default("weekly")
+  cacheLifetime      Int      @default(3600)
+  debugMode          Boolean  @default(false)
   emailNotifications Boolean  @default(true)
-  donationAlerts    Boolean  @default(true)
-  volunteerAlerts   Boolean  @default(true)
-  contactFormAlerts Boolean  @default(true)
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  donationAlerts     Boolean  @default(true)
+  volunteerAlerts    Boolean  @default(true)
+  contactFormAlerts  Boolean  @default(true)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 }
 
 model BlogSettings {
-  id                  String   @id @default(cuid())
-  postsPerPage        Int      @default(10)
-  allowComments       Boolean  @default(true)
-  moderateComments    Boolean  @default(true)
-  featuredPostsCount  Int      @default(3)
-  showRelatedPosts    Boolean  @default(true)
-  showAuthorInfo      Boolean  @default(true)
-  defaultCategory     String?
-  seoTitle            String   @default("Publications | IWLAG")
-  seoDescription      String   @default("Latest publications, books, articles, and resources from IWLAG")
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @updatedAt
+  id                 String   @id @default(cuid())
+  postsPerPage       Int      @default(10)
+  allowComments      Boolean  @default(true)
+  moderateComments   Boolean  @default(true)
+  featuredPostsCount Int      @default(3)
+  showRelatedPosts   Boolean  @default(true)
+  showAuthorInfo     Boolean  @default(true)
+  defaultCategory    String?
+  seoTitle           String   @default("Publications | IWLAG")
+  seoDescription     String   @default("Latest publications, books, articles, and resources from IWLAG")
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 }
 
 model Publication {
-  id          String    @id @default(cuid())
+  id          String          @id @default(cuid())
   title       String
-  slug        String    @unique
-  description String    @db.Text
-  fileUrl     String    // URL to the PDF or document
-  coverImage  String?   // Cover image for the publication
-  featured    Boolean   @default(false)
-  published   Boolean   @default(false)
+  slug        String          @unique
+  description String
+  fileUrl     String
+  coverImage  String?
+  featured    Boolean         @default(false)
+  published   Boolean         @default(false)
   publishedAt DateTime?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
   authorId    String
-  author      User      @relation(fields: [authorId], references: [id])
   categoryId  String?
-  category    Category? @relation(fields: [categoryId], references: [id])
-  tags        Tag[]
   type        PublicationType @default(BOOK)
+  author      User            @relation(fields: [authorId], references: [id])
+  category    Category?       @relation(fields: [categoryId], references: [id])
+  tags        Tag[]           @relation("PublicationToTag")
 
   @@index([authorId])
   @@index([categoryId])
@@ -339,7 +334,7 @@ model Publication {
 model Notice {
   id          String    @id @default(cuid())
   title       String
-  content     String    @db.Text
+  content     String
   important   Boolean   @default(false)
   published   Boolean   @default(true)
   publishedAt DateTime  @default(now())
@@ -356,19 +351,19 @@ model PressRelease {
   id          String    @id @default(cuid())
   title       String
   slug        String    @unique
-  content     String    @db.Text
-  excerpt     String?   @db.Text
-  youtubeUrl  String?   // URL for YouTube video
-  websiteUrls Json?     // Array of related website URLs
-  images      Json?     // Array of image URLs
+  content     String
+  excerpt     String?
   featured    Boolean   @default(false)
   published   Boolean   @default(false)
   publishedAt DateTime?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   authorId    String
+  image       String?
+  youtubeUrl  String?
+  websiteUrls Json?
+  images      Json?
   author      User      @relation(fields: [authorId], references: [id])
-  image       String?   // Main featured image
 
   @@index([authorId])
 }
@@ -377,18 +372,18 @@ model Media {
   id          String    @id @default(cuid())
   title       String
   slug        String    @unique
-  description String    @db.Text
-  mediaUrl    String    // URL to the video or media file
+  description String
+  mediaUrl    String
   mediaType   MediaType @default(VIDEO)
-  thumbnail   String?   // Thumbnail image for the media
+  thumbnail   String?
   featured    Boolean   @default(false)
   published   Boolean   @default(false)
   publishedAt DateTime?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   authorId    String
-  author      User      @relation(fields: [authorId], references: [id])
   categoryId  String?
+  author      User      @relation(fields: [authorId], references: [id])
   category    Category? @relation(fields: [categoryId], references: [id])
 
   @@index([authorId])
@@ -397,7 +392,7 @@ model Media {
 
 model Comment {
   id        String        @id @default(cuid())
-  content   String        @db.Text
+  content   String
   name      String
   email     String
   website   String?
@@ -405,10 +400,10 @@ model Comment {
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
   postId    String
-  post      Post          @relation(fields: [postId], references: [id], onDelete: Cascade)
   parentId  String?
-  parent    Comment?      @relation("CommentToComment", fields: [parentId], references: [id], onDelete: SetNull)
+  parent    Comment?      @relation("CommentToComment", fields: [parentId], references: [id])
   replies   Comment[]     @relation("CommentToComment")
+  post      Post          @relation(fields: [postId], references: [id], onDelete: Cascade)
 
   @@index([postId])
   @@index([parentId])

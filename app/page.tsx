@@ -167,7 +167,7 @@ export default function HomePage() {
 				className="fixed top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary to-primary/80 z-50"
 				style={{ scaleX: scrollProgress / 100, transformOrigin: "0%" }}
 			/>
-			<ImportantNoticeOverlay />
+			{/* <ImportantNoticeOverlay /> */}
 			{/* Hero Section with Enhanced Parallax */}
 			<HeroParallax
 				imageUrl="/heroimage.jpg?height=1200&width=1920"
@@ -187,7 +187,7 @@ export default function HomePage() {
 								className="flex items-center gap-2"
 							>
 								<Sparkles className="h-4 w-4" />
-								<span>Empowering Communities Since 2010</span>
+								<span>Empowering Communities Since 2000</span>
 								<Sparkles className="h-4 w-4" />
 							</motion.span>
 						</Badge>
@@ -443,7 +443,7 @@ export default function HomePage() {
 										transition={{ delay: 0.4 }}
 									>
 										<span className="text-white text-sm font-medium bg-primary/80 px-3 py-1 rounded-full backdrop-blur-sm">
-											Since 2010
+											Since 2000
 										</span>
 									</motion.div>
 								</div>
@@ -524,7 +524,7 @@ export default function HomePage() {
 								icon: Sparkles,
 							},
 							{
-								value: 15,
+								value: 25,
 								label: "Years of Impact",
 								suffix: "+",
 								icon: Calendar,
@@ -740,7 +740,7 @@ export default function HomePage() {
 				</div>
 			</section>
 			<section className="py-24 relative overflow-hidden">
-				<NoticesSection />
+				{/* <NoticesSection /> */}
 			</section>
 
 			<section className="py-24 relative overflow-hidden">
@@ -1149,7 +1149,7 @@ export default function HomePage() {
 								className="relative"
 							>
 								<div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/90 pointer-events-none z-10" />
-								<NoticesSection />
+								{/* <NoticesSection /> */}
 							</motion.div>
 						</motion.div>
 
