@@ -5,7 +5,7 @@ import type React from "react";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import {
 	BarChart,
@@ -98,8 +98,8 @@ export default function AdminLayout({
 					<Button variant="outline" size="sm">
 						<Link href="/">View Site</Link>
 					</Button>
-					<Button variant="outline" size="sm">
-						<Link href="/api/auth/signout">Logout</Link>
+					<Button variant="outline" size="sm" onClick={() => signOut({ callbackUrl: "/admin" })}>
+						Logout
 					</Button>
 				</div>
 			</header>

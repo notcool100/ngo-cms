@@ -87,11 +87,22 @@ stages:
         artifactName: 'frontend'
         downloadPath: '$(System.ArtifactsDirectory)'
 
+    - task: DownloadSecureFile@1
+      name: live_env
+      inputs:
+        secureFile: 'live.env'
+      displayName: 'Download Secure Env File'
+
     - script: |
         echo "$(SUDO_PASSWORD)" | sudo -S mkdir -p $(deployPath)
         echo "$(SUDO_PASSWORD)" | sudo -S chown -R $(whoami):$(whoami) $(deployPath)
+        
+        # Copy secure file to deployment directory as .env
+        cp $(live_env.secureFilePath) $(deployPath)/.env
+        echo "Secure .env file copied to $(deployPath)"
+        
         echo "Created deployment directory"
-      displayName: 'Create Deployment Directory'
+      displayName: 'Create Deployment Directory & Setup Env'
 
     - script: |
         echo "Stopping $(serviceName) service..."
