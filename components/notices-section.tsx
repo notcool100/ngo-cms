@@ -30,6 +30,9 @@ export function ImportantNoticeOverlay() {
 
 	// Helper function to check if notice is dismissed
 	const isNoticeDismissed = (noticeId: string) => {
+		if (typeof window === 'undefined' || typeof localStorage === 'undefined' || typeof localStorage.getItem !== 'function') {
+			return false;
+		}
 		try {
 			const storageKey = `notice_dismissed_${noticeId}`;
 			const dismissedUntil = localStorage.getItem(storageKey);
@@ -44,7 +47,7 @@ export function ImportantNoticeOverlay() {
 			}
 			return false;
 		} catch (error) {
-			console.warn('localStorage not available:', error);
+			console.warn('localStorage access failed:', error);
 			return false;
 		}
 	};
@@ -163,9 +166,11 @@ export function ImportantNoticeOverlay() {
 					break;
 			}
 
-			localStorage.setItem(storageKey, dismissUntil.toISOString());
+			if (typeof window !== 'undefined' && typeof localStorage !== 'undefined' && typeof localStorage.setItem === 'function') {
+				localStorage.setItem(storageKey, dismissUntil.toISOString());
+			}
 		} catch (error) {
-			console.warn('localStorage not available:', error);
+			console.warn('localStorage access failed:', error);
 		}
 
 		setIsVisible(false);

@@ -8,7 +8,8 @@ pool:
 
 variables:
   nodeVersion: '24.x'
-  stagingPath: '/var/www/inwolag_dev'
+  deployPath: '/var/www/inwolag_live'
+  serviceName: 'inwolag_live'
 
 stages:
 - stage: BuildFrontend 
@@ -46,13 +47,13 @@ stages:
         includeRootFolder: false
         archiveType: 'tar'
         tarCompression: 'gz'
-        archiveFile: '$(Build.ArtifactStagingDirectory)/inwolag_staging.tar.gz'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/inwolag_live.tar.gz'
         replaceExistingArchive: true
       displayName: 'Archive Frontend Files'
     
     - task: PublishBuildArtifacts@1
       inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)/inwolag_staging.tar.gz'
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)/inwolag_live.tar.gz'
         ArtifactName: 'frontend'
         publishLocation: 'Container'
       displayName: 'Publish Frontend Artifact'
@@ -68,16 +69,16 @@ stages:
     - script: |
         echo "Running pre-deployment checks..."
         echo "All build stages completed successfully"
-        echo "Ready for deployment to Staging"
+        echo "Ready for deployment"
       displayName: 'Pre-Deployment Validation'
 
-- stage: DeployStaging
-  displayName: 'Deploy to Staging'
+- stage: Deploy
+  displayName: 'Deploy to Production'
   dependsOn: PreDeploy
   condition: succeeded('PreDeploy')
   jobs:
-  - job: DeployFrontendStaging
-    displayName: 'Deploy Frontend to Staging'
+  - job: DeployFrontend
+    displayName: 'Deploy Frontend'
     steps:
     - task: DownloadBuildArtifacts@1
       inputs:
@@ -87,45 +88,42 @@ stages:
         downloadPath: '$(System.ArtifactsDirectory)'
 
     - script: |
-        echo "$(SUDO_PASSWORD)" | sudo -S mkdir -p $(stagingPath)
-        echo "$(SUDO_PASSWORD)" | sudo -S chown -R $(whoami):$(whoami) $(stagingPath)
-        echo "Created frontend Staging directory"
-      displayName: 'Create Frontend Directory'
+        echo "$(SUDO_PASSWORD)" | sudo -S mkdir -p $(deployPath)
+        echo "$(SUDO_PASSWORD)" | sudo -S chown -R $(whoami):$(whoami) $(deployPath)
+        echo "Created deployment directory"
+      displayName: 'Create Deployment Directory'
+
+    - script: |
+        echo "Stopping $(serviceName) service..."
+        echo "$(SUDO_PASSWORD)" | sudo -S systemctl stop $(serviceName).service || true
+        echo "Service stopped"
+      displayName: 'Stop Systemd Service'
 
     - script: |
         echo "Extracting frontend build..."
-        tar -xzf $(System.ArtifactsDirectory)/frontend/inwolag_staging.tar.gz -C $(stagingPath)/
-        chmod -R 755 $(stagingPath)/
-        echo "Frontend extracted to $(stagingPath)"
+        tar -xzf $(System.ArtifactsDirectory)/frontend/inwolag_live.tar.gz -C $(deployPath)/
+        chmod -R 755 $(deployPath)/
+        echo "Frontend extracted to $(deployPath)"
       displayName: 'Extract Frontend Build'
 
     - script: |
-        # Install PM2 if not present
-        if ! command -v pm2 &> /dev/null; then
-          npm install -g pm2
-          echo "PM2 installed"
-        fi
-        
-        cd $(stagingPath)/
+        cd $(deployPath)/
         if [ -f "package-lock.json" ]; then
           npm ci --omit=dev
-          echo "Staging dependencies installed via npm ci"
+          echo "Dependencies installed via npm ci"
         else
           npm install --omit=dev
-          echo "Staging dependencies installed via npm install"
+          echo "Dependencies installed via npm install"
         fi
 
-        # Ensure Prisma and UUID are installed
+        # Ensure Prisma client is generated
         npx prisma generate
-        npm install uuid
       displayName: 'Install Dependencies & Generate Prisma'
 
     - script: |
-        cd $(stagingPath)/
-        echo "Restarting frontend..."
-        pm2 delete inwolag-staging 2>/dev/null || true
-        pm2 start npm --name "inwolag-staging" -- start -- --port 7000
-        pm2 save
-        echo "Frontend restarted with PM2 on port 7000"
-        pm2 list
-      displayName: 'Restart Frontend with PM2'
+        echo "Starting $(serviceName) service..."
+        echo "$(SUDO_PASSWORD)" | sudo -S systemctl daemon-reload
+        echo "$(SUDO_PASSWORD)" | sudo -S systemctl restart $(serviceName).service
+        echo "$(SUDO_PASSWORD)" | sudo -S systemctl status $(serviceName).service --no-pager
+        echo "Service restarted successfully"
+      displayName: 'Restart Systemd Service'
