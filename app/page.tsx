@@ -264,7 +264,7 @@ export default function HomePage() {
 							</motion.div>
 						</Link>
 
-						<Link href="/donate">
+						{/* <Link href="/donate">
 							<motion.div
 								whileHover={{ scale: 1.05 }}
 								whileTap={{ scale: 0.95 }}
@@ -278,7 +278,7 @@ export default function HomePage() {
 									<span>Donate Now</span>
 								</Button>
 							</motion.div>
-						</Link>
+						</Link> */}
 					</FadeIn>
 
 					<motion.div
@@ -879,14 +879,14 @@ export default function HomePage() {
 
 					<div className="grid grid-cols-1 gap-8 md:grid-cols-3 text-black">
 						{[
-							{
-								icon: <Heart className="h-10 w-10" />,
-								title: "Donate",
-								description:
-									"Your financial support helps us expand our programs and reach more women in need. Every contribution makes a difference.",
-								cta: "Donate Now",
-								href: "/donate",
-							},
+							// {
+							// 	icon: <Heart className="h-10 w-10" />,
+							// 	title: "Donate",
+							// 	description:
+							// 		"Your financial support helps us expand our programs and reach more women in need. Every contribution makes a difference.",
+							// 	cta: "Donate Now",
+							// 	href: "/donate",
+							// },
 							{
 								icon: <Users className="h-10 w-10" />,
 								title: "Volunteer",
