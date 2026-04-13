@@ -209,7 +209,7 @@ export default function AdminDashboard() {
 							{/* Stats Cards */}
 							<StaggerItem>
 								<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-									<Card>
+									{/* <Card>
 										<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
 											<CardTitle className="text-sm font-medium">
 												Total Donations
@@ -224,7 +224,7 @@ export default function AdminDashboard() {
 												+${stats.lastMonthDonations.toLocaleString()} this month
 											</p>
 										</CardContent>
-									</Card>
+									</Card> */}
 
 									<Card>
 										<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -280,7 +280,7 @@ export default function AdminDashboard() {
 							</StaggerItem>
 
 							{/* Donation Chart */}
-							<StaggerItem>
+							{/* <StaggerItem>
 								<Card>
 									<CardHeader>
 										<CardTitle>Donation Overview</CardTitle>
@@ -313,13 +313,13 @@ export default function AdminDashboard() {
 										</div>
 									</CardContent>
 								</Card>
-							</StaggerItem>
+							</StaggerItem> */}
 
 							{/* Recent Donations and Program Categories */}
 							<StaggerItem>
 								<div className="grid gap-4 md:grid-cols-2">
 									{/* Recent Donations */}
-									<Card>
+									{/* <Card>
 										<CardHeader>
 											<CardTitle>Recent Donations</CardTitle>
 											<CardDescription>
@@ -348,7 +348,7 @@ export default function AdminDashboard() {
 												))}
 											</div>
 										</CardContent>
-									</Card>
+									</Card> */}
 
 									{/* Program Categories */}
 									<Card>
@@ -474,7 +474,7 @@ export default function AdminDashboard() {
 
 					{/* Analytics Tab */}
 					<TabsContent value="analytics" className="space-y-6">
-						<Card>
+						{/* <Card>
 							<CardHeader>
 								<CardTitle>Donation Analytics</CardTitle>
 								<CardDescription>
@@ -561,7 +561,7 @@ export default function AdminDashboard() {
 									</Card>
 								</div>
 							</CardContent>
-						</Card>
+						</Card> */}
 
 						<div className="grid gap-4 md:grid-cols-2">
 							<Card>
@@ -643,7 +643,7 @@ export default function AdminDashboard() {
 					<TabsContent value="reports" className="space-y-6">
 						<PermissionGate permission="download:reports">
 							<div className="grid gap-4 md:grid-cols-3">
-								<Card>
+								{/* <Card>
 									<CardHeader>
 										<CardTitle>Donation Reports</CardTitle>
 										<CardDescription>
@@ -677,7 +677,7 @@ export default function AdminDashboard() {
 											Download Report
 										</Button>
 									</CardContent>
-								</Card>
+								</Card> */}
 
 								<Card>
 									<CardHeader>
@@ -775,7 +775,7 @@ export default function AdminDashboard() {
 							</CardHeader>
 							<CardContent>
 								<div className="space-y-4">
-									{stats.recentDonations.map((donation, index) => (
+									{/* {stats.recentDonations.map((donation, index) => (
 										<div
 											key={`notification-${index}`}
 											className="flex items-start gap-4 rounded-lg border p-4"
@@ -796,7 +796,7 @@ export default function AdminDashboard() {
 												{donation.date}
 											</div>
 										</div>
-									))}
+									))} */}
 
 									{stats.recentMessages.map((message, index) => (
 										<div
