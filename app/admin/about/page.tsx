@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
@@ -42,6 +43,7 @@ interface TeamMember {
 	position: string;
 	bio: string;
 	image: string;
+	teamType: string;
 	socialLinks?: {
 		twitter?: string;
 		linkedin?: string;
@@ -67,6 +69,8 @@ interface AboutPageData {
 	sections: AboutSection[];
 	team: TeamMember[];
 }
+
+import { TeamCard } from "@/components/team-card";
 
 export default function AdminAboutPage() {
 	const [aboutData, setAboutData] = useState<AboutPageData | null>(null);
@@ -142,6 +146,7 @@ export default function AdminAboutPage() {
 			position: "",
 			bio: "",
 			image: "",
+			teamType: "BOARD",
 			order: aboutData?.team?.length || 0,
 			active: true,
 			socialLinks: {
@@ -605,45 +610,38 @@ export default function AdminAboutPage() {
 						</Button>
 					</div>
 
-					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+					<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
 						{aboutData?.team && aboutData.team.length > 0 ? (
 							aboutData.team.map((member) => (
-								<Card key={member.id}>
-									<CardContent className="p-6">
-										<div className="flex items-start justify-between">
-											<div>
-												<h3 className="font-bold text-lg">{member.name}</h3>
-												<p className="text-primary">{member.position}</p>
-											</div>
-											<div className="flex items-center gap-2">
-												<Button
-													variant="outline"
-													size="sm"
-													onClick={() => handleEditTeamMember(member)}
-												>
-													<Edit className="h-4 w-4" />
-												</Button>
-												<Button
-													variant="destructive"
-													size="sm"
-													onClick={() => handleDeleteTeamMember(member.id)}
-												>
-													<Trash className="h-4 w-4" />
-												</Button>
-											</div>
-										</div>
-										<p className="text-gray-500 mt-4 line-clamp-3">
-											{member.bio}
-										</p>
-										<div className="mt-4 flex items-center">
-											<span
-												className={`inline-flex items-center px-2 py-1 rounded-full text-xs ${member.active ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"}`}
-											>
-												{member.active ? "Active" : "Inactive"}
-											</span>
-										</div>
-									</CardContent>
-								</Card>
+								<div key={member.id} className="relative group">
+									<div className="absolute top-4 right-4 z-20 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+										<Button
+											variant="secondary"
+											size="icon"
+											className="h-8 w-8 rounded-full shadow-md"
+											onClick={() => handleEditTeamMember(member)}
+										>
+											<Edit className="h-4 w-4" />
+										</Button>
+										<Button
+											variant="destructive"
+											size="icon"
+											className="h-8 w-8 rounded-full shadow-md"
+											onClick={() => handleDeleteTeamMember(member.id)}
+										>
+											<Trash className="h-4 w-4" />
+										</Button>
+									</div>
+									<div className="opacity-90 grayscale-[0.5] group-hover:grayscale-0 group-hover:opacity-100 transition-all">
+										<TeamCard member={member} />
+									</div>
+									<div className="mt-2 flex items-center justify-center">
+										<Badge variant={member.teamType === "BOARD" ? "default" : "secondary"} className="text-[10px] px-2 py-0">
+											{member.teamType === "BOARD" ? "Board" : "Network"}
+										</Badge>
+										<span className={`ml-2 h-2 w-2 rounded-full ${member.active ? "bg-green-500" : "bg-gray-300"}`} />
+									</div>
+								</div>
 							))
 						) : (
 							<div className="col-span-full text-center py-12">
@@ -833,6 +831,27 @@ export default function AdminAboutPage() {
 						</DialogTitle>
 					</DialogHeader>
 					<div className="grid gap-4 py-4">
+						<div className="grid grid-cols-4 items-center gap-4">
+							<Label htmlFor="member-type" className="text-right">
+								Team Type
+							</Label>
+							<Select
+								value={editingTeamMember?.teamType}
+								onValueChange={(value) =>
+									setEditingTeamMember((prev) =>
+										prev ? { ...prev, teamType: value } : null,
+									)
+								}
+							>
+								<SelectTrigger className="col-span-3">
+									<SelectValue placeholder="Select team type" />
+								</SelectTrigger>
+								<SelectContent>
+									<SelectItem value="BOARD">Board of Directors</SelectItem>
+									<SelectItem value="STAFF">Advisory/Staff Network</SelectItem>
+								</SelectContent>
+							</Select>
+						</div>
 						<div className="grid grid-cols-4 items-center gap-4">
 							<Label htmlFor="member-name" className="text-right">
 								Name

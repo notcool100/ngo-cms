@@ -150,6 +150,42 @@ export default function MediaEditPage({ params }: { params: { id: string } }) {
     }
   }, [id, isNew, form, toast]);
 
+  // Watch for mediaUrl changes to auto-detect YouTube
+  const mediaUrlValue = form.watch("mediaUrl");
+  useEffect(() => {
+    if (!mediaUrlValue) return;
+
+    // Detect YouTube
+    const youtubeRegExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = mediaUrlValue.match(youtubeRegExp);
+    const videoId = match && match[2].length === 11 ? match[2] : null;
+
+    if (videoId) {
+      // Auto-set type to VIDEO
+      if (form.getValues("mediaType") !== "VIDEO") {
+        form.setValue("mediaType", "VIDEO", { shouldValidate: true });
+      }
+
+      // Auto-set thumbnail if empty
+      if (!form.getValues("thumbnail")) {
+        const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+        form.setValue("thumbnail", thumbnailUrl, { shouldValidate: true });
+      }
+    }
+  }, [mediaUrlValue, form]);
+
+  // Watch for title changes to auto-generate slug
+  const titleValue = form.watch("title");
+  useEffect(() => {
+    if (titleValue && isNew && !form.getFieldState("slug").isDirty) {
+      const slug = titleValue
+        .toLowerCase()
+        .replace(/[^\w\s-]/g, "")
+        .replace(/\s+/g, "-");
+      form.setValue("slug", slug, { shouldValidate: true });
+    }
+  }, [titleValue, form, isNew]);
+
   const onSubmit = async (values: MediaFormValues) => {
     try {
       const method = isNew ? "POST" : "PUT";

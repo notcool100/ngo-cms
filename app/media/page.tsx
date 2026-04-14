@@ -3,7 +3,7 @@
 import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { Video, Music, Film, Mic, Newspaper, FileQuestion } from "lucide-react";
+import { Video, Music, Film, Mic, Newspaper, FileQuestion, Play } from "lucide-react";
 
 import {
 	Card,
@@ -24,6 +24,13 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "@/components/ui/dialog";
 
 interface Media {
 	id: string;
@@ -178,7 +185,13 @@ function MediaPageContent() {
 	};
 
 	const featuredMedia = filteredMedia.filter((item) => item.featured);
-	const regularMedia = filteredMedia.filter((item) => !item.featured);
+
+	const getYouTubeVideoId = (url: string) => {
+		const regExp =
+			/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+		const match = url.match(regExp);
+		return match && match[2].length === 11 ? match[2] : null;
+	};
 
 	return (
 		<div className="container mx-auto py-12">
@@ -255,6 +268,7 @@ function MediaPageContent() {
 						media={filteredMedia}
 						getMediaTypeIcon={getMediaTypeIcon}
 						getMediaTypeColor={getMediaTypeColor}
+						getYouTubeVideoId={getYouTubeVideoId}
 						loading={loading}
 					/>
 				</TabsContent>
@@ -264,6 +278,7 @@ function MediaPageContent() {
 						media={filteredMedia.filter((item) => item.mediaType === "VIDEO")}
 						getMediaTypeIcon={getMediaTypeIcon}
 						getMediaTypeColor={getMediaTypeColor}
+						getYouTubeVideoId={getYouTubeVideoId}
 						loading={loading}
 					/>
 				</TabsContent>
@@ -273,6 +288,7 @@ function MediaPageContent() {
 						media={filteredMedia.filter((item) => item.mediaType === "AUDIO")}
 						getMediaTypeIcon={getMediaTypeIcon}
 						getMediaTypeColor={getMediaTypeColor}
+						getYouTubeVideoId={getYouTubeVideoId}
 						loading={loading}
 					/>
 				</TabsContent>
@@ -284,6 +300,7 @@ function MediaPageContent() {
 						)}
 						getMediaTypeIcon={getMediaTypeIcon}
 						getMediaTypeColor={getMediaTypeColor}
+						getYouTubeVideoId={getYouTubeVideoId}
 						loading={loading}
 					/>
 				</TabsContent>
@@ -295,6 +312,7 @@ function MediaPageContent() {
 						)}
 						getMediaTypeIcon={getMediaTypeIcon}
 						getMediaTypeColor={getMediaTypeColor}
+						getYouTubeVideoId={getYouTubeVideoId}
 						loading={loading}
 					/>
 				</TabsContent>
@@ -310,6 +328,7 @@ function MediaPageContent() {
 								media={item}
 								getMediaTypeIcon={getMediaTypeIcon}
 								getMediaTypeColor={getMediaTypeColor}
+								getYouTubeVideoId={getYouTubeVideoId}
 							/>
 						))}
 					</div>
@@ -323,11 +342,13 @@ function MediaGrid({
 	media,
 	getMediaTypeIcon,
 	getMediaTypeColor,
+	getYouTubeVideoId,
 	loading,
 }: {
 	media: Media[];
 	getMediaTypeIcon: (type: string) => JSX.Element;
 	getMediaTypeColor: (type: string) => string;
+	getYouTubeVideoId: (url: string) => string | null;
 	loading: boolean;
 }) {
 	if (loading) {
@@ -357,6 +378,7 @@ function MediaGrid({
 					media={item}
 					getMediaTypeIcon={getMediaTypeIcon}
 					getMediaTypeColor={getMediaTypeColor}
+					getYouTubeVideoId={getYouTubeVideoId}
 				/>
 			))}
 		</div>
@@ -367,58 +389,113 @@ function MediaCard({
 	media,
 	getMediaTypeIcon,
 	getMediaTypeColor,
+	getYouTubeVideoId,
 }: {
 	media: Media;
 	getMediaTypeIcon: (type: string) => JSX.Element;
 	getMediaTypeColor: (type: string) => string;
+	getYouTubeVideoId: (url: string) => string | null;
 }) {
-	return (
-		<Card className="overflow-hidden h-full flex flex-col">
-			<div className="relative aspect-video bg-muted">
+	const isVideo = media.mediaType === "VIDEO";
+	const videoId = isVideo ? getYouTubeVideoId(media.mediaUrl) : null;
+	const isYouTube = !!videoId;
+
+	const CardUI = (
+		<Card className="overflow-hidden h-full flex flex-col group transition-all duration-300 hover:shadow-xl hover:-translate-y-1 bg-white border-muted/20">
+			<div className="relative aspect-video bg-muted overflow-hidden">
 				{media.thumbnail ? (
 					<img
 						src={media.thumbnail}
 						alt={media.title}
-						className="w-full h-full object-cover"
+						className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
 					/>
 				) : (
 					<div className="w-full h-full flex items-center justify-center bg-muted">
 						{getMediaTypeIcon(media.mediaType)}
 					</div>
 				)}
+				<div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+					{isVideo && (
+						<div className="bg-primary text-white p-4 rounded-full shadow-lg scale-90 group-hover:scale-100 transition-transform duration-300">
+							<Play className="h-6 w-6" />
+						</div>
+					)}
+				</div>
 				<Badge
 					className={`absolute top-2 right-2 ${getMediaTypeColor(
 						media.mediaType,
-					)}`}
+					)} border-none text-white`}
 				>
 					{media.mediaType}
 				</Badge>
 			</div>
-			<CardHeader>
-				<CardTitle className="line-clamp-2">{media.title}</CardTitle>
-				<CardDescription>
-					{media.category && (
-						<Link href={`/media?category=${media.category.slug}`}>
-							<Badge variant="outline" className="mr-2">
+			<CardHeader className="p-5">
+				<CardTitle className="text-xl line-clamp-2 leading-tight group-hover:text-primary transition-colors">
+					{media.title}
+				</CardTitle>
+				<CardDescription className="pt-2 flex flex-col gap-2">
+					<div className="flex items-center justify-between">
+						{media.category && (
+							<Badge variant="secondary" className="bg-primary/5 text-primary border-none">
 								{media.category.name}
 							</Badge>
-						</Link>
-					)}
-					<span className="text-sm text-muted-foreground">
-						By {media.author.name}
-					</span>
+						)}
+						<span className="text-xs text-muted-foreground font-medium">
+							By {media.author.name}
+						</span>
+					</div>
 				</CardDescription>
 			</CardHeader>
-			<CardContent className="flex-grow">
-				<p className="text-muted-foreground line-clamp-3">
+			<CardContent className="px-5 pb-5 flex-grow">
+				<p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed">
 					{media.description}
 				</p>
 			</CardContent>
-			<CardFooter>
-				<Button asChild className="w-full">
-					<Link href={`/media/${media.slug}`}>View Media</Link>
-				</Button>
+			<CardFooter className="px-5 pb-5 pt-0 mt-auto flex gap-2">
+				{isVideo ? (
+					<Button asChild className="w-full rounded-xl">
+						<span className="cursor-pointer">Watch Now</span>
+					</Button>
+				) : (
+					<Button asChild className="w-full rounded-xl">
+						<Link href={`/media/${media.slug}`}>View Details</Link>
+					</Button>
+				)}
+				{isVideo && (
+					<Button asChild variant="outline" className="px-3 rounded-xl">
+						<Link href={`/media/${media.slug}`} title="View detail page">
+							<FileQuestion className="h-4 w-4" />
+						</Link>
+					</Button>
+				)}
 			</CardFooter>
 		</Card>
 	);
+
+	if (isVideo && isYouTube) {
+		const embedUrl = `https://www.youtube.com/embed/${videoId}`;
+		return (
+			<Dialog>
+				<DialogTrigger asChild>
+					<div className="cursor-pointer h-full">{CardUI}</div>
+				</DialogTrigger>
+				<DialogContent className="sm:max-w-[800px] p-0 overflow-hidden bg-black border-none rounded-2xl shadow-2xl">
+					<DialogHeader className="sr-only">
+						<DialogTitle>{media.title}</DialogTitle>
+					</DialogHeader>
+					<div className="aspect-video w-full">
+						<iframe
+							src={embedUrl}
+							title={media.title}
+							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+							allowFullScreen
+							className="w-full h-full border-none"
+						></iframe>
+					</div>
+				</DialogContent>
+			</Dialog>
+		);
+	}
+
+	return <Link href={`/media/${media.slug}`}>{CardUI}</Link>;
 }

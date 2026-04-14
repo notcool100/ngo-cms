@@ -3,23 +3,25 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
 	ArrowRight,
-	ExternalLink,
 	Globe,
 	Handshake,
 	MapPin,
 	Scale,
 	Users,
+	Video,
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+
 import { FadeIn } from "@/components/animations/fade-in";
 import { HeroParallax } from "@/components/animations/hero-parallax";
 import { ScaleIn } from "@/components/animations/scale-in";
-import { TeamHierarchy } from "@/components/team-hierarchy";
+import { TeamCard } from "@/components/team-card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { INWOLAG_CONTENT } from "@/lib/inwolag-content";
 
 interface TeamMember {
@@ -295,70 +297,98 @@ export default function AboutPage() {
 								</Badge>
 								<h2 className="text-3xl font-bold">Watch and learn more</h2>
 							</div>
-							<div className="space-y-3">
-								{INWOLAG_CONTENT.mediaLinks.map((link, index) => (
-									<a
-										key={link}
-										href={link}
-										target="_blank"
-										rel="noopener noreferrer"
-										className="flex items-center justify-between rounded-2xl border border-muted/20 px-4 py-3 text-sm transition-colors hover:border-primary/30 hover:bg-primary/5"
-									>
-										<span>INWOLAG in Media {String(index + 1).padStart(2, "0")}</span>
-										<ExternalLink className="h-4 w-4 text-primary" />
-									</a>
-								))}
+							<div className="space-y-6">
+								<p className="text-muted-foreground">
+									Watch our documentaries, interviews, and media appearances to learn more about our work and impact.
+								</p>
+								<Link href="/media?category=videos">
+									<Button className="w-full py-8 text-lg rounded-2xl group">
+										<Video className="mr-3 h-5 w-5" />
+										Browse Video Gallery
+										<ArrowRight className="ml-3 h-5 w-5 transition-transform group-hover:translate-x-1" />
+									</Button>
+								</Link>
 							</div>
 						</div>
 					</FadeIn>
 				</div>
 			</section>
 
-			<section className="bg-gradient-to-b from-muted/20 to-white py-20">
-				<div className="container space-y-16">
-					<div>
-						<div className="mb-10 text-center">
-							<Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20">
-								Board of Directors
-							</Badge>
-							<h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">
-								Leadership and governance
-							</h2>
-						</div>
-						<div className="rounded-3xl border border-muted/20 bg-white p-8 shadow-sm">
-							{isLoading ? (
-								<p className="text-center text-muted-foreground">Loading board members...</p>
-							) : boardMembers.length > 0 ? (
-								<TeamHierarchy teamMembers={boardMembers} />
-							) : (
-								<p className="text-center text-muted-foreground">Board information is not available.</p>
-							)}
-						</div>
+			<section className="bg-gradient-to-b from-muted/20 to-white py-24">
+				<div className="container">
+					<div className="mb-12 text-center">
+						<Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20">
+							Leadership & Governance
+						</Badge>
+						<h2 className="text-4xl font-bold tracking-tighter sm:text-5xl">
+							The people behind INWOLAG
+						</h2>
+						<p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
+							Guided by a dedicated Board of Directors and supported by an extensive regional network of advisors and focal persons.
+						</p>
 					</div>
 
-					<div>
-						<div className="mb-10 text-center">
-							<Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20">
-								Advisory and Focal Network
-							</Badge>
-							<h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">
-								Regional guidance and support
-							</h2>
+					<Tabs defaultValue="board" className="mx-auto max-w-6xl">
+						<div className="mb-10 flex justify-center">
+							<TabsList className="grid w-full max-w-md grid-cols-2 rounded-2xl bg-muted/50 p-1">
+								<TabsTrigger
+									value="board"
+									className="rounded-xl py-3 text-sm font-semibold transition-all data-[state=active]:bg-white data-[state=active]:shadow-md"
+								>
+									Board of Directors
+								</TabsTrigger>
+								<TabsTrigger
+									value="network"
+									className="rounded-xl py-3 text-sm font-semibold transition-all data-[state=active]:bg-white data-[state=active]:shadow-md"
+								>
+									Advisory & Focal Network
+								</TabsTrigger>
+							</TabsList>
 						</div>
-						<div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-							{networkMembers.map((member) => (
-								<FadeIn key={member.id}>
-									<div className="rounded-3xl border border-muted/20 bg-white p-6 shadow-sm">
-										<p className="text-sm font-medium text-primary">{member.position}</p>
-										<h3 className="mt-2 text-xl font-bold">{member.name}</h3>
-										<p className="mt-3 text-sm leading-6 text-muted-foreground">
-											{member.bio}
-										</p>
+
+						<AnimatePresence mode="wait">
+							<TabsContent value="board" key="team-board" className="focus-visible:outline-none">
+								<motion.div
+									initial={{ opacity: 0, y: 20 }}
+									animate={{ opacity: 1, y: 0 }}
+									exit={{ opacity: 0, y: -20 }}
+									transition={{ duration: 0.3 }}
+									className="rounded-3xl border border-muted/20 bg-white p-8 shadow-sm"
+								>
+									<div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+										{isLoading ? (
+											<p className="col-span-full py-20 text-center text-muted-foreground">
+												Loading board members...
+											</p>
+										) : boardMembers.length > 0 ? (
+											boardMembers.map((member, index) => (
+												<TeamCard key={member.id || `board-${index}`} member={member} />
+											))
+										) : (
+											<p className="col-span-full py-20 text-center text-muted-foreground">
+												Board information is not available.
+											</p>
+										)}
 									</div>
-								</FadeIn>
-							))}
-						</div>
-					</div>
+								</motion.div>
+							</TabsContent>
+
+							<TabsContent value="network" key="team-network" className="focus-visible:outline-none">
+								<motion.div
+									initial={{ opacity: 0, y: 20 }}
+									animate={{ opacity: 1, y: 0 }}
+									exit={{ opacity: 0, y: -20 }}
+									transition={{ duration: 0.3 }}
+								>
+									<div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+										{networkMembers.map((member, index) => (
+											<TeamCard key={member.id || `network-${index}`} member={member} />
+										))}
+									</div>
+								</motion.div>
+							</TabsContent>
+						</AnimatePresence>
+					</Tabs>
 				</div>
 			</section>
 
