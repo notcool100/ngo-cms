@@ -39,6 +39,7 @@ import { toast } from "@/components/ui/use-toast";
 import { Container } from "@/components/ui/container";
 import { NoticesSection, ImportantNoticeOverlay } from "@/components/notices-section";
 import { FeaturedPublications } from "@/components/featured-publications";
+import { INWOLAG_CONTENT } from "@/lib/inwolag-content";
 
 export default function HomePage() {
 	const [featuredPrograms, setFeaturedPrograms] = useState<
@@ -171,7 +172,7 @@ export default function HomePage() {
 			{/* Hero Section with Enhanced Parallax */}
 			<HeroParallax
 				imageUrl="/heroimage.jpg?height=1200&width=1920"
-				alt="Women empowerment"
+				alt="INWOLAG community gathering"
 				overlayColor="from-primary/90 via-primary/80 to-primary/70"
 			>
 				<div className="text-center text-white relative z-10 px-4">
@@ -187,7 +188,7 @@ export default function HomePage() {
 								className="flex items-center gap-2"
 							>
 								<Sparkles className="h-4 w-4" />
-								<span>Empowering Communities Since 2000</span>
+								<span>Advocating Since 2000</span>
 								<Sparkles className="h-4 w-4" />
 							</motion.span>
 						</Badge>
@@ -239,8 +240,7 @@ export default function HomePage() {
 						className="mx-auto mt-8 max-w-[700px] text-lg text-white/90 md:text-xl"
 					>
 						<p className="leading-relaxed backdrop-blur-sm bg-black/5 p-4 rounded-lg inline-block">
-							Join our mission to create a world where every woman has the
-							opportunity to thrive, lead, and inspire positive change.
+							{INWOLAG_CONTENT.heroSummary}
 						</p>
 					</FadeIn>
 
@@ -264,7 +264,7 @@ export default function HomePage() {
 							</motion.div>
 						</Link>
 
-						<Link href="/donate">
+						{/* <Link href="/donate">
 							<motion.div
 								whileHover={{ scale: 1.05 }}
 								whileTap={{ scale: 0.95 }}
@@ -278,7 +278,7 @@ export default function HomePage() {
 									<span>Donate Now</span>
 								</Button>
 							</motion.div>
-						</Link>
+						</Link> */}
 					</FadeIn>
 
 					<motion.div
@@ -347,20 +347,14 @@ export default function HomePage() {
 									<span className="font-medium">Our Mission</span>
 								</Badge>
 								<h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent mb-6">
-									Creating a world of equal opportunities
+									Protecting rights, dignity, and collective futures
 								</h2>
 								<div className="text-lg text-muted-foreground space-y-6">
 									<p className="leading-relaxed">
-										INWOLAG is dedicated to advancing women's rights, promoting
-										gender equality, and creating opportunities for women to
-										achieve their full potential through education, economic
-										empowerment, and leadership development.
+										{INWOLAG_CONTENT.whatWeDo}
 									</p>
 									<p className="leading-relaxed">
-										We believe that when women are empowered, entire communities
-										thrive. Our programs focus on providing resources,
-										education, and support to help women overcome barriers and
-										reach their full potential.
+										{INWOLAG_CONTENT.whyWeDo}
 									</p>
 								</div>
 
@@ -375,17 +369,17 @@ export default function HomePage() {
 									{[
 										{
 											icon: <BookOpen className="h-5 w-5" />,
-											text: "Education",
+											text: "Access to Justice",
 										},
 										{
 											icon: <Sparkles className="h-5 w-5" />,
-											text: "Empowerment",
+											text: "Collective Rights",
 										},
 										{
 											icon: <GraduationCap className="h-5 w-5" />,
-											text: "Leadership",
+											text: "Protected Areas",
 										},
-										{ icon: <Globe className="h-5 w-5" />, text: "Community" },
+										{ icon: <Globe className="h-5 w-5" />, text: "Climate Justice" },
 									].map((item, i) => (
 										<motion.div
 											key={item.text}
@@ -496,9 +490,7 @@ export default function HomePage() {
 								Making a Difference
 							</h2>
 							<p className="mx-auto mt-6 max-w-[700px] text-muted-foreground">
-								For over a decade, we've been working to create positive change
-								in communities around the world. Here's the impact we've made so
-								far.
+								{INWOLAG_CONTENT.reachSummary}
 							</p>
 						</motion.div>
 					</div>
@@ -506,27 +498,27 @@ export default function HomePage() {
 					<div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-4">
 						{[
 							{
-								value: 5000,
-								label: "Women Empowered",
+								value: 25,
+								label: "Years of advocacy",
 								suffix: "+",
 								icon: Users,
 							},
 							{
-								value: 120,
-								label: "Communities Served",
-								suffix: "+",
+								value: 40,
+								label: "Districts reached",
+								suffix: "",
 								icon: Globe,
 							},
 							{
-								value: 50,
-								label: "Active Programs",
-								suffix: "+",
+								value: 7,
+								label: "Provinces reached",
+								suffix: "",
 								icon: Sparkles,
 							},
 							{
-								value: 25,
-								label: "Years of Impact",
-								suffix: "+",
+								value: 7,
+								label: "Founding lawyers",
+								suffix: "",
 								icon: Calendar,
 							},
 						].map((stat, index) => (
@@ -608,8 +600,7 @@ export default function HomePage() {
 							Featured Initiatives
 						</h2>
 						<p className="mx-auto mt-6 max-w-[700px] text-muted-foreground">
-							Discover our key programs that are making a difference in the
-							lives of women around the world.
+							Explore INWOLAG's core thematic areas, from legal aid and collective rights to conservation, climate justice, and evidence-based advocacy.
 						</p>
 					</motion.div>
 
@@ -771,8 +762,7 @@ export default function HomePage() {
 							className="mx-auto mt-6 max-w-[700px] text-muted-foreground"
 						>
 							<p className="leading-relaxed">
-								Join us at our upcoming events to learn, connect, and make a
-								difference in your community.
+								Join trainings, dialogues, and public events connected to Indigenous women's rights, collective rights, climate justice, and community advocacy.
 							</p>
 						</FadeIn>
 					</div>
@@ -871,27 +861,26 @@ export default function HomePage() {
 							className="mx-auto mt-6 max-w-[700px] text-muted-foreground"
 						>
 							<p className="leading-relaxed">
-								There are many ways you can contribute to our mission and make a
-								difference in the lives of women around the world.
+								Support INWOLAG through legal awareness, advocacy, research, field coordination, partnerships, and community-based action.
 							</p>
 						</FadeIn>
 					</div>
 
 					<div className="grid grid-cols-1 gap-8 md:grid-cols-3 text-black">
 						{[
-							{
-								icon: <Heart className="h-10 w-10" />,
-								title: "Donate",
-								description:
-									"Your financial support helps us expand our programs and reach more women in need. Every contribution makes a difference.",
-								cta: "Donate Now",
-								href: "/donate",
-							},
+							// {
+							// 	icon: <Heart className="h-10 w-10" />,
+							// 	title: "Donate",
+							// 	description:
+							// 		"Your financial support helps us expand our programs and reach more women in need. Every contribution makes a difference.",
+							// 	cta: "Donate Now",
+							// 	href: "/donate",
+							// },
 							{
 								icon: <Users className="h-10 w-10" />,
 								title: "Volunteer",
 								description:
-									"Share your time and skills to support our programs and make a direct impact in your community and beyond.",
+									"Contribute your time, legal expertise, research skills, translation support, or coordination capacity to strengthen ongoing work.",
 								cta: "Become a Volunteer",
 								href: "/volunteer",
 							},
@@ -899,9 +888,9 @@ export default function HomePage() {
 								icon: <Calendar className="h-10 w-10" />,
 								title: "Partner With Us",
 								description:
-									"Collaborate with us to create meaningful partnerships that advance our shared goals and amplify our impact.",
+									"Collaborate on advocacy, research, documentation, training, and community-led initiatives that advance Indigenous women's rights.",
 								cta: "Become a Partner",
-								href: "/partner",
+								href: "/contact",
 							},
 						].map((item, index) => (
 							<motion.div
@@ -991,7 +980,7 @@ export default function HomePage() {
 									Subscribe to Our Newsletter
 								</h2>
 								<p className="text-muted-foreground">
-									Get the latest updates on our programs, events, and impact stories delivered to your inbox.
+									Get updates on publications, media coverage, events, and opportunities to engage with INWOLAG.
 								</p>
 							</motion.div>
 						</div>

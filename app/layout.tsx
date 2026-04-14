@@ -5,13 +5,13 @@ import "./globals.css";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import { ThemeProvider } from "@/components/theme-provider";
+import { INWOLAG_CONTENT } from "@/lib/inwolag-content";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-	title: "INWOLAG - Women's Empowerment NGO",
-	description:
-		"Empowering women through education, support, and community initiatives",
+	title: "INWOLAG | Indigenous Women Legal Awareness Group",
+	description: INWOLAG_CONTENT.siteDescription,
 	generator: "v0.dev",
 };
 export default function RootLayout({

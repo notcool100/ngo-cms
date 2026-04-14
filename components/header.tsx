@@ -19,7 +19,7 @@ const navigation = [
 	{ name: "Media", href: "/media" },
 	{ name: "Events", href: "/events" },
 	// { name: "Blog", href: "/blog" },
-	{ name: "Contribution", href: "/volunteer" },
+	{ name: "Get Involved", href: "/volunteer" },
 	{ name: "Contact", href: "/contact" },
 ];
 

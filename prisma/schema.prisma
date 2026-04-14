@@ -278,9 +278,9 @@ model Newsletter {
 
 model SiteSettings {
   id                 String   @id @default(cuid())
-  siteName           String   @default("IWLAG")
-  siteDescription    String   @default("Empowering women through education and support")
-  contactEmail       String   @default("contact@empowertogether.org")
+  siteName           String   @default("INWOLAG")
+  siteDescription    String   @default("Indigenous Women Legal Awareness Group (INWOLAG) advances Indigenous women's rights, access to justice, collective rights, gender-just climate action, and evidence-based advocacy in Nepal.")
+  contactEmail       String   @default("admin@inwolag.org.np")
   maintenanceMode    Boolean  @default(false)
   backupFrequency    String   @default("weekly")
   cacheLifetime      Int      @default(3600)
@@ -302,8 +302,8 @@ model BlogSettings {
   showRelatedPosts   Boolean  @default(true)
   showAuthorInfo     Boolean  @default(true)
   defaultCategory    String?
-  seoTitle           String   @default("Publications | IWLAG")
-  seoDescription     String   @default("Latest publications, books, articles, and resources from IWLAG")
+  seoTitle           String   @default("News & Publications | INWOLAG")
+  seoDescription     String   @default("Research, publications, and updates from Indigenous Women Legal Awareness Group (INWOLAG).")
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 }

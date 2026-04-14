@@ -116,8 +116,7 @@ export default function EventsPage() {
               className="mx-auto mt-6 max-w-[700px] text-lg text-white/90"
             >
               <p className="leading-relaxed">
-                Join us at our upcoming events and be part of the change. Together, we
-                can make a difference in the lives of women around the world.
+                Join us at upcoming events, trainings, and public dialogues connected to Indigenous women's rights, collective rights, climate justice, and community advocacy.
               </p>
             </FadeIn>
           </div>
@@ -388,7 +387,7 @@ export default function EventsPage() {
             </FadeIn>
             <FadeIn delay={0.2}>
               <p className="max-w-2xl mx-auto mb-8 text-white/90">
-                If you're interested in partnering with us to host an event that supports women's empowerment, 
+                If you're interested in partnering with us to host an event that supports Indigenous women's rights, legal awareness, or rights-based advocacy,
                 we'd love to hear from you.
               </p>
             </FadeIn>

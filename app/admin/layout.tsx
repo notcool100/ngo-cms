@@ -150,7 +150,7 @@ export default function AdminLayout({
 							</Link>
 						)}
 
-						{permissions.hasPermission("manage:donations") && (
+						{/* {permissions.hasPermission("manage:donations") && (
 							<Link
 								href="/admin/donations"
 								className={`flex items-center gap-2 rounded-lg px-3 py-2 ${
@@ -163,7 +163,7 @@ export default function AdminLayout({
 								<DollarSign className="h-5 w-5" />
 								Donations
 							</Link>
-						)}
+						)} */}
 
 						{permissions.hasPermission("manage:events") && (
 							<Link

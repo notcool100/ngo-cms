@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Volunteer | INWOLAG",
-  description: "Join our volunteer team and help empower women and transform communities around the world.",
+  title: "Get Involved | INWOLAG",
+  description: "Support INWOLAG through volunteering, field coordination, research support, advocacy, and community-based collaboration.",
 };

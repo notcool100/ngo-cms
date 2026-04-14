@@ -30,6 +30,7 @@ export function ProgramCard({
   const imageUrl = image && image.trim() !== "" 
     ? image 
     : "/placeholder.svg?height=400&width=600";
+  const contentPreview = content.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
   return (
     <motion.div
       className="bg-white rounded-xl overflow-hidden shadow-sm border border-muted/20 h-full flex flex-col"
@@ -69,9 +70,9 @@ export function ProgramCard({
         <h3 className="text-xl font-bold mb-2 text-black">{title}</h3>
         <p className="text-muted-foreground mb-4">{description}</p>
         
-        {content && (
+        {contentPreview && (
           <p className="text-sm text-muted-foreground line-clamp-3 mb-6">
-            {content}
+            {contentPreview}
           </p>
         )}
 

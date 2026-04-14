@@ -41,9 +41,12 @@ export async function POST(request: NextRequest) {
 		const bytes = await file.arrayBuffer();
 		const buffer = Buffer.from(bytes);
 
-		// Create unique filename
+		// Sanitize filename to prevent path traversal by keeping only alphanumeric characters, dashes, and underscores
+		const originalNameWithoutExt = file.name.replace(/\.[^/.]+$/, "");
+		const sanitizedBaseName = originalNameWithoutExt.replace(/[^a-zA-Z0-9\-_]/g, "");
+		const extension = extname(file.name).replace(/[^a-zA-Z0-9.]/g, "");
 		const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
-		const filename = `${file.name.replace(/\.[^/.]+$/, "")}-${uniqueSuffix}${extname(file.name)}`;
+		const filename = `${sanitizedBaseName || 'file'}-${uniqueSuffix}${extension}`;
 
 		// Determine folder based on file type
 		const isImage = file.type.startsWith("image");

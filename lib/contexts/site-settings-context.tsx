@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { INWOLAG_DEFAULTS } from "@/lib/inwolag-content";
 
 interface SiteSettings {
   siteName: string;
@@ -24,9 +25,9 @@ interface SiteSettingsContextType {
 }
 
 const defaultSettings: SiteSettings = {
-  siteName: "INWOLAG",
-  siteDescription: "Empowering women through education and support",
-  contactEmail: "contact@empowertogether.org",
+  siteName: INWOLAG_DEFAULTS.siteName,
+  siteDescription: INWOLAG_DEFAULTS.siteDescription,
+  contactEmail: INWOLAG_DEFAULTS.contactEmail,
   maintenanceMode: false,
   backupFrequency: "weekly",
   cacheLifetime: 3600,

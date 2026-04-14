@@ -1,40 +1,48 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from "@prisma/client";
+
+import { INWOLAG_DEFAULTS } from "../lib/inwolag-content";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  // Check if settings already exist
-  const existingSettings = await prisma.siteSettings.findFirst();
-  
-  if (!existingSettings) {
-    // Create default settings
-    await prisma.siteSettings.create({
-      data: {
-        siteName: "IWLAG",
-        siteDescription: "Empowering women through education and support",
-        contactEmail: "contact@empowertogether.org",
-        maintenanceMode: false,
-        backupFrequency: "weekly",
-        cacheLifetime: 3600,
-        debugMode: false,
-        emailNotifications: true,
-        donationAlerts: true,
-        volunteerAlerts: true,
-        contactFormAlerts: true,
-      },
-    });
-    
-    console.log('Default site settings created');
-  } else {
-    console.log('Site settings already exist, skipping seed');
-  }
+	const existingSettingsCount = await prisma.siteSettings.count();
+
+	if (existingSettingsCount > 0) {
+		await prisma.siteSettings.updateMany({
+			data: {
+				siteName: INWOLAG_DEFAULTS.siteName,
+				siteDescription: INWOLAG_DEFAULTS.siteDescription,
+				contactEmail: INWOLAG_DEFAULTS.contactEmail,
+			},
+		});
+		console.log("Site settings updated");
+		return;
+	}
+
+	await prisma.siteSettings.create({
+		data: {
+			siteName: INWOLAG_DEFAULTS.siteName,
+			siteDescription: INWOLAG_DEFAULTS.siteDescription,
+			contactEmail: INWOLAG_DEFAULTS.contactEmail,
+			maintenanceMode: false,
+			backupFrequency: "weekly",
+			cacheLifetime: 3600,
+			debugMode: false,
+			emailNotifications: true,
+			donationAlerts: true,
+			volunteerAlerts: true,
+			contactFormAlerts: true,
+		},
+	});
+
+	console.log("Default site settings created");
 }
 
 main()
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+	.catch((error) => {
+		console.error(error);
+		process.exit(1);
+	})
+	.finally(async () => {
+		await prisma.$disconnect();
+	});
