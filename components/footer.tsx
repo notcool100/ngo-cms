@@ -8,9 +8,10 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Facebook, Instagram, Twitter, Youtube, Heart, Mail, MapPin, Phone, ArrowRight } from "lucide-react";
+import { Youtube, Heart, Mail, MapPin, ArrowRight } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 import { useSiteSettings } from "@/lib/contexts/site-settings-context";
+import { INWOLAG_CONTENT } from "@/lib/inwolag-content";
 
 export default function Footer() {
 	const [email, setEmail] = useState("");
@@ -175,38 +176,13 @@ export default function Footer() {
 							<h3 className="text-xl font-bold text-gradient">{settings?.siteName || "INWOLAG"}</h3>
 						</div>
 						<p className="text-muted-foreground">
-							{settings?.siteDescription || "Empowering women through education, support, and community initiatives since 2010."}
+							{settings?.siteDescription || INWOLAG_CONTENT.siteDescription}
 						</p>
-						<div className="flex space-x-4">
+						<div className="flex flex-wrap gap-4">
 							<motion.a
-								href="#"
-								className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-white transition-colors"
-								whileHover={{ scale: 1.1 }}
-								whileTap={{ scale: 0.9 }}
-								aria-label="Facebook"
-							>
-								<Facebook className="h-5 w-5" />
-							</motion.a>
-							<motion.a
-								href="#"
-								className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-white transition-colors"
-								whileHover={{ scale: 1.1 }}
-								whileTap={{ scale: 0.9 }}
-								aria-label="Instagram"
-							>
-								<Instagram className="h-5 w-5" />
-							</motion.a>
-							<motion.a
-								href="#"
-								className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-white transition-colors"
-								whileHover={{ scale: 1.1 }}
-								whileTap={{ scale: 0.9 }}
-								aria-label="Twitter"
-							>
-								<Twitter className="h-5 w-5" />
-							</motion.a>
-							<motion.a
-								href="#"
+								href={INWOLAG_CONTENT.mediaLinks[0]}
+								target="_blank"
+								rel="noopener noreferrer"
 								className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-white transition-colors"
 								whileHover={{ scale: 1.1 }}
 								whileTap={{ scale: 0.9 }}
@@ -214,6 +190,13 @@ export default function Footer() {
 							>
 								<Youtube className="h-5 w-5" />
 							</motion.a>
+							<Link
+								href="/media"
+								className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
+							>
+								View media coverage
+								<ArrowRight className="h-4 w-4" />
+							</Link>
 						</div>
 					</div>
 					
@@ -272,20 +255,17 @@ export default function Footer() {
 								<MapPin className="h-5 w-5 text-primary mt-0.5" />
 								<span className="text-muted-foreground">
 									Kapan<br />
-									kathmandu, Nepal
+									Kathmandu, Nepal
 								</span>
 							</li>
 							<li className="flex items-center gap-3">
-								<Phone className="h-5 w-5 text-primary" />
-								<a href="tel:+1234567890" className="text-muted-foreground hover:text-primary transition-colors">
-									(977) 9800000000
+								<Mail className="h-5 w-5 text-primary" />
+								<a href={`mailto:${settings?.contactEmail || INWOLAG_CONTENT.contactEmail}`} className="text-muted-foreground hover:text-primary transition-colors">
+									{settings?.contactEmail || INWOLAG_CONTENT.contactEmail}
 								</a>
 							</li>
-							<li className="flex items-center gap-3">
-								<Mail className="h-5 w-5 text-primary" />
-								<a href={`mailto:${settings?.contactEmail || "info@empowertogether.org"}`} className="text-muted-foreground hover:text-primary transition-colors">
-									{settings?.contactEmail || "info@empowertogether.org"}
-								</a>
+							<li className="text-sm text-muted-foreground">
+								Working across 40 districts in all seven provinces of Nepal.
 							</li>
 						</ul>
 					</div>
@@ -311,7 +291,7 @@ export default function Footer() {
 					<div className="flex items-center gap-2">
 						<Heart className="h-4 w-4 text-primary" />
 						<span className="text-sm text-muted-foreground">
-							Made with love for a better world
+							Grounded in justice, dignity, and collective rights
 						</span>
 					</div>
 				</div>

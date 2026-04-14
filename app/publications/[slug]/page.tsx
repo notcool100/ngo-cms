@@ -95,14 +95,20 @@ export default function PublicationPage() {
 							/>
 
 							<div className="mt-10">
-								<Button
-									onClick={() => window.open(pub.fileUrl, "_blank")}
-									size="lg"
-									className="w-full"
-								>
-									<Download className="mr-2 h-4 w-4" />
-									Download Publication
-								</Button>
+								{pub.fileUrl ? (
+									<Button
+										onClick={() => window.open(pub.fileUrl, "_blank")}
+										size="lg"
+										className="w-full"
+									>
+										<Download className="mr-2 h-4 w-4" />
+										Download Publication
+									</Button>
+								) : (
+									<div className="rounded-lg border border-dashed p-4 text-sm text-muted-foreground">
+										A downloadable file has not been attached to this publication yet.
+									</div>
+								)}
 							</div>
 						</div>
 					</div>

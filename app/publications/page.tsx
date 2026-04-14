@@ -62,7 +62,7 @@ export default function PublicationsPage() {
 				>
 					<Heading
 						title="Publications"
-						description="Explore our collection of publications, books, articles, acts and rules"
+						description="Explore INWOLAG's research, reports, translations, and policy analysis on Indigenous women's rights, collective rights, conservation, and climate justice."
 					/>
 				</motion.div>
 

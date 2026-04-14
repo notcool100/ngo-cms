@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar, Clock, MapPin } from "lucide-react";
 import prisma from "@/lib/prisma";
 import ProgramGallery from "@/components/program-gallery";
+import { INWOLAG_CONTENT } from "@/lib/inwolag-content";
 
 interface ProgramPageProps {
 	params: {
@@ -100,9 +101,11 @@ export default async function ProgramPage({ params }: ProgramPageProps) {
 								</h2>
 							</div>
 							<div className="prose max-w-none">
-								{program.content.split("\n").map((paragraph, index) => (
-									<p key={index}>{paragraph}</p>
-								))}
+								<div
+									dangerouslySetInnerHTML={{
+										__html: program.content,
+									}}
+								/>
 							</div>
 
 							{/* Program Gallery */}
@@ -114,15 +117,13 @@ export default async function ProgramPage({ params }: ProgramPageProps) {
 									<div className="bg-muted/40 p-4 rounded-lg">
 										<h4 className="font-medium">Who We Serve</h4>
 										<p className="text-sm text-muted-foreground mt-1">
-											Women and girls from underserved communities seeking
-											opportunities for growth and empowerment.
+											Indigenous women, girls, and communities affected by legal exclusion, violence, environmental injustice, and unequal development.
 										</p>
 									</div>
 									<div className="bg-muted/40 p-4 rounded-lg">
 										<h4 className="font-medium">Program Reach</h4>
 										<p className="text-sm text-muted-foreground mt-1">
-											Operating in 15+ communities with over 500 participants
-											annually.
+											Connected to INWOLAG's work across 40 districts in all seven provinces of Nepal.
 										</p>
 									</div>
 								</div>
@@ -164,10 +165,10 @@ export default async function ProgramPage({ params }: ProgramPageProps) {
 											For more information about this program, please contact us
 											at{" "}
 											<a
-												href="mailto:programs@empowertogether.org"
+												href={`mailto:${INWOLAG_CONTENT.contactEmail}`}
 												className="text-primary hover:underline"
 											>
-												programs@empowertogether.org
+												{INWOLAG_CONTENT.contactEmail}
 											</a>
 										</p>
 									</div>

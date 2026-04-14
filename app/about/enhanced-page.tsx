@@ -13,6 +13,7 @@ import {
   Heart,
   Target,
   Globe,
+  Award,
   ArrowRight,
   Twitter,
   Linkedin,
@@ -667,7 +668,7 @@ export default function AboutPage() {
               <Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20 py-1.5 px-4">Our Leadership</Badge>
               <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-gradient mb-6">Meet Our Team</h2>
               <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
-                The dedicated professionals working together to create positive change around the world.
+                The dedicated professionals working together to advance Indigenous women's rights and collective dignity in Nepal.
               </p>
             </FadeIn>
           </div>
@@ -839,7 +840,7 @@ export default function AboutPage() {
               </FadeIn>
               <FadeIn delay={0.2}>
                 <p className="max-w-2xl mx-auto mb-10 text-white/90 text-lg">
-                  There are many ways to get involved and support our work to empower women worldwide.
+                  There are many ways to get involved and support our work on Indigenous women's rights, legal aid, and rights-based advocacy.
                 </p>
               </FadeIn>
 

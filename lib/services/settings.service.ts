@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import type { SiteSettings } from "@prisma/client";
+import { INWOLAG_DEFAULTS } from "@/lib/inwolag-content";
 
 export class SettingsService {
   /**
@@ -8,7 +9,11 @@ export class SettingsService {
    */
   async getSettings(): Promise<SiteSettings> {
     // Get the first settings record or create it if it doesn't exist
-    const settings = await prisma.siteSettings.findFirst();
+    const settings = await prisma.siteSettings.findFirst({
+      orderBy: {
+        updatedAt: "desc",
+      },
+    });
     
     if (!settings) {
       return this.createDefaultSettings();
@@ -23,9 +28,9 @@ export class SettingsService {
   async createDefaultSettings(): Promise<SiteSettings> {
     return prisma.siteSettings.create({
       data: {
-        siteName: "INWOLAG",
-        siteDescription: "Empowering women through education and support",
-        contactEmail: "contact@empowertogether.org",
+        siteName: INWOLAG_DEFAULTS.siteName,
+        siteDescription: INWOLAG_DEFAULTS.siteDescription,
+        contactEmail: INWOLAG_DEFAULTS.contactEmail,
         maintenanceMode: false,
         backupFrequency: "weekly",
         cacheLifetime: 3600,

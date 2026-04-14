@@ -22,7 +22,7 @@ export function FeaturedPublications() {
 				<div className="flex items-center justify-between">
 					<Heading
 						title="Featured Publications"
-						description="Check out our featured publications"
+						description="Recent INWOLAG research and reports"
 					/>
 				</div>
 				<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
@@ -46,7 +46,7 @@ export function FeaturedPublications() {
 			<div className="flex items-center justify-between">
 				<Heading
 					title="Featured Publications"
-					description="Check out our featured publications"
+					description="Recent INWOLAG research and reports"
 				/>
 				<Button variant="link" asChild>
 					<Link href="/publications" className="flex items-center gap-x-2">

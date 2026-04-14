@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Donate | IWLAG",
-  description: "Support our mission to empower women and transform communities around the world.",
+  title: "Support Our Work | INWOLAG",
+  description: "Support INWOLAG's work on Indigenous women's rights, legal aid, collective rights, climate justice, and research in Nepal.",
 };
