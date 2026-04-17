@@ -9,7 +9,7 @@ pool:
 variables:
   nodeVersion: '24.x'
   deployPath: '/var/www/inwolag_live'
-  serviceName: 'inwolag_live'
+  serviceName: 'inwolag-frontend'
 
 stages:
 - stage: BuildFrontend 
