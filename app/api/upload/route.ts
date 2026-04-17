@@ -38,6 +38,30 @@ export async function POST(request: NextRequest) {
 			return NextResponse.json({ error: "No file provided" }, { status: 400 });
 		}
 
+		const fileExtension = extname(file.name).toLowerCase();
+		const fileMimeType = file.type;
+
+		const ALLOWED_EXTENSIONS = [
+			".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg",
+			".pdf", ".doc", ".docx", ".xls", ".xlsx", ".txt", ".csv"
+		];
+
+		const ALLOWED_MIME_TYPES = [
+			"image/jpeg", "image/png", "image/gif", "image/webp", "image/svg+xml",
+			"application/pdf", "application/msword",
+			"application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+			"application/vnd.ms-excel",
+			"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+			"text/plain", "text/csv"
+		];
+
+		if (!ALLOWED_EXTENSIONS.includes(fileExtension) || !ALLOWED_MIME_TYPES.includes(fileMimeType)) {
+			return NextResponse.json(
+				{ error: "Invalid file type. Unrecognized extension or MIME type." },
+				{ status: 400 }
+			);
+		}
+
 		const bytes = await file.arrayBuffer();
 		const buffer = Buffer.from(bytes);
 
