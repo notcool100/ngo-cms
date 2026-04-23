@@ -56,9 +56,8 @@ const formSchema = z.object({
 	featured: z.boolean().default(false),
 	published: z.boolean().default(false),
 	categoryId: z.string().optional(),
-	authorId: z.string({
-		required_error: "Author is required",
-	}),
+	authorId: z.string().optional(),
+	authorName: z.string().optional(),
 });
 
 type PublicationFormValues = z.infer<typeof formSchema>;
@@ -97,6 +96,7 @@ export const PublicationForm: React.FC<PublicationFormProps> = ({
 			published: false,
 			categoryId: undefined,
 			authorId: "",
+			authorName: "",
 		},
 	});
 
@@ -118,7 +118,8 @@ export const PublicationForm: React.FC<PublicationFormProps> = ({
 				featured: data.featured || false,
 				published: data.published || false,
 				categoryId: data.categoryId,
-				authorId: data.authorId || "",
+				authorId: data.authorId,
+				authorName: data.authorName,
 			});
 			router.push("/admin/publications");
 			router.refresh();
@@ -201,7 +202,7 @@ export const PublicationForm: React.FC<PublicationFormProps> = ({
 							name="authorId"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Author</FormLabel>
+									<FormLabel>Admin Author (Internal)</FormLabel>
 									<Select
 										disabled={isSubmitting || loadingUsers}
 										onValueChange={field.onChange}
@@ -212,7 +213,7 @@ export const PublicationForm: React.FC<PublicationFormProps> = ({
 											<SelectTrigger>
 												<SelectValue
 													defaultValue={field.value}
-													placeholder="Select an author"
+													placeholder="Select an internal author"
 												/>
 											</SelectTrigger>
 										</FormControl>
@@ -224,6 +225,23 @@ export const PublicationForm: React.FC<PublicationFormProps> = ({
 											))}
 										</SelectContent>
 									</Select>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="authorName"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Display Author Name (Free Text)</FormLabel>
+									<FormControl>
+										<Input
+											disabled={isSubmitting}
+											placeholder="e.g. Adv. Indira Kumari Shreesh"
+											{...field}
+										/>
+									</FormControl>
 									<FormMessage />
 								</FormItem>
 							)}

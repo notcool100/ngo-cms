@@ -13,7 +13,8 @@ interface PublicationPayload {
 	featured?: boolean;
 	published?: boolean;
 	categoryId?: string;
-	authorId: string;
+	authorId?: string;
+	authorName?: string;
 }
 
 export const usePublications = (admin?: boolean) => {

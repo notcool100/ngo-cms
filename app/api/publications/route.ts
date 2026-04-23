@@ -143,23 +143,20 @@ export async function POST(request: NextRequest) {
 			return NextResponse.json({ error: "Type is required" }, { status: 400 });
 		}
 
-		if (!authorId) {
-			return NextResponse.json(
-				{ error: "Author is required" },
-				{ status: 400 },
-			);
-		}
+		const { authorName } = body;
 
-		// Check if author exists
-		const author = await prisma.user.findUnique({
-			where: { id: authorId },
-		});
+		// Optional: Check if author exists if authorId is provided
+		if (authorId) {
+			const author = await prisma.user.findUnique({
+				where: { id: authorId },
+			});
 
-		if (!author) {
-			return NextResponse.json(
-				{ error: "Selected author not found" },
-				{ status: 400 },
-			);
+			if (!author) {
+				return NextResponse.json(
+					{ error: "Selected internal author not found" },
+					{ status: 400 },
+				);
+			}
 		}
 
 		// Check if slug already exists
@@ -194,8 +191,9 @@ export async function POST(request: NextRequest) {
 				featured: featured || false,
 				published: published || false,
 				publishedAt: published ? new Date() : null,
-				authorId,
-				categoryId,
+				authorId: authorId || null,
+				authorName: authorName || null,
+				categoryId: categoryId || null,
 			},
 		});
 
@@ -227,12 +225,14 @@ export async function PUT(request: NextRequest) {
 		} = data;
 
 		// Validate required fields
-		if (!currentSlug || !title || !description || !fileUrl || !authorId) {
+		if (!currentSlug || !title || !description || !fileUrl) {
 			return NextResponse.json(
 				{ error: "Missing required fields" },
 				{ status: 400 },
 			);
 		}
+
+		const { authorName } = data;
 
 		// Check if publication exists
 		const existingPublication = await prisma.publication.findUnique({
@@ -247,16 +247,18 @@ export async function PUT(request: NextRequest) {
 			);
 		}
 
-		// Check if author exists
-		const author = await prisma.user.findUnique({
-			where: { id: authorId },
-		});
+		// Check if author exists if authorId is provided
+		if (authorId) {
+			const author = await prisma.user.findUnique({
+				where: { id: authorId },
+			});
 
-		if (!author) {
-			return NextResponse.json(
-				{ error: "Selected author not found" },
-				{ status: 400 },
-			);
+			if (!author) {
+				return NextResponse.json(
+					{ error: "Selected internal author not found" },
+					{ status: 400 },
+				);
+			}
 		}
 
 		// Generate new slug from title
@@ -294,9 +296,10 @@ export async function PUT(request: NextRequest) {
 					published && !existingPublication.published
 						? new Date()
 						: existingPublication.publishedAt,
-				categoryId,
+				categoryId: categoryId || null,
 				type,
-				authorId,
+				authorId: authorId || null,
+				authorName: authorName || null,
 				tags: {
 					disconnect: existingPublication.tags.map((tag) => ({ id: tag.id })),
 					connect: tags ? tags.map((tagId: string) => ({ id: tagId })) : [],

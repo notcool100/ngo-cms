@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-
 import { syncInwolagContent } from "./inwolag-sync";
 
 const prisma = new PrismaClient();
