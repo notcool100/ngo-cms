@@ -17,8 +17,19 @@ const contactSchema = z.object({
 
 export async function submitContactForm(formData: FormData) {
 	try {
+		const firstName = formData.get("firstName");
+		const lastName = formData.get("lastName");
+		const nameValue =
+			typeof formData.get("name") === "string"
+				? formData.get("name")
+				: [firstName, lastName]
+					.map((value) => (typeof value === "string" ? value.trim() : ""))
+					.filter(Boolean)
+					.join(" ")
+					.trim();
+
 		const validatedData = contactSchema.parse({
-			name: formData.get("name"),
+			name: nameValue,
 			email: formData.get("email"),
 			phone: formData.get("phone") || undefined,
 			subject: formData.get("subject") || undefined,

@@ -39,11 +39,13 @@ export default function VolunteerPage() {
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [formSuccess, setFormSuccess] = useState(false);
 	const [formError, setFormError] = useState<string | null>(null);
+	const [formErrorDetails, setFormErrorDetails] = useState<string[]>([]);
 
 	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		setIsSubmitting(true);
 		setFormError(null);
+		setFormErrorDetails([]);
 
 		try {
 			const formData = new FormData(event.currentTarget);
@@ -54,6 +56,7 @@ export default function VolunteerPage() {
 				event.currentTarget.reset();
 			} else {
 				setFormError(result.message || "Something went wrong. Please try again.");
+				setFormErrorDetails(result.errors?.map((err) => err.message) ?? []);
 			}
 		} catch (error) {
 			console.error("Error submitting form:", error);
@@ -215,11 +218,21 @@ export default function VolunteerPage() {
 							) : (
 								<form onSubmit={handleSubmit} className="mt-8 space-y-6">
 									{formError && (
-										<div className="flex items-start rounded-2xl border border-red-200 bg-red-50 p-4">
-											<X className="mr-3 mt-0.5 h-5 w-5 flex-shrink-0 text-red-600" />
-											<p className="text-red-700">{formError}</p>
-										</div>
+								<div className="rounded-2xl border border-red-200 bg-red-50 p-4">
+									<div className="flex items-start">
+										<X className="mr-3 mt-0.5 h-5 w-5 flex-shrink-0 text-red-600" />
+										<p className="text-red-700">{formError}</p>
+									</div>
+									{formErrorDetails.length > 0 && (
+										<ul className="mt-3 list-disc space-y-1 pl-6 text-sm text-red-700">
+											{formErrorDetails.map((detail, index) => (
+												<li key={index}>{detail}</li>
+											))}
+										</ul>
 									)}
+								</div>
+
+						)}
 
 									<div className="grid gap-6 md:grid-cols-2">
 										<div className="space-y-2">
