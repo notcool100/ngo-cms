@@ -142,7 +142,7 @@ export const INWOLAG_CONTENT = {
 	],
 	aboutSections: [
 		{
-			title: "Our Mission",
+			title: "Our ission",
 			subtitle: "An egalitarian and prospective society",
 			type: "mission",
 			order: 1,

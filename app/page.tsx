@@ -344,11 +344,10 @@ export default function HomePage() {
 								transition={{ duration: 0.8 }}
 							>
 								<Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20 py-1.5 px-3">
-									<span className="font-medium">Our Mission</span>
+									<span className="font-medium">Who we are</span>
 								</Badge>
 								<h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent mb-6">
-									Protecting rights, dignity, and collective futures
-								</h2>
+Who We are								</h2>
 								<div className="text-lg text-muted-foreground space-y-6">
 									<p className="leading-relaxed">
 										{INWOLAG_CONTENT.whatWeDo}
@@ -358,7 +357,7 @@ export default function HomePage() {
 									</p>
 								</div>
 
-								<motion.div
+								{/* <motion.div
 									className="mt-8 flex flex-wrap gap-4"
 									variants={{
 										hidden: { opacity: 0 },
@@ -393,7 +392,7 @@ export default function HomePage() {
 											<span className="text-sm font-medium">{item.text}</span>
 										</motion.div>
 									))}
-								</motion.div>
+								</motion.div> */}
 							</motion.div>
 						</div>
 
@@ -577,7 +576,7 @@ export default function HomePage() {
 
 			{/* Featured Programs with Enhanced Cards */}
 			<section className="py-24 relative overflow-hidden">
-				{/* Animated background gradient */}
+			
 				<motion.div
 					className="absolute inset-0 bg-gradient-to-b from-muted/20 via-transparent to-transparent"
 					initial={{ opacity: 0 }}
@@ -842,7 +841,7 @@ export default function HomePage() {
 			</section>
 
 			{/* Get Involved with Enhanced Design */}
-			<section className="py-24 relative overflow-hidden">
+			{/* <section className="py-24 relative overflow-hidden">
 				<div className="container relative z-10">
 					<div className="mb-16 text-center">
 						<FadeIn>
@@ -935,7 +934,7 @@ export default function HomePage() {
 						))}
 					</div>
 				</div>
-			</section>
+			</section> */}
 
 			{/* Newsletter Subscription */}
 			<section className="py-24 bg-gradient-to-b from-muted/20 to-background relative overflow-hidden">

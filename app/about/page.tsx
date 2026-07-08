@@ -9,6 +9,8 @@ import {
 	Globe,
 	Handshake,
 	MapPin,
+	Newspaper,
+	Play,
 	Scale,
 	Users,
 	Video,
@@ -23,6 +25,157 @@ import { ScaleIn } from "@/components/animations/scale-in";
 import { TeamCard } from "@/components/team-card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { INWOLAG_CONTENT } from "@/lib/inwolag-content";
+
+export const INWOLAG_CONTENT = {
+	heroSummary:
+		"TODO: replace with your real hero summary paragraph shown under the About hero heading.",
+
+	stats: [
+		{ label: "TODO label 1", value: "TODO value 1" },
+		{ label: "TODO label 2", value: "TODO value 2" },
+		{ label: "TODO label 3", value: "TODO value 3" },
+		{ label: "TODO label 4", value: "TODO value 4" },
+	],
+
+	aboutSections: [
+		{
+			type: "mission",
+			title: "Mission",
+			subtitle: null,
+			content: "<p>TODO: replace with your real mission HTML content.</p>",
+		},
+		{
+			type: "vision",
+			title: "Vision",
+			subtitle: null,
+			content: "<p>TODO: replace with your real vision HTML content.</p>",
+		},
+		{
+			type: "history",
+			title: "TODO history section title",
+			subtitle: "TODO optional subtitle",
+			content: "<p>TODO: replace with your real history/objectives HTML content.</p>",
+		},
+	],
+
+	reachSummary:
+		"TODO: replace with your real summary of districts/regions where INWOLAG has worked.",
+
+	partners: ["TODO Partner 1", "TODO Partner 2", "TODO Partner 3", "TODO Partner 4"],
+
+	thematicAreas: [
+		{
+			slug: "legal-aid",
+			title: "Legal Aid (Access to Justice)",
+			description:
+				"INWOLAG provides legal awareness, counseling, litigation, and psychosocial services to Indigenous women survivors of violence and rights violations, all for free. As a leading advocate for Indigenous women's rights, we bridge access to justice and empowerment at both the local and national levels.",
+			focus: "Public Interest Litigation",
+			activities: [
+				{
+					name: "Rupandehi Workshop – KAAGAPAY",
+					date: "2023-07-20",
+				},
+			],
+		},
+		{
+			slug: "indigenous-collective-rights",
+			title: "Indigenous Collective Rights",
+			description:
+				"INWOLAG promotes the collective ownership, identity, and self-determination of Indigenous communities by safeguarding their ancestral lands, cultures, and traditions. With a strong emphasis on the principle of Free, Prior and Informed Consent (FPIC), we ensure that Indigenous peoples have the right to make decisions about their lands, territories, and resources before any development or policy is implemented.",
+			focus: "Right to Self-determination of Indigenous Communities",
+			activities: [],
+		},
+		{
+			slug: "gender-justice-climate",
+			title: "Gender Justice & Climate",
+			description:
+				"INWOLAG provides livelihood training programs for Indigenous women to help them mitigate and adapt to the impacts of climate change. These trainings equip women with practical skills and sustainable practices that enhance both environmental resilience and economic independence.",
+			focus: null,
+			activities: [],
+		},
+	],
+};
+const MEDIA_VIDEOS = [
+	{ id: "ahGEuSm2sZ8" },
+	{ id: "gcCUzUYFtQ8" },
+	{ id: "14v3lVDglBU" },
+	{ id: "5LycovAb6Go" },
+	{ id: "6h-iDbUuRAU" },
+	{ id: "kekdYDBBacU" },
+	{ id: "no0g4BdSwGc" },
+] as const;
+
+interface VideoMeta {
+	title: string;
+	author: string;
+}
+
+function VideoCard({ id, index }: { id: string; index: number }) {
+	const [playing, setPlaying] = useState(false);
+	const [meta, setMeta] = useState<VideoMeta | null>(null);
+
+	useEffect(() => {
+		let cancelled = false;
+		fetch(
+			`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${id}&format=json`,
+		)
+			.then((res) => (res.ok ? res.json() : null))
+			.then((data) => {
+				if (!cancelled && data) {
+					setMeta({ title: data.title, author: data.author_name });
+				}
+			})
+			.catch(() => {});
+		return () => {
+			cancelled = true;
+		};
+	}, [id]);
+
+	return (
+		<FadeIn delay={index * 0.08}>
+			<div className="group overflow-hidden rounded-3xl border border-muted/20 bg-white shadow-sm transition-shadow hover:shadow-md">
+				<div className="relative aspect-video w-full overflow-hidden bg-muted/20">
+					{playing ? (
+						<iframe
+							src={`https://www.youtube.com/embed/${id}?autoplay=1`}
+							title={meta?.title ?? "INWOLAG media coverage"}
+							allow="accelerate-compute; autoplay; encrypted-media; picture-in-picture"
+							allowFullScreen
+							className="h-full w-full"
+						/>
+					) : (
+						<button
+							type="button"
+							onClick={() => setPlaying(true)}
+							className="group/play relative h-full w-full"
+							aria-label={`Play video: ${meta?.title ?? "INWOLAG media coverage"}`}
+						>
+							<img
+								src={`https://img.youtube.com/vi/${id}/hqdefault.jpg`}
+								alt={meta?.title ?? "INWOLAG media coverage"}
+								className="h-full w-full object-cover transition-transform duration-300 group-hover/play:scale-105"
+							/>
+							<div className="absolute inset-0 flex items-center justify-center bg-black/20 transition-colors group-hover/play:bg-black/30">
+								<span className="flex h-14 w-14 items-center justify-center rounded-full bg-white/90 shadow-md transition-transform group-hover/play:scale-110">
+									<Play className="ml-1 h-6 w-6 fill-primary text-primary" />
+								</span>
+							</div>
+						</button>
+					)}
+				</div>
+
+				<div className="p-5">
+					<h3 className="line-clamp-2 font-semibold leading-snug text-foreground">
+						{meta?.title ?? "INWOLAG in the media"}
+					</h3>
+					{meta?.author && (
+						<p className="mt-1 text-sm text-muted-foreground">{meta.author}</p>
+					)}
+				</div>
+			</div>
+		</FadeIn>
+	);
+}
 
 interface TeamMember {
 	id: number;
@@ -94,8 +247,12 @@ export default function AboutPage() {
 	const historySections = sections.filter((section) => section.type === "history");
 	const resolvedHistorySections =
 		historySections.length > 0 ? historySections : fallbackHistory;
+
+	// NOTE: swap "ADVISORY" / "FOCAL" below for your actual teamType values
+	// if they differ in your database.
 	const boardMembers = team.filter((member) => member.teamType === "BOARD");
-	const networkMembers = team.filter((member) => member.teamType === "STAFF");
+	const advisoryMembers = team.filter((member) => member.teamType === "ADVISORY");
+	const focalMembers = team.filter((member) => member.teamType === "FOCAL");
 
 	return (
 		<div className="flex flex-col">
@@ -186,17 +343,6 @@ export default function AboutPage() {
 
 			<section className="bg-muted/10 py-20">
 				<div className="container">
-					<div className="mb-12 text-center">
-						<ScaleIn>
-							<Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20">
-								Who We Are
-							</Badge>
-							<h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">
-								History and objectives
-							</h2>
-						</ScaleIn>
-					</div>
-
 					<div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
 						<div className="space-y-8">
 							{resolvedHistorySections.map((section, index) => (
@@ -246,13 +392,40 @@ export default function AboutPage() {
 										<Users className="h-5 w-5 text-primary" />
 										<h3 className="text-xl font-bold">Core thematic areas</h3>
 									</div>
-									<div className="space-y-3">
+									<div className="space-y-4">
 										{INWOLAG_CONTENT.thematicAreas.map((area) => (
 											<div
 												key={area.slug}
-												className="rounded-2xl bg-primary/5 px-4 py-3 text-sm font-medium text-foreground"
+												className="rounded-2xl bg-primary/5 px-5 py-4 text-sm text-foreground"
 											>
-												{area.title}
+												<h4 className="mb-2 text-base font-semibold">
+													{area.title}
+												</h4>
+												<p className="mb-2 text-muted-foreground">
+													{area.description}
+												</p>
+
+												{area.focus && (
+													<p className="mb-2 font-medium">
+														Focus: {area.focus}
+													</p>
+												)}
+
+												{area.activities.length > 0 && (
+													<div>
+														<p className="mb-1 font-medium">
+															Activities / Projects
+														</p>
+														<ul className="list-inside list-disc space-y-1 text-muted-foreground">
+															{area.activities.map((activity) => (
+																<li key={activity.name}>
+																	{activity.name}
+																	{activity.date && ` (${activity.date})`}
+																</li>
+															))}
+														</ul>
+													</div>
+												)}
 											</div>
 										))}
 									</div>
@@ -263,54 +436,29 @@ export default function AboutPage() {
 				</div>
 			</section>
 
-			<section className="py-20">
-				<div className="container grid gap-8 lg:grid-cols-2">
-					<FadeIn>
-						<div className="rounded-3xl border border-muted/20 bg-white p-8 shadow-sm">
-							<div className="mb-6 flex items-center gap-3">
-								<Handshake className="h-6 w-6 text-primary" />
-								<div>
-									<Badge className="mb-2 bg-primary/10 text-primary hover:bg-primary/20">
-										Partners
-									</Badge>
-									<h2 className="text-3xl font-bold">Our partners</h2>
-								</div>
-							</div>
-							<div className="grid gap-3 sm:grid-cols-2">
-								{INWOLAG_CONTENT.partners.map((partner) => (
-									<div
-										key={partner}
-										className="rounded-2xl border border-primary/10 bg-primary/5 px-4 py-3 text-sm font-medium"
-									>
-										{partner}
-									</div>
-								))}
-							</div>
-						</div>
-					</FadeIn>
+			<section className="bg-muted/10 py-20">
+				<div className="container">
+					<div className="mb-12 text-center">
+						<ScaleIn>
+							<Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20">
+								<Newspaper className="mr-1 h-3.5 w-3.5" />
+								In the Media
+							</Badge>
+							<h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">
+								INWOLAG in Media
+							</h2>
+							<p className="mx-auto mt-3 max-w-2xl text-muted-foreground">
+								Watch coverage, interviews, and features on INWOLAG&apos;s work
+								with Indigenous women across Nepal.
+							</p>
+						</ScaleIn>
+					</div>
 
-					<FadeIn delay={0.1}>
-						<div className="rounded-3xl border border-muted/20 bg-white p-8 shadow-sm">
-							<div className="mb-6">
-								<Badge className="mb-2 bg-primary/10 text-primary hover:bg-primary/20">
-									In Media
-								</Badge>
-								<h2 className="text-3xl font-bold">Watch and learn more</h2>
-							</div>
-							<div className="space-y-6">
-								<p className="text-muted-foreground">
-									Watch our documentaries, interviews, and media appearances to learn more about our work and impact.
-								</p>
-								<Link href="/media?category=videos">
-									<Button className="w-full py-8 text-lg rounded-2xl group">
-										<Video className="mr-3 h-5 w-5" />
-										Browse Video Gallery
-										<ArrowRight className="ml-3 h-5 w-5 transition-transform group-hover:translate-x-1" />
-									</Button>
-								</Link>
-							</div>
-						</div>
-					</FadeIn>
+					<div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+						{MEDIA_VIDEOS.map((video, index) => (
+							<VideoCard key={video.id} id={video.id} index={index} />
+						))}
+					</div>
 				</div>
 			</section>
 
@@ -330,7 +478,7 @@ export default function AboutPage() {
 
 					<Tabs defaultValue="board" className="mx-auto max-w-6xl">
 						<div className="mb-10 flex justify-center">
-							<TabsList className="grid w-full max-w-md grid-cols-2 rounded-2xl bg-muted/50 p-1">
+							<TabsList className="grid w-full max-w-xl grid-cols-3 rounded-2xl bg-muted/50 p-1">
 								<TabsTrigger
 									value="board"
 									className="rounded-xl py-3 text-sm font-semibold transition-all data-[state=active]:bg-white data-[state=active]:shadow-md"
@@ -338,10 +486,16 @@ export default function AboutPage() {
 									Board of Directors
 								</TabsTrigger>
 								<TabsTrigger
-									value="network"
+									value="advisory"
 									className="rounded-xl py-3 text-sm font-semibold transition-all data-[state=active]:bg-white data-[state=active]:shadow-md"
 								>
-									Advisory & Focal Network
+									Advisory Network
+								</TabsTrigger>
+								<TabsTrigger
+									value="focal"
+									className="rounded-xl py-3 text-sm font-semibold transition-all data-[state=active]:bg-white data-[state=active]:shadow-md"
+								>
+									Focal Network
 								</TabsTrigger>
 							</TabsList>
 						</div>
@@ -373,17 +527,54 @@ export default function AboutPage() {
 								</motion.div>
 							</TabsContent>
 
-							<TabsContent value="network" key="team-network" className="focus-visible:outline-none">
+							<TabsContent value="advisory" key="team-advisory" className="focus-visible:outline-none">
 								<motion.div
 									initial={{ opacity: 0, y: 20 }}
 									animate={{ opacity: 1, y: 0 }}
 									exit={{ opacity: 0, y: -20 }}
 									transition={{ duration: 0.3 }}
+									className="rounded-3xl border border-muted/20 bg-white p-8 shadow-sm"
 								>
 									<div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-										{networkMembers.map((member, index) => (
-											<TeamCard key={member.id || `network-${index}`} member={member} />
-										))}
+										{isLoading ? (
+											<p className="col-span-full py-20 text-center text-muted-foreground">
+												Loading advisory network...
+											</p>
+										) : advisoryMembers.length > 0 ? (
+											advisoryMembers.map((member, index) => (
+												<TeamCard key={member.id || `advisory-${index}`} member={member} />
+											))
+										) : (
+											<p className="col-span-full py-20 text-center text-muted-foreground">
+												Advisory network information is not available.
+											</p>
+										)}
+									</div>
+								</motion.div>
+							</TabsContent>
+
+							<TabsContent value="focal" key="team-focal" className="focus-visible:outline-none">
+								<motion.div
+									initial={{ opacity: 0, y: 20 }}
+									animate={{ opacity: 1, y: 0 }}
+									exit={{ opacity: 0, y: -20 }}
+									transition={{ duration: 0.3 }}
+									className="rounded-3xl border border-muted/20 bg-white p-8 shadow-sm"
+								>
+									<div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+										{isLoading ? (
+											<p className="col-span-full py-20 text-center text-muted-foreground">
+												Loading focal network...
+											</p>
+										) : focalMembers.length > 0 ? (
+											focalMembers.map((member, index) => (
+												<TeamCard key={member.id || `focal-${index}`} member={member} />
+											))
+										) : (
+											<p className="col-span-full py-20 text-center text-muted-foreground">
+												Focal network information is not available.
+											</p>
+										)}
 									</div>
 								</motion.div>
 							</TabsContent>
