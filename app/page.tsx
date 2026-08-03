@@ -40,6 +40,8 @@ import { Container } from "@/components/ui/container";
 import { NoticesSection, ImportantNoticeOverlay } from "@/components/notices-section";
 import { FeaturedPublications } from "@/components/featured-publications";
 import { PartnersCarousel } from "@/components/partners-carousel";
+import { MediaSection } from "@/components/media-section";
+import { PARTNERS } from "@/lib/partners";
 import { INWOLAG_CONTENT } from "@/lib/inwolag-content";
 
 export default function HomePage() {
@@ -276,7 +278,7 @@ export default function HomePage() {
 							Our Partners
 						</h2>
 					</div>
-					<PartnersCarousel partners={INWOLAG_CONTENT.partners} />
+					<PartnersCarousel partners={PARTNERS} />
 				</div>
 			</section>
 
@@ -322,17 +324,23 @@ export default function HomePage() {
 								transition={{ duration: 0.8 }}
 							>
 								<Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20 py-1.5 px-3">
-									<span className="font-medium">Who we are</span>
+									<span className="font-medium">What we do</span>
 								</Badge>
 								<h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent mb-6">
-									Who We are								</h2>
+									What We Do
+								</h2>
 								<div className="text-lg text-muted-foreground space-y-6">
 									<p className="leading-relaxed">
 										{INWOLAG_CONTENT.whatWeDo}
 									</p>
-									<p className="leading-relaxed">
-										{INWOLAG_CONTENT.whyWeDo}
-									</p>
+									<ul className="space-y-2">
+										{INWOLAG_CONTENT.whatWeDoAreas.map((area) => (
+											<li key={area} className="flex items-start gap-2">
+												<Sparkles className="mt-1 h-4 w-4 shrink-0 text-primary" />
+												<span>{area}</span>
+											</li>
+										))}
+									</ul>
 								</div>
 
 								{/* <motion.div
@@ -424,6 +432,57 @@ export default function HomePage() {
 				</div>
 			</section>
 
+			{/* Why We Do */}
+			<section className="py-24 relative overflow-hidden bg-muted/10">
+				<div className="container relative z-10">
+					<motion.div
+						className="mb-12 text-center"
+						initial={{ opacity: 0, y: 20 }}
+						whileInView={{ opacity: 1, y: 0 }}
+						viewport={{ once: true }}
+						transition={{ duration: 0.6 }}
+					>
+						<Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20 py-1.5 px-3">
+							<span className="font-medium">Why we do</span>
+						</Badge>
+						<h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+							Why We Do
+						</h2>
+						<p className="mx-auto mt-6 max-w-[700px] text-lg text-muted-foreground leading-relaxed">
+							{INWOLAG_CONTENT.whyWeDo}
+						</p>
+					</motion.div>
+
+					<motion.div
+						className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 max-w-5xl mx-auto"
+						initial="hidden"
+						whileInView="visible"
+						viewport={{ once: true }}
+						variants={{
+							visible: {
+								transition: {
+									staggerChildren: 0.1,
+								},
+							},
+						}}
+					>
+						{INWOLAG_CONTENT.objectives.map((objective) => (
+							<motion.div
+								key={objective}
+								variants={{
+									hidden: { opacity: 0, y: 20 },
+									visible: { opacity: 1, y: 0 },
+								}}
+								transition={{ duration: 0.5 }}
+								className="rounded-xl bg-white border border-muted/20 p-6 shadow-sm h-full"
+							>
+								<p className="text-muted-foreground leading-relaxed">{objective}</p>
+							</motion.div>
+						))}
+					</motion.div>
+				</div>
+			</section>
+
 			{/* Impact Stats with Enhanced Animated Counters */}
 			<section className="bg-gradient-to-b from-muted/30 to-background py-24 relative overflow-hidden">
 				{/* Animated background pattern */}
@@ -461,10 +520,10 @@ export default function HomePage() {
 							transition={{ duration: 0.6 }}
 						>
 							<Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20 py-1.5 px-3">
-								<span className="font-medium">Our Impact</span>
+								<span className="font-medium">Where we have worked</span>
 							</Badge>
 							<h2 className="text-3xl font-bold tracking-tighter sm:text-4xl bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
-								Making a Difference
+								Where We Have Worked
 							</h2>
 							<p className="mx-auto mt-6 max-w-[700px] text-muted-foreground">
 								{INWOLAG_CONTENT.reachSummary}
@@ -707,112 +766,10 @@ export default function HomePage() {
 					</motion.div>
 				</div>
 			</section>
-			<section className="py-24 relative overflow-hidden">
-				{/* <NoticesSection /> */}
-			</section>
 
-			{/* Upcoming Events with Enhanced Design */}
-			<section className="bg-gradient-to-b from-muted/40 to-muted/10 py-24 relative overflow-hidden">
-				{/* Decorative elements */}
-				<div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2" />
-				<div className="absolute bottom-0 left-0 w-80 h-80 bg-primary/5 rounded-full translate-y-1/2 -translate-x-1/2" />
 
-				<div className="container relative z-10">
-					<div className="mb-16 text-center">
-						<FadeIn>
-							<Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20 py-1.5 px-3">
-								<span className="font-medium">Events</span>
-							</Badge>
-						</FadeIn>
-						<FadeIn direction="up" delay={0.2}>
-							<h2 className="text-3xl font-bold tracking-tighter sm:text-4xl bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
-								Upcoming Events
-							</h2>
-						</FadeIn>
-						<FadeIn
-							direction="up"
-							delay={0.4}
-							className="mx-auto mt-6 max-w-[700px] text-muted-foreground"
-						>
-							<p className="leading-relaxed">
-								Join trainings, dialogues, and public events connected to Indigenous women's rights, collective rights, climate justice, and community advocacy.
-							</p>
-						</FadeIn>
-					</div>
-
-					<div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-						{isLoading ? (
-							// Skeleton loaders
-							Array(2)
-								.fill(0)
-								.map((item, index) => (
-									<div
-										key={`skeleton-${Math.random()}`}
-										className="bg-white rounded-xl overflow-hidden shadow-md border border-muted/20"
-									>
-										<div className="p-6 space-y-4">
-											<div className="h-5 w-1/3 bg-muted rounded animate-pulse" />
-											<div className="h-6 w-3/4 bg-muted rounded animate-pulse" />
-											<div className="h-4 w-1/2 bg-muted rounded animate-pulse" />
-											<div className="h-4 w-full bg-muted rounded animate-pulse" />
-											<div className="h-10 w-1/3 bg-muted rounded animate-pulse" />
-										</div>
-									</div>
-								))
-						) : upcomingEvents.length > 0 ? (
-							upcomingEvents.map((event, index) => (
-								<EventCard
-									key={event.id || index}
-									id={event.id}
-									title={event.title}
-									slug={event.slug}
-									description={event.description}
-									startDate={event.startDate}
-									endDate={event.endDate}
-									location={event.location}
-								/>
-							))
-						) : (
-							// Empty state when no events exist
-							<div className="col-span-full text-center py-16">
-								<div className="mx-auto max-w-md">
-									<div className="mx-auto mb-4 h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center">
-										<Calendar className="h-8 w-8 text-primary" />
-									</div>
-									<h3 className="text-xl font-semibold mb-2">No Upcoming Events</h3>
-									<p className="text-muted-foreground mb-6">
-										Stay tuned for future events and announcements.
-									</p>
-									<Link href="/events">
-										<Button variant="outline" className="rounded-full">
-											View All Events
-											<ArrowRight className="ml-2 h-4 w-4" />
-										</Button>
-									</Link>
-								</div>
-							</div>
-						)}
-					</div>
-
-					<FadeIn direction="up" delay={0.6} className="mt-12 text-center">
-						<Link href="/events">
-							<motion.div
-								whileHover={{ scale: 1.05 }}
-								whileTap={{ scale: 0.95 }}
-							>
-								<Button
-									variant="outline"
-									size="lg"
-									className="rounded-full px-8 gap-2 border-primary/20 hover:border-primary"
-								>
-									View All Events
-									<ArrowRight className="h-4 w-4" />
-								</Button>
-							</motion.div>
-						</Link>
-					</FadeIn>
-				</div>
-			</section>
+			{/* INWOLAG in Media */}
+			<MediaSection limit={3} showViewAllLink className="py-24 relative overflow-hidden" />
 
 			{/* Get Involved with Enhanced Design */}
 			{/* <section className="py-24 relative overflow-hidden">
@@ -910,73 +867,7 @@ export default function HomePage() {
 				</div>
 			</section> */}
 
-			{/* Newsletter Subscription */}
-			<section className="py-24 bg-gradient-to-b from-muted/20 to-background relative overflow-hidden">
-				<motion.div
-					className="absolute inset-0"
-					initial={{ opacity: 0 }}
-					animate={{ opacity: 1 }}
-					transition={{ duration: 1 }}
-				>
-					<motion.div
-						className="absolute inset-0"
-						style={{
-							background:
-								"radial-gradient(circle at 50% 50%, var(--primary) 1px, transparent 1px)",
-							backgroundSize: "32px 32px",
-						}}
-						animate={{
-							opacity: [0.05, 0.1, 0.05],
-							backgroundPosition: ["0% 0%", "100% 100%"],
-						}}
-						transition={{
-							duration: 15,
-							repeat: Number.POSITIVE_INFINITY,
-							repeatType: "reverse",
-						}}
-					/>
-				</motion.div>
 
-				<div className="container relative z-10">
-					<div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-lg p-10 border border-muted/20">
-						<div className="text-center mb-8">
-							<motion.div
-								initial={{ opacity: 0, y: 20 }}
-								whileInView={{ opacity: 1, y: 0 }}
-								viewport={{ once: true }}
-								transition={{ duration: 0.6 }}
-							>
-								<Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20 py-1.5 px-3">
-									<span className="font-medium">Stay Updated</span>
-								</Badge>
-								<h2 className="text-3xl font-bold tracking-tighter sm:text-4xl bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent mb-4">
-									Subscribe to Our Newsletter
-								</h2>
-								<p className="text-muted-foreground">
-									Get updates on publications, media coverage, events, and opportunities to engage with INWOLAG.
-								</p>
-							</motion.div>
-						</div>
-
-						<form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-4 max-w-xl mx-auto">
-							<Input
-								type="email"
-								placeholder="Enter your email address"
-								value={email}
-								onChange={(e) => setEmail(e.target.value)}
-								className="flex-grow rounded-full px-4 py-6 border-primary/20 focus:border-primary"
-								required
-							/>
-							<Button
-								type="submit"
-								className="rounded-full px-8 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-md"
-							>
-								Subscribe
-							</Button>
-						</form>
-					</div>
-				</div>
-			</section>
 
 
 		</div>

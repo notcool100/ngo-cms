@@ -1,4 +1,5 @@
 import {
+	MediaType,
 	PrismaClient,
 	PublicationType,
 	Role,
@@ -7,6 +8,7 @@ import {
 import bcrypt from "bcryptjs";
 
 import { INWOLAG_CONTENT } from "./inwolag-content";
+import { extractYoutubeId, youtubeThumbnailUrl } from "./youtube";
 
 const GENERIC_EVENT_SLUGS = [
 	"women-in-tech-conference",
@@ -205,6 +207,57 @@ export async function syncInwolagContent(prisma: PrismaClient) {
 		});
 	}
 
+	const mediaSlugs = INWOLAG_CONTENT.mediaLinks.map(
+		(link) => `inwolag-media-${extractYoutubeId(link)}`,
+	);
+
+	await prisma.media.updateMany({
+		where: {
+			authorId: admin.id,
+			slug: {
+				notIn: mediaSlugs,
+			},
+		},
+		data: {
+			published: false,
+			featured: false,
+		},
+	});
+
+	for (const [index, link] of INWOLAG_CONTENT.mediaLinks.entries()) {
+		const slug = `inwolag-media-${extractYoutubeId(link)}`;
+		const title = `INWOLAG Media Coverage ${String(index + 1).padStart(2, "0")}`;
+
+		await prisma.media.upsert({
+			where: { slug },
+			update: {
+				title,
+				description:
+					"Video coverage and features on INWOLAG's work with Indigenous women across Nepal.",
+				mediaUrl: link,
+				mediaType: MediaType.VIDEO,
+				thumbnail: youtubeThumbnailUrl(link),
+				featured: index < 3,
+				published: true,
+				publishedAt: new Date(),
+				authorId: admin.id,
+			},
+			create: {
+				title,
+				slug,
+				description:
+					"Video coverage and features on INWOLAG's work with Indigenous women across Nepal.",
+				mediaUrl: link,
+				mediaType: MediaType.VIDEO,
+				thumbnail: youtubeThumbnailUrl(link),
+				featured: index < 3,
+				published: true,
+				publishedAt: new Date(),
+				authorId: admin.id,
+			},
+		});
+	}
+
 	await prisma.event.updateMany({
 		where: {
 			slug: {
@@ -234,5 +287,6 @@ export async function syncInwolagContent(prisma: PrismaClient) {
 		teamMembers: INWOLAG_CONTENT.teamMembers.length,
 		programs: INWOLAG_CONTENT.thematicAreas.length,
 		publications: INWOLAG_CONTENT.publications.length,
+		media: INWOLAG_CONTENT.mediaLinks.length,
 	};
 }

@@ -9,9 +9,9 @@ import {
 	Globe,
 	Handshake,
 	MapPin,
-	Newspaper,
-	Play,
 	Scale,
+	Sparkles,
+	Target,
 	Users,
 	Video,
 } from "lucide-react";
@@ -21,93 +21,14 @@ import { Button } from "@/components/ui/button";
 
 import { FadeIn } from "@/components/animations/fade-in";
 import { HeroCarousel } from "@/components/animations/hero-carousel";
+import { MediaSection } from "@/components/media-section";
 import { PartnersCarousel } from "@/components/partners-carousel";
-import { ScaleIn } from "@/components/animations/scale-in";
+import { ThematicAreaTimeline } from "@/components/thematic-area-timeline";
+import { OrgChart } from "@/components/org-chart";
+import { PARTNERS } from "@/lib/partners";
 import { TeamCard } from "@/components/team-card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { INWOLAG_CONTENT, INWOLAG_CONTENT as SITE_CONTENT } from "@/lib/inwolag-content";
-
-const MEDIA_VIDEOS = [
-	{ id: "ahGEuSm2sZ8" },
-	{ id: "gcCUzUYFtQ8" },
-	{ id: "14v3lVDglBU" },
-	{ id: "5LycovAb6Go" },
-	{ id: "6h-iDbUuRAU" },
-	{ id: "kekdYDBBacU" },
-	{ id: "no0g4BdSwGc" },
-] as const;
-
-interface VideoMeta {
-	title: string;
-	author: string;
-}
-
-function VideoCard({ id, index }: { id: string; index: number }) {
-	const [playing, setPlaying] = useState(false);
-	const [meta, setMeta] = useState<VideoMeta | null>(null);
-
-	useEffect(() => {
-		let cancelled = false;
-		fetch(
-			`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${id}&format=json`,
-		)
-			.then((res) => (res.ok ? res.json() : null))
-			.then((data) => {
-				if (!cancelled && data) {
-					setMeta({ title: data.title, author: data.author_name });
-				}
-			})
-			.catch(() => {});
-		return () => {
-			cancelled = true;
-		};
-	}, [id]);
-
-	return (
-		<FadeIn delay={index * 0.08}>
-			<div className="group overflow-hidden rounded-3xl border border-muted/20 bg-white shadow-sm transition-shadow hover:shadow-md">
-				<div className="relative aspect-video w-full overflow-hidden bg-muted/20">
-					{playing ? (
-						<iframe
-							src={`https://www.youtube.com/embed/${id}?autoplay=1`}
-							title={meta?.title ?? "INWOLAG media coverage"}
-							allow="accelerate-compute; autoplay; encrypted-media; picture-in-picture"
-							allowFullScreen
-							className="h-full w-full"
-						/>
-					) : (
-						<button
-							type="button"
-							onClick={() => setPlaying(true)}
-							className="group/play relative h-full w-full"
-							aria-label={`Play video: ${meta?.title ?? "INWOLAG media coverage"}`}
-						>
-							<img
-								src={`https://img.youtube.com/vi/${id}/hqdefault.jpg`}
-								alt={meta?.title ?? "INWOLAG media coverage"}
-								className="h-full w-full object-cover transition-transform duration-300 group-hover/play:scale-105"
-							/>
-							<div className="absolute inset-0 flex items-center justify-center bg-black/20 transition-colors group-hover/play:bg-black/30">
-								<span className="flex h-14 w-14 items-center justify-center rounded-full bg-white/90 shadow-md transition-transform group-hover/play:scale-110">
-									<Play className="ml-1 h-6 w-6 fill-primary text-primary" />
-								</span>
-							</div>
-						</button>
-					)}
-				</div>
-
-				<div className="p-5">
-					<h3 className="line-clamp-2 font-semibold leading-snug text-foreground">
-						{meta?.title ?? "INWOLAG in the media"}
-					</h3>
-					{meta?.author && (
-						<p className="mt-1 text-sm text-muted-foreground">{meta.author}</p>
-					)}
-				</div>
-			</div>
-		</FadeIn>
-	);
-}
+import { INWOLAG_CONTENT } from "@/lib/inwolag-content";
 
 interface TeamMember {
 	id: number;
@@ -152,6 +73,9 @@ const fallbackHistory = INWOLAG_CONTENT.aboutSections.filter(
 export default function AboutPage() {
 	const [aboutData, setAboutData] = useState<AboutPageData | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
+	const [thematicAreas, setThematicAreas] = useState<
+		typeof INWOLAG_CONTENT.thematicAreas | null
+	>(null);
 
 	useEffect(() => {
 		const fetchAboutData = async () => {
@@ -170,6 +94,25 @@ export default function AboutPage() {
 		};
 
 		fetchAboutData();
+	}, []);
+
+	useEffect(() => {
+		const fetchThematicAreas = async () => {
+			try {
+				const response = await fetch("/api/thematic-areas");
+				if (!response.ok) {
+					throw new Error("Failed to fetch thematic areas");
+				}
+				const responseData = await response.json();
+				if (Array.isArray(responseData.data) && responseData.data.length > 0) {
+					setThematicAreas(responseData.data);
+				}
+			} catch (error) {
+				console.error("Error fetching thematic areas:", error);
+			}
+		};
+
+		fetchThematicAreas();
 	}, []);
 
 	const sections = aboutData?.sections || [];
@@ -250,7 +193,7 @@ export default function AboutPage() {
 							Our Partners
 						</h2>
 					</div>
-					<PartnersCarousel partners={SITE_CONTENT.partners} />
+					<PartnersCarousel partners={PARTNERS} />
 				</div>
 			</section>
 
@@ -299,126 +242,127 @@ export default function AboutPage() {
 				</div>
 			</section>
 
-			<section className="bg-muted/10 py-20">
+			<section className="py-20 bg-muted/10">
 				<div className="container">
-					<div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
-						<div className="space-y-8">
-							{resolvedHistorySections.map((section, index) => (
-								<FadeIn key={`${section.title}-${index}`} delay={index * 0.1}>
-									<div className="rounded-3xl border border-muted/20 bg-white p-8 shadow-sm">
-										<h3 className="text-2xl font-bold">{section.title}</h3>
-										{section.subtitle && (
-											<p className="mt-2 font-medium text-primary">
-												{section.subtitle}
-											</p>
-										)}
-										<div
-											className="prose mt-5 max-w-none text-muted-foreground"
-											dangerouslySetInnerHTML={{ __html: section.content }}
-										/>
+					<div className="grid gap-8 lg:grid-cols-2">
+						<FadeIn>
+							<div className="rounded-3xl border border-muted/20 bg-white p-8 shadow-sm">
+								<div className="mb-6 flex items-center gap-3">
+									<div className="rounded-full bg-primary/10 p-3 text-primary">
+										<Sparkles className="h-6 w-6" />
 									</div>
-								</FadeIn>
-							))}
-						</div>
-
-						<div className="space-y-8">
-							<FadeIn delay={0.2}>
-								<div className="overflow-hidden rounded-3xl border border-muted/20 bg-white shadow-sm">
-									<div className="relative h-72">
-										<Image
-											src="/heroimage.jpg?height=720&width=960"
-											alt="INWOLAG community meeting"
-											fill
-											className="object-cover"
-										/>
-									</div>
-									<div className="p-8">
-										<div className="mb-4 flex items-center gap-3">
-											<MapPin className="h-5 w-5 text-primary" />
-											<h3 className="text-xl font-bold">Where we have worked</h3>
-										</div>
-										<p className="text-muted-foreground">
-											{INWOLAG_CONTENT.reachSummary}
-										</p>
+									<div>
+										<Badge className="mb-2 bg-primary/10 text-primary hover:bg-primary/20">
+											What We Do
+										</Badge>
+										<h2 className="text-3xl font-bold">What We Do</h2>
 									</div>
 								</div>
-							</FadeIn>
+								<p className="text-muted-foreground leading-relaxed">
+									{INWOLAG_CONTENT.whatWeDo}
+								</p>
+								<ul className="mt-5 space-y-3">
+									{INWOLAG_CONTENT.whatWeDoAreas.map((area) => (
+										<li key={area} className="flex items-start gap-2 text-muted-foreground">
+											<Sparkles className="mt-1 h-4 w-4 shrink-0 text-primary" />
+											<span>{area}</span>
+										</li>
+									))}
+								</ul>
+							</div>
+						</FadeIn>
+						<FadeIn delay={0.1}>
+							<div className="rounded-3xl border border-muted/20 bg-white p-8 shadow-sm">
+								<div className="mb-6 flex items-center gap-3">
+									<div className="rounded-full bg-primary/10 p-3 text-primary">
+										<Target className="h-6 w-6" />
+									</div>
+									<div>
+										<Badge className="mb-2 bg-primary/10 text-primary hover:bg-primary/20">
+											Why We Do
+										</Badge>
+										<h2 className="text-3xl font-bold">Why We Do</h2>
+									</div>
+								</div>
+								<p className="text-muted-foreground leading-relaxed">
+									{INWOLAG_CONTENT.whyWeDo}
+								</p>
+								<ul className="mt-5 space-y-3">
+									{INWOLAG_CONTENT.objectives.map((objective) => (
+										<li key={objective} className="flex items-start gap-2 text-muted-foreground">
+											<Target className="mt-1 h-4 w-4 shrink-0 text-primary" />
+											<span>{objective}</span>
+										</li>
+									))}
+								</ul>
+							</div>
+						</FadeIn>
+					</div>
+				</div>
+			</section>
 
-							<FadeIn delay={0.3}>
+			<section className="bg-muted/10 py-20">
+				<div className="container">
+					<div className="space-y-8">
+						{resolvedHistorySections.map((section, index) => (
+							<FadeIn key={`${section.title}-${index}`} delay={index * 0.1}>
 								<div className="rounded-3xl border border-muted/20 bg-white p-8 shadow-sm">
-									<div className="mb-4 flex items-center gap-3">
-										<Users className="h-5 w-5 text-primary" />
-										<h3 className="text-xl font-bold">Core thematic areas</h3>
-									</div>
-									<div className="space-y-4">
-										{INWOLAG_CONTENT.thematicAreas.map((area) => (
-											<div
-												key={area.slug}
-												className="rounded-2xl bg-primary/5 px-5 py-4 text-sm text-foreground"
-											>
-												<h4 className="mb-2 text-base font-semibold">
-													{area.title}
-												</h4>
-												<p className="mb-2 text-muted-foreground">
-													{area.description}
-												</p>
-
-												{area.focus && (
-													<p className="mb-2 font-medium">
-														Focus: {area.focus}
-													</p>
-												)}
-
-												{area.activities.length > 0 && (
-													<div>
-														<p className="mb-1 font-medium">
-															Activities / Projects
-														</p>
-														<ul className="list-inside list-disc space-y-1 text-muted-foreground">
-															{area.activities.map((activity) => (
-																<li key={activity.name}>
-																	{activity.name}
-																	{activity.date && ` (${activity.date})`}
-																</li>
-															))}
-														</ul>
-													</div>
-												)}
-											</div>
-										))}
-									</div>
+									<h3 className="text-2xl font-bold">{section.title}</h3>
+									{section.subtitle && (
+										<p className="mt-2 font-medium text-primary">
+											{section.subtitle}
+										</p>
+									)}
+									<div
+										className="prose mt-5 max-w-none text-muted-foreground"
+										dangerouslySetInnerHTML={{ __html: section.content }}
+									/>
 								</div>
 							</FadeIn>
-						</div>
-					</div>
-				</div>
-			</section>
-
-			<section className="bg-muted/10 py-20">
-				<div className="container">
-					<div className="mb-12 text-center">
-						<ScaleIn>
-							<Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20">
-								<Newspaper className="mr-1 h-3.5 w-3.5" />
-								In the Media
-							</Badge>
-							<h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">
-								INWOLAG in Media
-							</h2>
-							<p className="mx-auto mt-3 max-w-2xl text-muted-foreground">
-								Watch coverage, interviews, and features on INWOLAG&apos;s work
-								with Indigenous women across Nepal.
-							</p>
-						</ScaleIn>
-					</div>
-
-					<div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-						{MEDIA_VIDEOS.map((video, index) => (
-							<VideoCard key={video.id} id={video.id} index={index} />
 						))}
+
+						<FadeIn delay={0.2}>
+							<div className="overflow-hidden rounded-3xl border border-muted/20 bg-white shadow-sm">
+								<div className="relative h-72">
+									<Image
+										src="/heroimage.jpg?height=720&width=960"
+										alt="INWOLAG community meeting"
+										fill
+										className="object-cover"
+									/>
+								</div>
+								<div className="p-8">
+									<div className="mb-4 flex items-center gap-3">
+										<MapPin className="h-5 w-5 text-primary" />
+										<h3 className="text-xl font-bold">Where we have worked</h3>
+									</div>
+									<p className="text-muted-foreground">
+										{INWOLAG_CONTENT.reachSummary}
+									</p>
+								</div>
+							</div>
+						</FadeIn>
+
+						<FadeIn delay={0.3}>
+							<div className="rounded-3xl border border-muted/20 bg-white p-8 shadow-sm">
+								<div className="mb-4 flex items-center gap-3">
+									<Users className="h-5 w-5 text-primary" />
+									<h3 className="text-xl font-bold">Core thematic areas</h3>
+								</div>
+								<p className="mb-4 text-sm text-muted-foreground">
+									Click an area to see its timeline of cases, activities, and
+									publications.
+								</p>
+								<ThematicAreaTimeline
+								areas={thematicAreas ?? INWOLAG_CONTENT.thematicAreas}
+							/>
+							</div>
+						</FadeIn>
 					</div>
 				</div>
 			</section>
+
+			<MediaSection />
 
 			<section className="bg-gradient-to-b from-muted/20 to-white py-24">
 				<div className="container">
@@ -538,6 +482,44 @@ export default function AboutPage() {
 							</TabsContent>
 						</AnimatePresence>
 					</Tabs>
+				</div>
+			</section>
+
+			<section className="bg-muted/10 py-20">
+				<div className="container">
+					<div className="mb-12 text-center">
+						<Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20">
+							Organizational Structure
+						</Badge>
+						<h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">
+							How INWOLAG Is Organized
+						</h2>
+						<p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
+							Our governance and staff structures work together to guide strategy and deliver programs on the ground.
+						</p>
+					</div>
+
+					<div className="space-y-12">
+						<FadeIn>
+							<div className="rounded-3xl border border-muted/20 bg-white p-8 shadow-sm">
+								<h3 className="mb-2 text-xl font-bold">INWOLAG Organogram</h3>
+								<p className="mb-4 text-sm text-muted-foreground">
+									Board governance structure.
+								</p>
+								<OrgChart root={INWOLAG_CONTENT.governanceOrgChart} />
+							</div>
+						</FadeIn>
+
+						<FadeIn delay={0.1}>
+							<div className="rounded-3xl border border-muted/20 bg-white p-8 shadow-sm">
+								<h3 className="mb-2 text-xl font-bold">Staff Organogram</h3>
+								<p className="mb-4 text-sm text-muted-foreground">
+									Program and operations staffing structure.
+								</p>
+								<OrgChart root={INWOLAG_CONTENT.staffOrgChart} />
+							</div>
+						</FadeIn>
+					</div>
 				</div>
 			</section>
 

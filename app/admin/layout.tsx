@@ -24,6 +24,7 @@ import {
 	AlertCircle,
 	UserRound,
 	Building,
+	Milestone,
 } from "lucide-react";
 import { usePermissions } from "@/hooks/use-permissions";
 
@@ -263,7 +264,20 @@ export default function AdminLayout({
 							<UserRound className="h-5 w-5" />
 							Office Team
 						</Link>
-						
+
+						<Link
+							href="/admin/about/thematic-areas"
+							className={`flex items-center gap-2 rounded-lg px-3 py-2 ml-4 ${
+								pathname === "/admin/about/thematic-areas" ||
+								pathname.startsWith("/admin/about/thematic-areas/")
+									? "bg-primary text-primary-foreground"
+									: "text-muted-foreground hover:bg-muted hover:text-foreground"
+							}`}
+						>
+							<Milestone className="h-5 w-5" />
+							Thematic Areas
+						</Link>
+
 						{permissions.hasPermission("manage:publications") && (
 							<Link
 								href="/admin/publications"

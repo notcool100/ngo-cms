@@ -37,6 +37,13 @@ export const INWOLAG_CONTENT = {
 	whoWeAre: whoWeAreParagraphs,
 	whatWeDo:
 		"INWOLAG focuses on advancing Indigenous women's rights and access to justice through a holistic approach combining legal aid, advocacy, awareness, research, and empowerment.",
+	whatWeDoAreas: [
+		"Legal Aid (Access to Justice)",
+		"Indigenous Collective Rights (Right to Land, Natural Resources and Territories)",
+		"Conservation and Protected Parks",
+		"Gender Just Climate",
+		"Research, Publications and Policy",
+	],
 	whyWeDo:
 		"INWOLAG's objectives stem from a deep commitment to justice, equity, and empowerment for Indigenous women and communities long marginalised by Nepal's legal and socio-political structures.",
 	objectives: [
@@ -47,6 +54,36 @@ export const INWOLAG_CONTENT = {
 		"Promote Indigenous women's leadership and representation in decision-making processes.",
 	],
 	aboutObjectives,
+	governanceOrgChart: {
+		title: "Chairperson",
+		names: ["Adv. Indira K. Shreesh"],
+		children: [
+			{ title: "Vice Chairperson", names: ["Adv. Uma Tamang"] },
+			{ title: "Secretary", names: ["Adv. Kaushila Rai"] },
+			{ title: "Treasurer", names: ["Adv. Ritu Thapa"] },
+			{
+				title: "Executive Members",
+				names: ["Adv. Mon Kumari Rai", "Adv. Rita Sherpa", "Adv. Jayanti Rai"],
+			},
+			{ title: "General Members" },
+		],
+	},
+	staffOrgChart: {
+		title: "Executive Director",
+		names: ["(ED)"],
+		children: [
+			{ title: "Program/Project Coordinator" },
+			{ title: "Finance/Admin Officer" },
+			{
+				title: "District Focal Person",
+				children: [{ title: "Community Mobiliser" }],
+			},
+			{ title: "Legal/Program Officer" },
+			{ title: "Office Assistant" },
+			{ title: "Project/Program Assistant" },
+			{ title: "Psychosocial Counselor" },
+		],
+	},
 	reachSummary:
 		"INWOLAG has extended its work across 40 districts in all seven provinces of Nepal, particularly in regions with a high concentration of Indigenous populations and significant human rights challenges.",
 	stats: [
@@ -95,6 +132,31 @@ export const INWOLAG_CONTENT = {
 			activities: [
 				{ name: "Rupandehi Workshop – KAAGAPAY", date: "2023-07-20" },
 			],
+			milestones: [
+				{
+					date: "2059 B.S. (2002)",
+					title: "PIL: Discriminatory Board Membership Terms (NFDIN Act)",
+					description:
+						"Supreme Court petition challenging the National Foundation for Upliftment of Aadibasi/Janjati Act's discriminatory, shorter tenure for nominated women board members — decided by a Special Bench (Decision No. 7217, Writ No. 82).",
+				},
+				{
+					date: "2009 – 2013",
+					title: "PIL: Representation of Indigenous Peoples in the Constituent Assembly",
+					description:
+						"Filed with LAHURNIP, NIWF-Nepal, NGO-FONIN and other Indigenous Peoples' Organizations; the Supreme Court's 2013 directive ordered amendments to electoral laws to secure direct representation of Indigenous Peoples in the Constituent Assembly.",
+				},
+				{
+					date: "20 Jul 2023",
+					title: "Rupandehi Workshop – KAAGAPAY",
+					description: "Community legal-awareness workshop held in Rupandehi.",
+				},
+				{
+					date: "Ongoing",
+					title: "PIL: Challenging Nepal's REDD+ Process",
+					description:
+						"Supreme Court case seeking an interim order against implementing REDD+ in Nepal on the grounds that it risks violating the rights of Indigenous peoples and dependent communities.",
+				},
+			] as { date: string; title: string; description?: string }[],
 			featured: true,
 		},
 		{
@@ -109,6 +171,7 @@ export const INWOLAG_CONTENT = {
 				]),
 			focus: "Right to Self-determination of Indigenous Communities",
 			activities: [] as { name: string; date?: string }[],
+			milestones: [] as { date: string; title: string; description?: string }[],
 			featured: true,
 		},
 		{
@@ -123,6 +186,7 @@ export const INWOLAG_CONTENT = {
 				]),
 			focus: null as string | null,
 			activities: [] as { name: string; date?: string }[],
+			milestones: [] as { date: string; title: string; description?: string }[],
 			featured: true,
 		},
 		{
@@ -137,6 +201,7 @@ export const INWOLAG_CONTENT = {
 				]),
 			focus: null as string | null,
 			activities: [] as { name: string; date?: string }[],
+			milestones: [] as { date: string; title: string; description?: string }[],
 			featured: true,
 		},
 		{
@@ -151,6 +216,93 @@ export const INWOLAG_CONTENT = {
 				]),
 			focus: null as string | null,
 			activities: [] as { name: string; date?: string }[],
+			milestones: [
+				{
+					date: "Nov 2021",
+					title:
+						"Aspiration and Realities to Imagine Violence-Free Lives for Indigenous Women and Women with Disabilities",
+					description:
+						"Joint initiative with NIDWAN examining intersecting discrimination faced by Indigenous women and Indigenous women with disabilities, feeding into the Beijing+25 review process.",
+				},
+				{
+					date: "2022",
+					title: "CEDAW General Recommendation No. 39 — Nepali Translation",
+					description:
+						"Nepali-language translation of CEDAW's framework on the rights of Indigenous women and girls, making the international standard accessible to Nepali communities and policymakers.",
+				},
+				{
+					date: "2024",
+					title:
+						"Exploring Sustainability in Trophy Hunting Practices at Dhorpatan Hunting Reserve",
+					description:
+						"Assessed the socioeconomic, cultural, and ecological sustainability of trophy hunting in the Dhorpatan Hunting Reserve.",
+				},
+				{
+					date: "2024",
+					title:
+						"Perception of Indigenous Bote and Tharus on Conservation Approaches, Chitwan National Park",
+					description:
+						"Surveyed Bote and Tharu households on land ownership, park policy, and human-wildlife conflict in Chitwan National Park's buffer zone.",
+				},
+				{
+					date: "Sep 2024",
+					title:
+						"Socio-Economic Perceptions of Communities around Dhorpatan Hunting Reserve",
+					description:
+						"Examined livelihoods, education, and conservation perceptions of Indigenous Peoples and Local Communities around the Dhorpatan Hunting Reserve.",
+				},
+				{
+					date: "Oct 2024",
+					title:
+						"Perception of Indigenous Peoples on Conservation, Koshi Tappu Wildlife Reserve",
+					description:
+						"Studied Indigenous Majhi communities' experiences with conservation governance and human-wildlife conflict in the Koshi Tappu Wildlife Reserve buffer zone.",
+				},
+				{
+					date: "Jan 2025",
+					title: "Testimonies of Tanahu Hydropower-Affected Magar Indigenous Women",
+					description:
+						"Documented Magar women's testimonies on the loss of ancestral land, culture, and livelihoods caused by the Tanahu Hydropower Project.",
+				},
+				{
+					date: "May 2025",
+					title: "Assessing Gender Impacts of Proposed Iron Mining in Jhumlawang",
+					description:
+						"Examined the gendered risks of a proposed iron mining project for Indigenous Magar and Dalit women in East Rukum.",
+				},
+				{
+					date: "May 2025",
+					title: "Women & Rivers (Beyond Borders)",
+					description:
+						"Cross-border study on Indigenous women's knowledge and river rejuvenation across seven river valleys in Nepal and India.",
+				},
+				{
+					date: "Jun 2025",
+					title:
+						"Beyond the Dam: Intangible Loss and Damage to the Magar Indigenous Communities",
+					description:
+						"Documented the cultural and identity-related losses experienced by the Magar community affected by the Tanahu Hydropower Project.",
+				},
+				{
+					date: "Dec 2025",
+					title:
+						"Baseline Report: Land-for-Land Compensation for the Tanahu Hydropower Project",
+					description:
+						"Documents the Magar community's collective land claims and demand for land-for-land compensation for territory submerged by the Tanahu Hydropower Project.",
+				},
+				{
+					date: "Policy Review",
+					title: "Does Nepal's Protected Area System Recognize Indigenous Peoples and Women?",
+					description:
+						"Review of Nepal's protected-area legislation and its treatment of Indigenous peoples and women.",
+				},
+				{
+					date: "Policy Review",
+					title: "Indigenous Rights in Nepal's Protected Areas: Policy Analysis",
+					description:
+						"Analysis of Nepal's National Parks and Wildlife Conservation Act and related regulations against Indigenous and women's rights standards.",
+				},
+			] as { date: string; title: string; description?: string }[],
 			featured: true,
 		},
 	],

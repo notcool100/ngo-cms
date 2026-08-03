@@ -1,0 +1,93 @@
+.orgTree,
+.orgTree ul {
+	padding-top: 20px;
+	position: relative;
+	display: flex;
+	justify-content: center;
+	margin: 0;
+	list-style: none;
+}
+
+.orgTree li {
+	list-style-type: none;
+	position: relative;
+	padding: 20px 12px 0 12px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.orgTree li::before,
+.orgTree li::after {
+	content: "";
+	position: absolute;
+	top: 0;
+	right: 50%;
+	border-top: 2px solid #93aede;
+	width: 50%;
+	height: 20px;
+}
+
+.orgTree li::after {
+	right: auto;
+	left: 50%;
+	border-left: 2px solid #93aede;
+}
+
+.orgTree li:only-child::after,
+.orgTree li:only-child::before {
+	display: none;
+}
+
+.orgTree li:only-child {
+	padding-top: 0;
+}
+
+.orgTree li:first-child::before,
+.orgTree li:last-child::after {
+	border: 0 none;
+}
+
+.orgTree li:last-child::before {
+	border-right: 2px solid #93aede;
+	border-radius: 0 6px 0 0;
+}
+
+.orgTree li:first-child::after {
+	border-radius: 6px 0 0 0;
+}
+
+.orgTree ul::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 50%;
+	border-left: 2px solid #93aede;
+	width: 0;
+	height: 20px;
+}
+
+.orgBox {
+	border: none;
+	padding: 10px 16px;
+	display: inline-flex;
+	flex-direction: column;
+	gap: 2px;
+	background-color: #4a6bad;
+	color: #fff;
+	font-size: 0.8rem;
+	line-height: 1.3;
+	border-radius: 8px;
+	min-width: 150px;
+	text-align: center;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.orgBoxTitle {
+	font-weight: 600;
+}
+
+.orgBoxSub {
+	font-size: 0.75rem;
+	opacity: 0.95;
+}

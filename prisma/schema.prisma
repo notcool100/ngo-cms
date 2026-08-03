@@ -170,6 +170,22 @@ model AboutSection {
   updatedAt DateTime @updatedAt
 }
 
+model ThematicArea {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  description String
+  content     String
+  focus       String?
+  activities  Json?
+  milestones  Json?
+  featured    Boolean  @default(true)
+  order       Int      @default(0)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
 model TeamMember {
   id          Int      @id @default(autoincrement())
   name        String
