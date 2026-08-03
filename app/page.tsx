@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 
 // Import our custom components
-import { HeroParallax } from "@/components/animations/hero-parallax";
+import { HeroCarousel } from "@/components/animations/hero-carousel";
 import { FadeIn } from "@/components/animations/fade-in";
 import { StaggerChildren } from "@/components/animations/stagger-children";
 import { StaggerItem } from "@/components/animations/stagger-item";
@@ -39,6 +39,7 @@ import { toast } from "@/components/ui/use-toast";
 import { Container } from "@/components/ui/container";
 import { NoticesSection, ImportantNoticeOverlay } from "@/components/notices-section";
 import { FeaturedPublications } from "@/components/featured-publications";
+import { PartnersCarousel } from "@/components/partners-carousel";
 import { INWOLAG_CONTENT } from "@/lib/inwolag-content";
 
 export default function HomePage() {
@@ -169,79 +170,60 @@ export default function HomePage() {
 				style={{ scaleX: scrollProgress / 100, transformOrigin: "0%" }}
 			/>
 			{/* <ImportantNoticeOverlay /> */}
-			{/* Hero Section with Enhanced Parallax */}
-			<HeroParallax
-				imageUrl="/heroimage.jpg?height=1200&width=1920"
-				alt="INWOLAG community gathering"
-				overlayColor="from-primary/90 via-primary/80 to-primary/70"
-			>
-				<div className="text-center text-white relative z-10 px-4">
+			{/* Hero Section - Image Carousel */}
+			<HeroCarousel
+				images={[
+					{ src: "/heroimage.jpg", alt: "INWOLAG community gathering" },
+					{
+						src: "/images/2023-12-19, IWHRD training-1747241692300-183973691.JPG",
+						alt: "IWHRD training session",
+					},
+					{
+						src: "/images/2023-12-19, IWHRD training-1747242429112-335750128.JPG",
+						alt: "IWHRD training participants",
+					},
+					{
+						src: "/images/2024-03-26, livelihood training in tanahu-1747244951448-850044844.jpg",
+						alt: "Livelihood training in Tanahu",
+					},
+				]}
+			/>
+
+			{/* Hero Content */}
+			<section className="py-16 md:py-24 relative overflow-hidden">
+				<div className="container relative z-10 text-center px-4">
 					<motion.div
 						initial={{ opacity: 0, y: 20 }}
-						animate={{ opacity: 1, y: 0 }}
+						whileInView={{ opacity: 1, y: 0 }}
+						viewport={{ once: true }}
 						transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
 					>
-						<Badge className="mb-6 bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm py-2 px-4 border border-white/20">
-							<motion.span
-								animate={{ opacity: [1, 0.7, 1] }}
-								transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
-								className="flex items-center gap-2"
-							>
+						<Badge className="mb-6 bg-primary/10 text-primary hover:bg-primary/20 py-2 px-4">
+							<span className="flex items-center gap-2">
 								<Sparkles className="h-4 w-4" />
 								<span>Advocating Since 2000</span>
 								<Sparkles className="h-4 w-4" />
-							</motion.span>
+							</span>
 						</Badge>
 					</motion.div>
 
-					<div className="relative">
-						<motion.div
-							className="absolute -left-16 -top-16 w-32 h-32 rounded-full bg-white/10 blur-3xl"
-							animate={{
-								scale: [1, 1.2, 1],
-								opacity: [0.3, 0.5, 0.3]
-							}}
-							transition={{
-								duration: 8,
-								repeat: Number.POSITIVE_INFINITY,
-								repeatType: "reverse"
-							}}
+					<div className="flex flex-col items-center text-center space-y-2">
+						<AnimatedText
+							text="For Nepalese Indigenous Women"
+							className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600"
 						/>
-						<motion.div
-							className="absolute -right-16 -bottom-16 w-32 h-32 rounded-full bg-white/10 blur-3xl"
-							animate={{
-								scale: [1.2, 1, 1.2],
-								opacity: [0.5, 0.3, 0.5]
-							}}
-							transition={{
-								duration: 8,
-								repeat: Number.POSITIVE_INFINITY,
-								repeatType: "reverse"
-							}}
+						<AnimatedText
+							text="By Nepalese Indigenous Women"
+							className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600"
 						/>
-
-						<div className="flex flex-col items-center text-center space-y-2">
-							<AnimatedText
-								text="For Nepalese Indigenous Women"
-								className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl bg-clip-text text-transparent bg-gradient-to-r from-white to-white/80 drop-shadow-lg"
-							/>
-							<AnimatedText
-								text="By Nepalese Indigenous Women"
-								className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl bg-clip-text text-transparent bg-gradient-to-r from-white to-white/80 drop-shadow-lg"
-							/>
-						</div>
-
-
 					</div>
 
 					<FadeIn
 						direction="up"
 						delay={0.5}
-						className="mx-auto mt-8 max-w-[700px] text-lg text-white/90 md:text-xl"
+						className="mx-auto mt-8 max-w-[700px] text-lg text-muted-foreground md:text-xl"
 					>
-						<p className="leading-relaxed backdrop-blur-sm bg-black/5 p-4 rounded-lg inline-block">
-							{INWOLAG_CONTENT.heroSummary}
-						</p>
+						<p className="leading-relaxed">{INWOLAG_CONTENT.heroSummary}</p>
 					</FadeIn>
 
 					<FadeIn
@@ -256,7 +238,7 @@ export default function HomePage() {
 							>
 								<Button
 									size="lg"
-									className="bg-white text-primary hover:bg-white/90 font-medium px-8 rounded-full transition-all duration-300 shadow-lg"
+									className="font-medium px-8 rounded-full transition-all duration-300 shadow-lg"
 								>
 									<span>Our Programs</span>
 									<ArrowRight className="ml-2 h-4 w-4" />
@@ -272,7 +254,7 @@ export default function HomePage() {
 								<Button
 									size="lg"
 									variant="outline"
-									className="border-white text-black hover:bg-white/20 font-medium px-8 rounded-full transition-all duration-300 backdrop-blur-sm"
+									className="font-medium px-8 rounded-full transition-all duration-300"
 								>
 									<Heart className="mr-2 h-4 w-4" />
 									<span>Donate Now</span>
@@ -280,27 +262,23 @@ export default function HomePage() {
 							</motion.div>
 						</Link> */}
 					</FadeIn>
-
-					<motion.div
-						className="absolute bottom-10 left-1/2 transform -translate-x-1/2"
-						initial={{ opacity: 0 }}
-						animate={{
-							opacity: 1,
-							y: [0, 10, 0],
-						}}
-						transition={{
-							delay: 1.5,
-							duration: 1.5,
-							repeat: Number.POSITIVE_INFINITY,
-							repeatType: "reverse",
-						}}
-					>
-						<div className="p-2 rounded-full bg-white/20 backdrop-blur-sm">
-							<ChevronRight size={30} className="rotate-90 text-white" />
-						</div>
-					</motion.div>
 				</div>
-			</HeroParallax>
+			</section>
+
+			{/* Our Partners */}
+			<section className="py-16 md:py-20 bg-muted/10">
+				<div className="container">
+					<div className="mb-10 text-center">
+						<Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20 py-1.5 px-3">
+							<span className="font-medium">Collaboration</span>
+						</Badge>
+						<h2 className="text-3xl font-bold tracking-tighter sm:text-4xl bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+							Our Partners
+						</h2>
+					</div>
+					<PartnersCarousel partners={INWOLAG_CONTENT.partners} />
+				</div>
+			</section>
 
 			{/* Mission Statement with Enhanced Design */}
 			<section className="py-24 md:py-32 relative overflow-hidden">
@@ -347,7 +325,7 @@ export default function HomePage() {
 									<span className="font-medium">Who we are</span>
 								</Badge>
 								<h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent mb-6">
-Who We are								</h2>
+									Who We are								</h2>
 								<div className="text-lg text-muted-foreground space-y-6">
 									<p className="leading-relaxed">
 										{INWOLAG_CONTENT.whatWeDo}
@@ -576,7 +554,7 @@ Who We are								</h2>
 
 			{/* Featured Programs with Enhanced Cards */}
 			<section className="py-24 relative overflow-hidden">
-			
+
 				<motion.div
 					className="absolute inset-0 bg-gradient-to-b from-muted/20 via-transparent to-transparent"
 					initial={{ opacity: 0 }}
@@ -731,10 +709,6 @@ Who We are								</h2>
 			</section>
 			<section className="py-24 relative overflow-hidden">
 				{/* <NoticesSection /> */}
-			</section>
-
-			<section className="py-24 relative overflow-hidden">
-				<FeaturedPublications />
 			</section>
 
 			{/* Upcoming Events with Enhanced Design */}
@@ -1004,200 +978,7 @@ Who We are								</h2>
 				</div>
 			</section>
 
-			{/* Featured Publications with Enhanced Design */}
-			<section className="py-24 relative overflow-hidden">
-				{/* Enhanced animated background */}
-				<motion.div
-					className="absolute inset-0"
-					initial={{ opacity: 0 }}
-					animate={{ opacity: 1 }}
-					transition={{ duration: 1 }}
-				>
-					<motion.div
-						className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/5"
-						animate={{
-							opacity: [0.5, 0.8, 0.5],
-							scale: [1, 1.1, 1],
-						}}
-						transition={{
-							duration: 8,
-							repeat: Number.POSITIVE_INFINITY,
-							repeatType: "reverse",
-						}}
-					/>
-					<motion.div
-						className="absolute inset-0"
-						style={{
-							background:
-								"radial-gradient(circle at 50% 50%, var(--primary) 1px, transparent 1px)",
-							backgroundSize: "32px 32px",
-						}}
-						animate={{
-							opacity: [0.1, 0.15, 0.1],
-							backgroundPosition: ["0% 0%", "100% 100%"],
-						}}
-						transition={{
-							duration: 15,
-							repeat: Number.POSITIVE_INFINITY,
-							repeatType: "reverse",
-						}}
-					/>
-				</motion.div>
 
-				<div className="container relative z-10">
-					{/* Enhanced header section */}
-					<motion.div
-						className="max-w-2xl mx-auto mb-16 text-center"
-						initial={{ opacity: 0, y: 20 }}
-						whileInView={{ opacity: 1, y: 0 }}
-						viewport={{ once: true }}
-						transition={{ duration: 0.6 }}
-					>
-						<motion.div
-							initial={{ scale: 0.95 }}
-							whileInView={{ scale: 1 }}
-							transition={{ duration: 0.6 }}
-						>
-							<Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20 py-1.5 px-3">
-								<span className="font-medium">Latest Updates</span>
-							</Badge>
-						</motion.div>
-						<h2 className="text-4xl md:text-5xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent mb-4">
-							Featured Publications
-						</h2>
-						<p className="text-lg text-muted-foreground">
-							Stay informed with our latest press releases and important notices
-						</p>
-					</motion.div>
-
-					{/* Enhanced grid layout */}
-					<motion.div
-						className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 max-w-7xl mx-auto"
-						initial="hidden"
-						whileInView="visible"
-						viewport={{ once: true, margin: "-100px" }}
-						variants={{
-							hidden: { opacity: 0 },
-							visible: {
-								opacity: 1,
-								transition: {
-									staggerChildren: 0.15,
-								},
-							},
-						}}
-					>
-						{/* Notices Section */}
-						<motion.div
-							variants={{
-								hidden: { opacity: 0, y: 20 },
-								visible: { opacity: 1, y: 0 },
-							}}
-							whileHover={{ y: -5 }}
-							transition={{ duration: 0.4 }}
-							className="group bg-white/80 backdrop-blur-sm rounded-xl shadow-md border border-muted/20 p-8 hover:shadow-lg hover:border-primary/20 transition-all duration-300"
-						>
-							<div className="flex items-center justify-between mb-8">
-								<motion.h3
-									className="text-2xl font-semibold flex items-center gap-3"
-									whileHover={{ x: 2 }}
-									transition={{ duration: 0.2 }}
-								>
-									<motion.span
-										className="p-2.5 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors"
-										whileHover={{ rotate: 360 }}
-										transition={{ duration: 0.5 }}
-									>
-										<AlertCircle className="h-6 w-6 text-primary" />
-									</motion.span>
-									<span className="bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
-										Important Notices
-									</span>
-								</motion.h3>
-								<Link
-									href="/notices"
-									className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors flex items-center gap-1 group/link"
-								>
-									View All
-									<motion.span
-										className="inline-block"
-										initial={{ x: 0 }}
-										whileHover={{ x: 5 }}
-										transition={{ duration: 0.2 }}
-									>
-										<ChevronRight className="h-4 w-4" />
-									</motion.span>
-								</Link>
-							</div>
-
-							<motion.div
-								variants={{
-									hidden: { opacity: 0 },
-									visible: { opacity: 1 },
-								}}
-								className="relative"
-							>
-								<div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/90 pointer-events-none z-10" />
-								{/* <NoticesSection /> */}
-							</motion.div>
-						</motion.div>
-
-						{/* Press Releases Section */}
-						<motion.div
-							variants={{
-								hidden: { opacity: 0, y: 20 },
-								visible: { opacity: 1, y: 0 },
-							}}
-							whileHover={{ y: -5 }}
-							transition={{ duration: 0.4 }}
-							className="group bg-white/80 backdrop-blur-sm rounded-xl shadow-md border border-muted/20 p-8 hover:shadow-lg hover:border-primary/20 transition-all duration-300"
-						>
-							<div className="flex items-center justify-between mb-8">
-								<motion.h3
-									className="text-2xl font-semibold flex items-center gap-3"
-									whileHover={{ x: 2 }}
-									transition={{ duration: 0.2 }}
-								>
-									<motion.span
-										className="p-2.5 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors"
-										whileHover={{ rotate: 360 }}
-										transition={{ duration: 0.5 }}
-									>
-										<Newspaper className="h-6 w-6 text-primary" />
-									</motion.span>
-									<span className="bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
-										Press Releases
-									</span>
-								</motion.h3>
-								<Link
-									href="/press-releases"
-									className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors flex items-center gap-1 group/link"
-								>
-									View All
-									<motion.span
-										className="inline-block"
-										initial={{ x: 0 }}
-										whileHover={{ x: 5 }}
-										transition={{ duration: 0.2 }}
-									>
-										<ChevronRight className="h-4 w-4" />
-									</motion.span>
-								</Link>
-							</div>
-
-							<motion.div
-								variants={{
-									hidden: { opacity: 0 },
-									visible: { opacity: 1 },
-								}}
-								className="relative"
-							>
-								<div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/90 pointer-events-none z-10" />
-								<FeaturedPublications />
-							</motion.div>
-						</motion.div>
-					</motion.div>
-				</div>
-			</section>
 		</div>
 	);
 }

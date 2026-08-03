@@ -20,11 +20,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
 import { FadeIn } from "@/components/animations/fade-in";
-import { HeroParallax } from "@/components/animations/hero-parallax";
+import { HeroCarousel } from "@/components/animations/hero-carousel";
+import { PartnersCarousel } from "@/components/partners-carousel";
 import { ScaleIn } from "@/components/animations/scale-in";
 import { TeamCard } from "@/components/team-card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { INWOLAG_CONTENT } from "@/lib/inwolag-content";
+import { INWOLAG_CONTENT, INWOLAG_CONTENT as SITE_CONTENT } from "@/lib/inwolag-content";
 
 export const INWOLAG_CONTENT = {
 	heroSummary:
@@ -256,23 +257,37 @@ export default function AboutPage() {
 
 	return (
 		<div className="flex flex-col">
-			<HeroParallax
-				imageUrl="/heroimage.jpg?height=1200&width=1920"
-				alt="About INWOLAG"
-				overlayColor="from-primary/85 via-primary/75 to-primary/65"
-			>
-				<div className="mx-auto max-w-5xl px-4 text-center text-white">
-					<Badge className="mb-6 bg-white/15 text-white hover:bg-white/20">
+			<HeroCarousel
+				images={[
+					{ src: "/heroimage.jpg", alt: "About INWOLAG" },
+					{
+						src: "/images/2023-12-19, IWHRD training-1747241692300-183973691.JPG",
+						alt: "IWHRD training session",
+					},
+					{
+						src: "/images/2023-12-19, IWHRD training-1747242429112-335750128.JPG",
+						alt: "IWHRD training participants",
+					},
+					{
+						src: "/images/2024-03-26, livelihood training in tanahu-1747244951448-850044844.jpg",
+						alt: "Livelihood training in Tanahu",
+					},
+				]}
+			/>
+
+			<section className="bg-gradient-to-b from-white to-muted/20 py-16 md:py-24">
+				<div className="mx-auto max-w-5xl px-4 text-center">
+					<Badge className="mb-6 bg-primary/10 text-primary hover:bg-primary/20">
 						About INWOLAG
 					</Badge>
-					<h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl">
+					<h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600">
 						Indigenous women's rights, led by Indigenous women
 					</h1>
-					<p className="mx-auto mt-6 max-w-3xl text-lg text-white/90 md:text-xl">
+					<p className="mx-auto mt-6 max-w-3xl text-lg text-muted-foreground md:text-xl">
 						{INWOLAG_CONTENT.heroSummary}
 					</p>
 				</div>
-			</HeroParallax>
+			</section>
 
 			<section className="bg-gradient-to-b from-white to-muted/20 py-16">
 				<div className="container">
@@ -293,6 +308,20 @@ export default function AboutPage() {
 							</motion.div>
 						))}
 					</div>
+				</div>
+			</section>
+
+			<section className="py-16 md:py-20 bg-muted/10">
+				<div className="container">
+					<div className="mb-10 text-center">
+						<Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20">
+							Collaboration
+						</Badge>
+						<h2 className="text-3xl font-bold tracking-tighter sm:text-4xl bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+							Our Partners
+						</h2>
+					</div>
+					<PartnersCarousel partners={SITE_CONTENT.partners} />
 				</div>
 			</section>
 
