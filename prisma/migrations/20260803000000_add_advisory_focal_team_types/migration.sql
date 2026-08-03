@@ -1,0 +1,3 @@
+-- AlterEnum
+ALTER TYPE "TeamType" ADD VALUE 'ADVISORY';
+ALTER TYPE "TeamType" ADD VALUE 'FOCAL';

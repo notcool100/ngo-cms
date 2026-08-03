@@ -26,75 +26,6 @@ import { TeamCard } from "@/components/team-card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { INWOLAG_CONTENT } from "@/lib/inwolag-content";
 
-export const INWOLAG_CONTENT = {
-	heroSummary:
-		"TODO: replace with your real hero summary paragraph shown under the About hero heading.",
-
-	stats: [
-		{ label: "TODO label 1", value: "TODO value 1" },
-		{ label: "TODO label 2", value: "TODO value 2" },
-		{ label: "TODO label 3", value: "TODO value 3" },
-		{ label: "TODO label 4", value: "TODO value 4" },
-	],
-
-	aboutSections: [
-		{
-			type: "mission",
-			title: "Mission",
-			subtitle: null,
-			content: "<p>TODO: replace with your real mission HTML content.</p>",
-		},
-		{
-			type: "vision",
-			title: "Vision",
-			subtitle: null,
-			content: "<p>TODO: replace with your real vision HTML content.</p>",
-		},
-		{
-			type: "history",
-			title: "TODO history section title",
-			subtitle: "TODO optional subtitle",
-			content: "<p>TODO: replace with your real history/objectives HTML content.</p>",
-		},
-	],
-
-	reachSummary:
-		"TODO: replace with your real summary of districts/regions where INWOLAG has worked.",
-
-	partners: ["TODO Partner 1", "TODO Partner 2", "TODO Partner 3", "TODO Partner 4"],
-
-	thematicAreas: [
-		{
-			slug: "legal-aid",
-			title: "Legal Aid (Access to Justice)",
-			description:
-				"INWOLAG provides legal awareness, counseling, litigation, and psychosocial services to Indigenous women survivors of violence and rights violations, all for free. As a leading advocate for Indigenous women's rights, we bridge access to justice and empowerment at both the local and national levels.",
-			focus: "Public Interest Litigation",
-			activities: [
-				{
-					name: "Rupandehi Workshop – KAAGAPAY",
-					date: "2023-07-20",
-				},
-			],
-		},
-		{
-			slug: "indigenous-collective-rights",
-			title: "Indigenous Collective Rights",
-			description:
-				"INWOLAG promotes the collective ownership, identity, and self-determination of Indigenous communities by safeguarding their ancestral lands, cultures, and traditions. With a strong emphasis on the principle of Free, Prior and Informed Consent (FPIC), we ensure that Indigenous peoples have the right to make decisions about their lands, territories, and resources before any development or policy is implemented.",
-			focus: "Right to Self-determination of Indigenous Communities",
-			activities: [],
-		},
-		{
-			slug: "gender-justice-climate",
-			title: "Gender Justice & Climate",
-			description:
-				"INWOLAG provides livelihood training programs for Indigenous women to help them mitigate and adapt to the impacts of climate change. These trainings equip women with practical skills and sustainable practices that enhance both environmental resilience and economic independence.",
-			focus: null,
-			activities: [],
-		},
-	],
-};
 const MEDIA_VIDEOS = [
 	{ id: "ahGEuSm2sZ8" },
 	{ id: "gcCUzUYFtQ8" },
@@ -248,8 +179,6 @@ export default function AboutPage() {
 	const resolvedHistorySections =
 		historySections.length > 0 ? historySections : fallbackHistory;
 
-	// NOTE: swap "ADVISORY" / "FOCAL" below for your actual teamType values
-	// if they differ in your database.
 	const boardMembers = team.filter((member) => member.teamType === "BOARD");
 	const advisoryMembers = team.filter((member) => member.teamType === "ADVISORY");
 	const focalMembers = team.filter((member) => member.teamType === "FOCAL");
