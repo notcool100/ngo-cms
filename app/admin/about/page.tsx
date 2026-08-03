@@ -848,7 +848,9 @@ export default function AdminAboutPage() {
 								</SelectTrigger>
 								<SelectContent>
 									<SelectItem value="BOARD">Board of Directors</SelectItem>
-									<SelectItem value="STAFF">Advisory/Staff Network</SelectItem>
+									<SelectItem value="STAFF">Staff</SelectItem>
+									<SelectItem value="ADVISORY">Advisory Council</SelectItem>
+									<SelectItem value="FOCAL">Focal Person</SelectItem>
 								</SelectContent>
 							</Select>
 						</div>

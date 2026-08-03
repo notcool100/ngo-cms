@@ -235,70 +235,51 @@ export default function TeamMembersPage() {
 			</div>
 
 			<Tabs value={activeTab} onValueChange={setActiveTab}>
-				<TabsList className="grid w-full grid-cols-2 mb-8">
+				<TabsList className="grid w-full grid-cols-4 mb-8">
 					<TabsTrigger value="staff">Office Team</TabsTrigger>
 					<TabsTrigger value="board">Board Members</TabsTrigger>
+					<TabsTrigger value="advisory">Advisory Council</TabsTrigger>
+					<TabsTrigger value="focal">Focal Persons</TabsTrigger>
 				</TabsList>
 
-				<TabsContent value="staff" className="space-y-4">
-					{loading ? (
-						<div className="flex justify-center py-8">
-							<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-						</div>
-					) : filteredMembers.length > 0 ? (
-						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-							{filteredMembers.map((member) => (
-								<TeamMemberCard
-									key={member.id}
-									member={member}
-									onEdit={() => handleEditMember(member)}
-									onDelete={() => handleDeleteMember(member.id)}
-								/>
-							))}
-						</div>
-					) : (
-						<div className="text-center py-12 border rounded-lg bg-muted/10">
-							<p className="text-muted-foreground">No team members found.</p>
-							<Button
-								variant="outline"
-								className="mt-4"
-								onClick={handleAddMember}
-							>
-								Add Your First Team Member
-							</Button>
-						</div>
-					)}
-				</TabsContent>
-
-				<TabsContent value="board" className="space-y-4">
-					{loading ? (
-						<div className="flex justify-center py-8">
-							<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-						</div>
-					) : filteredMembers.length > 0 ? (
-						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-							{filteredMembers.map((member) => (
-								<TeamMemberCard
-									key={member.id}
-									member={member}
-									onEdit={() => handleEditMember(member)}
-									onDelete={() => handleDeleteMember(member.id)}
-								/>
-							))}
-						</div>
-					) : (
-						<div className="text-center py-12 border rounded-lg bg-muted/10">
-							<p className="text-muted-foreground">No board members found.</p>
-							<Button
-								variant="outline"
-								className="mt-4"
-								onClick={handleAddMember}
-							>
-								Add Your First Board Member
-							</Button>
-						</div>
-					)}
-				</TabsContent>
+				{(
+					[
+						{ value: "staff", emptyLabel: "team members", addLabel: "Team Member" },
+						{ value: "board", emptyLabel: "board members", addLabel: "Board Member" },
+						{ value: "advisory", emptyLabel: "advisory council members", addLabel: "Advisory Council Member" },
+						{ value: "focal", emptyLabel: "focal persons", addLabel: "Focal Person" },
+					] as const
+				).map((tab) => (
+					<TabsContent key={tab.value} value={tab.value} className="space-y-4">
+						{loading ? (
+							<div className="flex justify-center py-8">
+								<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+							</div>
+						) : filteredMembers.length > 0 ? (
+							<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+								{filteredMembers.map((member) => (
+									<TeamMemberCard
+										key={member.id}
+										member={member}
+										onEdit={() => handleEditMember(member)}
+										onDelete={() => handleDeleteMember(member.id)}
+									/>
+								))}
+							</div>
+						) : (
+							<div className="text-center py-12 border rounded-lg bg-muted/10">
+								<p className="text-muted-foreground">No {tab.emptyLabel} found.</p>
+								<Button
+									variant="outline"
+									className="mt-4"
+									onClick={handleAddMember}
+								>
+									Add Your First {tab.addLabel}
+								</Button>
+							</div>
+						)}
+					</TabsContent>
+				))}
 			</Tabs>
 
 			<Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -350,6 +331,8 @@ export default function TeamMembersPage() {
 									<SelectContent>
 										<SelectItem value="STAFF">Office Team</SelectItem>
 										<SelectItem value="BOARD">Board Member</SelectItem>
+										<SelectItem value="ADVISORY">Advisory Council</SelectItem>
+										<SelectItem value="FOCAL">Focal Person</SelectItem>
 									</SelectContent>
 								</Select>
 							</div>
@@ -543,7 +526,13 @@ function TeamMemberCard({ member, onEdit, onDelete }: TeamMemberCardProps) {
 						{member.active ? "Active" : "Inactive"}
 					</span>
 					<span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-blue-100 text-blue-800 ml-2">
-						{member.teamType === "BOARD" ? "Board" : "Staff"}
+						{member.teamType === "BOARD"
+							? "Board"
+							: member.teamType === "ADVISORY"
+								? "Advisory"
+								: member.teamType === "FOCAL"
+									? "Focal"
+									: "Staff"}
 					</span>
 				</div>
 				<p className="mt-4 text-sm text-muted-foreground line-clamp-3">

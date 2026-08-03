@@ -476,4 +476,6 @@ enum MediaType {
 enum TeamType {
   BOARD
   STAFF
+  ADVISORY
+  FOCAL
 }
