@@ -267,21 +267,7 @@ export default function HomePage() {
 				</div>
 			</section>
 
-			{/* Our Partners */}
-			<section className="py-16 md:py-20 bg-muted/10">
-				<div className="container">
-					<div className="mb-10 text-center">
-						<Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20 py-1.5 px-3">
-							<span className="font-medium">Collaboration</span>
-						</Badge>
-						<h2 className="text-3xl font-bold tracking-tighter sm:text-4xl bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
-							Our Partners
-						</h2>
-					</div>
-					<PartnersCarousel partners={PARTNERS} />
-				</div>
-			</section>
-
+		
 			{/* Mission Statement with Enhanced Design */}
 			<section className="py-24 md:py-32 relative overflow-hidden">
 				{/* Animated background elements */}
@@ -770,6 +756,20 @@ export default function HomePage() {
 
 			{/* INWOLAG in Media */}
 			<MediaSection limit={3} showViewAllLink className="py-24 relative overflow-hidden" />
+	{/* Our Partners */}
+			<section className="py-16 md:py-20 bg-muted/10">
+				<div className="container">
+					<div className="mb-10 text-center">
+						<Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20 py-1.5 px-3">
+							<span className="font-medium">Collaboration</span>
+						</Badge>
+						<h2 className="text-3xl font-bold tracking-tighter sm:text-4xl bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+							Our Partners
+						</h2>
+					</div>
+					<PartnersCarousel partners={PARTNERS} />
+				</div>
+			</section>
 
 			{/* Get Involved with Enhanced Design */}
 			{/* <section className="py-24 relative overflow-hidden">
